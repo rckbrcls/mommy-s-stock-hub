@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Image,
-  Button,
   Modal,
   TextInput,
   TouchableOpacity,
@@ -12,6 +11,8 @@ import {
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 // Cor principal (inspirada no ícone)
 const MAIN_COLOR = "#4D9FFF";
@@ -97,18 +98,17 @@ export default function InventoryScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: BACKGROUND_COLOR }]}
-    >
-      {/* Header com cor de fundo (MAIN_COLOR) */}
-      <View style={styles.header}>
-        <Image
-          source={require("@/assets/images/logo.png")}
-          style={styles.headerLogo}
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
+      headerImage={
+        <IconSymbol
+          size={310}
+          color="#808080"
+          name="chevron.left.forwardslash.chevron.right"
+          style={styles.headerImage}
         />
-        <ThemedText style={styles.headerTitle}>Mommy's Stock HUB</ThemedText>
-      </View>
-
+      }
+    >
       {/* Modal de Adicionar Item */}
       <Modal
         animationType="slide"
@@ -211,7 +211,7 @@ export default function InventoryScreen() {
 
       {/* Botão de Adicionar Item */}
       <TouchableOpacity
-        style={[styles.mainButton, { marginVertical: 10, width: "90%" }]}
+        style={[styles.mainButton, { width: "100%" }]}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.buttonText}>Adicionar Item</Text>
@@ -226,34 +226,38 @@ export default function InventoryScreen() {
             onPress={() => openEditModal(index)}
             style={styles.listItem}
           >
-            <ThemedText style={styles.listItemText}>{item.name}</ThemedText>
-            <View style={styles.actionsContainer}>
-              <ThemedText style={styles.listItemText}>
-                estoque: {item.quantity}
+            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
+              <ThemedText style={styles.listItemTexBold}>
+                {item.name}
               </ThemedText>
-
+              <ThemedText style={styles.listItemText}>
+                quantidade:{" "}
+                <ThemedText style={styles.listItemTexBold}>
+                  {item.quantity}
+                </ThemedText>
+              </ThemedText>
+            </View>
+            <View style={styles.actionsContainer}>
               {/* Botão + */}
-              <View style={[styles.plusButton, { marginLeft: 5 }]}>
-                <Button
-                  title="+"
-                  onPress={() => incrementQuantity(index)}
-                  color="#FFFFFF"
-                />
-              </View>
+              <TouchableOpacity
+                style={[styles.plusButton, { marginLeft: 5 }]}
+                onPress={() => incrementQuantity(index)}
+              >
+                <Text style={styles.buttonText}>+</Text>
+              </TouchableOpacity>
 
               {/* Botão - */}
-              <View style={[styles.minusButton, { marginLeft: 5 }]}>
-                <Button
-                  title="-"
-                  onPress={() => decrementQuantity(index)}
-                  color="#FFFFFF"
-                />
-              </View>
+              <TouchableOpacity
+                style={[styles.minusButton, { marginLeft: 5 }]}
+                onPress={() => decrementQuantity(index)}
+              >
+                <Text style={styles.buttonText}>-</Text>
+              </TouchableOpacity>
             </View>
           </Pressable>
         ))}
       </View>
-    </SafeAreaView>
+    </ParallaxScrollView>
   );
 }
 
@@ -290,7 +294,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
     borderRadius: 10,
-    width: "80%",
+    width: "90%",
   },
   modalTitle: {
     fontWeight: "bold",
@@ -305,12 +309,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 8,
   },
-
+  headerImage: {
+    color: "#808080",
+    bottom: -90,
+    left: -35,
+    position: "absolute",
+  },
   // Botão principal (Adicionar, Salvar, Excluir, Sair)
   mainButton: {
     backgroundColor: MAIN_COLOR,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 6,
     alignItems: "center",
     marginBottom: 5,
     width: "100%",
@@ -327,19 +336,29 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+    textAlign: "center",
   },
 
   // Área de busca
   searchContainer: {
-    width: "90%",
+    width: "100%",
     alignSelf: "center",
     marginTop: 15,
   },
   searchBox: {
     borderWidth: 1,
-    borderColor: MAIN_COLOR,
-    borderRadius: 5,
+    borderColor: "#EEE",
+    borderRadius: 10,
     padding: 10,
+    shadowColor: "#202020",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: "#FFFFFF",
   },
   searchPlaceholder: {
     color: "#555555",
@@ -348,20 +367,24 @@ const styles = StyleSheet.create({
   // Lista
   listContainer: {
     flex: 1,
-    width: "90%",
+    width: "100%",
     alignSelf: "center",
     marginTop: 10,
     gap: 10,
+    paddingBottom: 20,
   },
   listTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: MAIN_COLOR,
+    color: "#333333",
     marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEE",
+    paddingBottom: 10,
   },
   listItem: {
     borderWidth: 1,
-    borderColor: MAIN_COLOR,
+    borderColor: "#EEE",
     padding: 10,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -382,6 +405,10 @@ const styles = StyleSheet.create({
     position: "relative",
     zIndex: 1,
   },
+  listItemTexBold: {
+    color: "#333333",
+    fontWeight: "bold",
+  },
   listItemText: {
     color: "#333333",
   },
@@ -393,10 +420,38 @@ const styles = StyleSheet.create({
   // Botões de + e -
   plusButton: {
     backgroundColor: MAIN_COLOR,
-    borderRadius: 5,
+    borderRadius: 200,
+    width: 35,
+    height: 35,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   minusButton: {
     backgroundColor: CANCEL_COLOR,
-    borderRadius: 5,
+    borderRadius: 200,
+    width: 35,
+    height: 35,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
