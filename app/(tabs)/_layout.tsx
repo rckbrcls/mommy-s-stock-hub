@@ -31,26 +31,45 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="inventory"
         options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          title: "Inventário",
+          tabBarIcon: ({ color }: { color: string }) => (
+            <IconSymbol size={28} name="archivebox.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="add"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person.fill" color={color} />
+          title: "Adicionar",
+          tabBarIcon: ({ color }: { color: string }) => (
+            <IconSymbol size={28} name="plus.circle.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="category"
+        options={{
+          title: "Categorias",
+          tabBarIcon: ({ color }: { color: string }) => (
+            <IconSymbol size={28} name="tag.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Ajustes",
+
+          tabBarIcon: ({ color }: { color: string }) => (
+            <IconSymbol size={28} name="gearshape.fill" color={color} />
           ),
         }}
       />
