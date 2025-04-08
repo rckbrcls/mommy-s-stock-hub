@@ -18,9 +18,6 @@ import { ThemedView } from "@/components/ThemedView";
 // Cor principal (inspirada no ícone)
 const MAIN_COLOR = "#4D9FFF";
 const CANCEL_COLOR = "#FF364E";
-// Caso queira um leve fundo azulado na tela inteira,
-// substitua por algo como "#EAF3FF" ou outro tom claro.
-const BACKGROUND_COLOR = "#FFFFFF";
 
 export default function InventoryScreen() {
   const [items, setItems] = useState([
