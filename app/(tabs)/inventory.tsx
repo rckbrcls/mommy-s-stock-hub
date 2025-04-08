@@ -20,7 +20,7 @@ const CANCEL_COLOR = "#FF364E";
 // substitua por algo como "#EAF3FF" ou outro tom claro.
 const BACKGROUND_COLOR = "#FFFFFF";
 
-export default function IventoryScreen() {
+export default function InventoryScreen() {
   const [items, setItems] = useState([
     { name: "Arroz", quantity: 5 },
     { name: "Feijão", quantity: 3 },
