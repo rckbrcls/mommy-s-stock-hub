@@ -13,6 +13,7 @@ import {
 import React, { useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { ThemedView } from "@/components/ThemedView";
 
 // Cor principal (inspirada no ícone)
 const MAIN_COLOR = "#4D9FFF";
@@ -109,6 +110,14 @@ export default function InventoryScreen() {
         />
       }
     >
+      <ThemedView
+        style={{
+          flexDirection: "row",
+          gap: 8,
+        }}
+      >
+        <ThemedText type="title">Iventário</ThemedText>
+      </ThemedView>
       {/* Modal de Adicionar Item */}
       <Modal
         animationType="slide"
@@ -304,10 +313,19 @@ const styles = StyleSheet.create({
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: MAIN_COLOR,
-    borderRadius: 5,
+    borderColor: "#DDD",
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: "#202020",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: "#FFFFFF",
     marginBottom: 10,
-    padding: 8,
   },
   headerImage: {
     color: "#808080",
@@ -347,7 +365,7 @@ const styles = StyleSheet.create({
   },
   searchBox: {
     borderWidth: 1,
-    borderColor: "#EEE",
+    borderColor: "#DDD",
     borderRadius: 10,
     padding: 10,
     shadowColor: "#202020",
