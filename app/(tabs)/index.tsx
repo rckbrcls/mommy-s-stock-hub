@@ -83,14 +83,18 @@ export default function HomeScreen() {
           </Text>
           {lowStock.length > 0 ? (
             <View style={styles.lowStockContainer}>
-              {lowStock.map((item) => (
-                <View key={item.id} style={styles.lowStockCard}>
-                  <Text style={styles.lowStockName}>{item.name}</Text>
-                  <Text style={styles.lowStockQuantity}>
-                    Qtd: {item.quantity}
-                  </Text>
-                </View>
-              ))}
+              {lowStock.slice(0, 4).map(
+                (
+                  item // Limitar a 4 itens
+                ) => (
+                  <View key={item.id} style={styles.lowStockCard}>
+                    <Text style={styles.lowStockName}>{item.name}</Text>
+                    <Text style={styles.lowStockQuantity}>
+                      Qtd: {item.quantity}
+                    </Text>
+                  </View>
+                )
+              )}
             </View>
           ) : (
             <Text style={styles.emptyList}>
@@ -110,14 +114,18 @@ export default function HomeScreen() {
           <Text style={styles.sectionTitle}>💰 Maiores Devedores:</Text>
           {topDebtors.length > 0 ? (
             <View style={styles.lowStockContainer}>
-              {topDebtors.map((debtor) => (
-                <View key={debtor.id} style={styles.lowStockCard}>
-                  <Text style={styles.lowStockName}>{debtor.name}</Text>
-                  <Text style={styles.lowStockQuantity}>
-                    Valor: R$ {debtor.amount.toFixed(2)}
-                  </Text>
-                </View>
-              ))}
+              {topDebtors.slice(0, 4).map(
+                (
+                  debtor // Limitar a 4 itens
+                ) => (
+                  <View key={debtor.id} style={styles.lowStockCard}>
+                    <Text style={styles.lowStockName}>{debtor.name}</Text>
+                    <Text style={styles.lowStockQuantity}>
+                      Valor: R$ {debtor.amount.toFixed(2)}
+                    </Text>
+                  </View>
+                )
+              )}
             </View>
           ) : (
             <Text style={styles.emptyList}>
@@ -129,6 +137,34 @@ export default function HomeScreen() {
             onPress={() => navigation.navigate("debtors" as never)}
           >
             <Text style={styles.buttonText}>Ver Devedores</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Resumo de categorias */}
+        <View style={styles.lowStockSection}>
+          <Text style={styles.sectionTitle}>📂 Categorias Existentes:</Text>
+          {totalCategories > 0 ? (
+            <View style={styles.lowStockContainer}>
+              {Array.from(
+                new Set(items.map((item) => item.category || "Sem Categoria"))
+              )
+                .slice(0, 4) // Limitar a 4 itens
+                .map((category, index) => (
+                  <View key={index} style={styles.lowStockCard}>
+                    <Text style={styles.lowStockName}>{category}</Text>
+                  </View>
+                ))}
+            </View>
+          ) : (
+            <Text style={styles.emptyList}>
+              Nenhuma categoria cadastrada no momento.
+            </Text>
+          )}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("inventory" as never)} // Botão para ir ao estoque
+          >
+            <Text style={styles.buttonText}>Ver Estoque</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
