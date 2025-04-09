@@ -12,10 +12,12 @@ import {
   Alert,
 } from "react-native";
 import { useInventory } from "@/contexts/InventoryContext";
+import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
   const { addItem } = useInventory();
+  const { addDebtor } = useDebtors(); // Usando o contexto de devedores
 
   // Tela para adicionar produtos
   const AddProductScreen = () => {
@@ -92,6 +94,59 @@ export default function AddTabScreen() {
     );
   };
 
+  // Tela para adicionar devedores
+  const AddDebtorScreen = () => {
+    const [name, setName] = useState("");
+    const [amount, setAmount] = useState("");
+
+    const handleSaveDebtor = async () => {
+      if (!name.trim() || !amount.trim()) {
+        Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+        return;
+      }
+
+      const newDebtor = {
+        id: Date.now(),
+        name,
+        amount: parseFloat(amount),
+        status: "open" as "open", // Status inicial como "Em Aberto"
+      };
+
+      await addDebtor(newDebtor); // Usando a função do contexto de devedores
+
+      Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
+      setName("");
+      setAmount("");
+    };
+
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Adicionar Devedor</Text>
+
+        <Text style={styles.label}>Nome do Devedor</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder="Ex: Cliente A"
+        />
+
+        <Text style={styles.label}>Valor Devido</Text>
+        <TextInput
+          style={styles.input}
+          value={amount}
+          onChangeText={setAmount}
+          placeholder="Ex: 100.00"
+          keyboardType="decimal-pad"
+        />
+
+        <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Salvar Devedor</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.tabContainer}>
@@ -111,9 +166,26 @@ export default function AddTabScreen() {
             Produto
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "debtor" && styles.activeTabButton,
+          ]}
+          onPress={() => setActiveTab("debtor")}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "debtor" && styles.activeTabButtonText,
+            ]}
+          >
+            Devedor
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {activeTab === "product" && <AddProductScreen />}
+      {activeTab === "debtor" && <AddDebtorScreen />}
     </SafeAreaView>
   );
 }

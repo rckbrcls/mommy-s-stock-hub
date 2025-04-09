@@ -9,30 +9,29 @@ import {
   TouchableOpacity,
   Alert,
   SafeAreaView,
+  TextInput,
 } from "react-native";
-
-type Debtor = {
-  id: string;
-  name: string;
-  amount: number;
-  status: "open" | "paid";
-};
+import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 
 export default function DebtorsScreen() {
-  const [debtors, setDebtors] = useState<Debtor[]>([
-    { id: "1", name: "Cliente A", amount: 100, status: "open" },
-    { id: "2", name: "Cliente B", amount: 200, status: "paid" },
-  ]);
+  const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para a barra de pesquisa
+
+  // Filtrar devedores com base no nome
+  const filteredDebtors = debtors.filter((debtor) =>
+    debtor.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Marcar como pago
-  const handleMarkAsPaid = (debtorId: string) => {
-    setDebtors((prev) =>
-      prev.map((d) => (d.id === debtorId ? { ...d, status: "paid" } : d))
-    );
+  const handleMarkAsPaid = async (debtorId: number) => {
+    const index = debtors.findIndex((d) => d.id === debtorId);
+    if (index !== -1) {
+      await markAsPaid(index);
+    }
   };
 
   // Excluir devedor
-  const handleDelete = (debtorId: string) => {
+  const handleDelete = async (debtorId: number) => {
     Alert.alert(
       "Excluir Devedor",
       "Tem certeza que deseja excluir este devedor?",
@@ -41,19 +40,14 @@ export default function DebtorsScreen() {
         {
           text: "Excluir",
           style: "destructive",
-          onPress: () => {
-            setDebtors((prev) => prev.filter((d) => d.id !== debtorId));
+          onPress: async () => {
+            const index = debtors.findIndex((d) => d.id === debtorId);
+            if (index !== -1) {
+              await removeDebtor(index);
+            }
           },
         },
       ]
-    );
-  };
-
-  // Navegar para tela de adicionar devedor
-  const handleAddDebtor = () => {
-    Alert.alert(
-      "Adicionar Devedor",
-      "Navegar para tela ou abrir modal de cadastro."
     );
   };
 
@@ -62,14 +56,20 @@ export default function DebtorsScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Devedores</Text>
 
+        {/* Barra de Pesquisa */}
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Pesquisar devedores..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+
         <FlatList
-          data={debtors}
-          keyExtractor={(item) => item.id}
+          data={filteredDebtors}
+          keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={
-            <Text style={styles.emptyList}>
-              Nenhum devedor cadastrado no momento.
-            </Text>
+            <Text style={styles.emptyList}>Nenhum devedor encontrado.</Text>
           }
           renderItem={({ item }) => (
             <View style={styles.debtorCard}>
@@ -108,10 +108,6 @@ export default function DebtorsScreen() {
             </View>
           )}
         />
-
-        <TouchableOpacity style={styles.addButton} onPress={handleAddDebtor}>
-          <Text style={styles.addButtonText}>Adicionar Devedor</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -134,6 +130,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: "center",
     color: "#333",
+  },
+  searchBar: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    backgroundColor: "#fff",
   },
   listContainer: {
     paddingBottom: 16,
@@ -201,22 +205,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 14,
-  },
-  addButton: {
-    backgroundColor: "#F5A689",
-    paddingVertical: 14,
-    borderRadius: 8,
-    marginTop: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  addButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 16,
   },
 });
