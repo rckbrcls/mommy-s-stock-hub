@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   markPaidButton: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#F5A689",
   },
   deleteButton: {
     backgroundColor: "#FF6347",
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   addButton: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#F5A689",
     paddingVertical: 14,
     borderRadius: 8,
     marginTop: 16,

@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#1E90FF",
+    color: "#F5A689",
   },
   summaryLabel: {
     fontSize: 14,
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#1E90FF",
+    color: "#F5A689",
     marginBottom: 12,
     textAlign: "center",
   },
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   button: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#F5A689",
     paddingVertical: 14,
     borderRadius: 8,
     marginBottom: 16,

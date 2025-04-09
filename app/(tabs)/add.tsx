@@ -1,6 +1,5 @@
-// MommyStockHub/screens/AddProductScreen.tsx
+// MommyStockHub/screens/AddTabScreen.tsx
 
-import { useNavigation } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -8,129 +7,193 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   SafeAreaView,
+  ScrollView,
+  Alert,
 } from "react-native";
 
-export default function AddProductScreen() {
-  const navigation = useNavigation();
+export default function AddTabScreen() {
+  const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
 
-  // Estados para armazenar valores do formulário
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [price, setPrice] = useState("");
-  const [barcode, setBarcode] = useState("");
+  // Tela para adicionar produtos
+  const AddProductScreen = () => {
+    const [name, setName] = useState("");
+    const [category, setCategory] = useState("");
+    const [quantity, setQuantity] = useState("");
+    const [price, setPrice] = useState("");
 
-  // Função de validação simples
-  const validateForm = (): boolean => {
-    if (!name.trim()) {
-      Alert.alert("Atenção", "Informe o nome do produto.");
-      return false;
-    }
-    if (!quantity.trim()) {
-      Alert.alert("Atenção", "Informe a quantidade.");
-      return false;
-    }
-    return true;
+    const handleSaveProduct = () => {
+      if (!name.trim() || !quantity.trim()) {
+        Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+        return;
+      }
+      Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
+      setName("");
+      setCategory("");
+      setQuantity("");
+      setPrice("");
+    };
+
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Adicionar Produto</Text>
+
+        <Text style={styles.label}>Nome do Produto</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder="Ex: Sabonete"
+        />
+
+        <Text style={styles.label}>Categoria</Text>
+        <TextInput
+          style={styles.input}
+          value={category}
+          onChangeText={setCategory}
+          placeholder="Ex: Higiene"
+        />
+
+        <Text style={styles.label}>Quantidade</Text>
+        <TextInput
+          style={styles.input}
+          value={quantity}
+          onChangeText={setQuantity}
+          placeholder="Ex: 10"
+          keyboardType="numeric"
+        />
+
+        <Text style={styles.label}>Preço (opcional)</Text>
+        <TextInput
+          style={styles.input}
+          value={price}
+          onChangeText={setPrice}
+          placeholder="Ex: 5.99"
+          keyboardType="decimal-pad"
+        />
+
+        <TouchableOpacity onPress={handleSaveProduct} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Salvar Produto</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    );
   };
 
-  // Função para salvar os dados (mock)
-  const handleSave = async () => {
-    if (!validateForm()) return;
+  // Tela para adicionar devedores
+  const AddDebtorScreen = () => {
+    const [name, setName] = useState("");
+    const [amount, setAmount] = useState("");
 
-    Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
-    setName("");
-    setCategory("");
-    setQuantity("");
-    setPrice("");
-    setBarcode("");
-    navigation.goBack();
-  };
+    const handleSaveDebtor = () => {
+      if (!name.trim() || !amount.trim()) {
+        Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+        return;
+      }
+      Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
+      setName("");
+      setAmount("");
+    };
 
-  // Função para abrir a tela de barcode (se tiver)
-  const openBarcodeScanner = () => {
-    Alert.alert(
-      "Scanner",
-      "Funcionalidade de leitura de código de barras aqui..."
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Adicionar Devedor</Text>
+
+        <Text style={styles.label}>Nome do Devedor</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder="Ex: João Silva"
+        />
+
+        <Text style={styles.label}>Valor</Text>
+        <TextInput
+          style={styles.input}
+          value={amount}
+          onChangeText={setAmount}
+          placeholder="Ex: 150.00"
+          keyboardType="decimal-pad"
+        />
+
+        <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Salvar Devedor</Text>
+        </TouchableOpacity>
+      </ScrollView>
     );
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.title}>Adicionar Produto</Text>
+      {/* Tabs na parte superior */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "product" && styles.activeTabButton,
+          ]}
+          onPress={() => setActiveTab("product")}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "product" && styles.activeTabButtonText,
+            ]}
+          >
+            Produto
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "debtor" && styles.activeTabButton,
+          ]}
+          onPress={() => setActiveTab("debtor")}
+        >
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === "debtor" && styles.activeTabButtonText,
+            ]}
+          >
+            Devedor
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-          <Text style={styles.label}>Nome do Produto</Text>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="Ex: Sabonete"
-          />
-
-          <Text style={styles.label}>Categoria</Text>
-          <TextInput
-            style={styles.input}
-            value={category}
-            onChangeText={setCategory}
-            placeholder="Ex: Higiene"
-          />
-
-          <Text style={styles.label}>Quantidade</Text>
-          <TextInput
-            style={styles.input}
-            value={quantity}
-            onChangeText={setQuantity}
-            placeholder="Ex: 10"
-            keyboardType="numeric"
-          />
-
-          <Text style={styles.label}>Preço (opcional)</Text>
-          <TextInput
-            style={styles.input}
-            value={price}
-            onChangeText={setPrice}
-            placeholder="Ex: 5.99"
-            keyboardType="decimal-pad"
-          />
-
-          <Text style={styles.label}>Código de Barras (opcional)</Text>
-          <View style={styles.barcodeContainer}>
-            <TextInput
-              style={[styles.input, { flex: 1, marginRight: 8 }]}
-              value={barcode}
-              onChangeText={setBarcode}
-              placeholder="Ex: 123456789"
-            />
-            <TouchableOpacity
-              onPress={openBarcodeScanner}
-              style={styles.scanButton}
-            >
-              <Text style={styles.scanButtonText}>Scan</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Salvar</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      {/* Conteúdo da aba ativa */}
+      {activeTab === "product" ? <AddProductScreen /> : <AddDebtorScreen />}
     </SafeAreaView>
   );
 }
 
+// Estilos
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8f9fa", // Fundo claro
+    backgroundColor: "#f8f9fa",
+  },
+  tabContainer: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  activeTabButton: {
+    borderBottomWidth: 3,
+    borderBottomColor: "#F5A689",
+  },
+  tabButtonText: {
+    fontSize: 16,
+    color: "#555",
+  },
+  activeTabButtonText: {
+    color: "#F5A689",
+    fontWeight: "bold",
   },
   container: {
     padding: 16,
@@ -157,24 +220,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: "#f9f9f9",
   },
-  barcodeContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  scanButton: {
-    backgroundColor: "#ff9900",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  scanButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
   saveButton: {
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#F5A689",
     paddingVertical: 16,
     borderRadius: 8,
     marginTop: 16,
