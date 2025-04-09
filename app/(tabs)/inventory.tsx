@@ -3,60 +3,35 @@ import { ThemedText } from "@/components/ThemedText";
 import {
   StyleSheet,
   View,
-  Image,
   Modal,
   TextInput,
   TouchableOpacity,
   Text,
   Pressable,
   ScrollView,
-} from "react-native"; // Adicione esta importação
+} from "react-native";
 import React, { useState } from "react";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
 import { ThemedView } from "@/components/ThemedView";
+import { useInventory } from "@/contexts/InventoryContext";
 
 // Cor principal (inspirada no ícone)
 const MAIN_COLOR = "#F5A689";
 const CANCEL_COLOR = "#FF364E";
 
 export default function InventoryScreen() {
-  const [items, setItems] = useState([
-    { name: "Arroz", quantity: 5 },
-    { name: "Feijão", quantity: 3 },
-    { name: "Macarrão", quantity: 8 },
-    { name: "Açúcar", quantity: 2 },
-    { name: "Sal", quantity: 4 },
-  ]);
+  const {
+    items,
+    updateItem,
+    removeItem,
+    incrementQuantity,
+    decrementQuantity,
+  } = useInventory();
 
   // Modal de "Editar Item"
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editItemName, setEditItemName] = useState("");
   const [editItemQuantity, setEditItemQuantity] = useState("1");
-
-  // Incremento e decremento
-  const incrementQuantity = (index: number) => {
-    const updatedItems = [...items];
-    updatedItems[index].quantity += 1;
-    setItems(updatedItems);
-  };
-
-  const decrementQuantity = (index: number) => {
-    const updatedItems = [...items];
-    if (updatedItems[index].quantity > 0) {
-      updatedItems[index].quantity -= 1;
-      setItems(updatedItems);
-    }
-  };
-
-  // Remover item
-  const handleRemoveItem = (index: number) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
-    setEditModalVisible(false);
-  };
 
   // Abrir modal de edição
   const openEditModal = (index: number) => {
@@ -67,14 +42,14 @@ export default function InventoryScreen() {
   };
 
   // Salvar edição
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editingIndex !== null) {
-      const updatedItems = [...items];
-      updatedItems[editingIndex] = {
+      const updatedItem = {
+        ...items[editingIndex],
         name: editItemName,
         quantity: parseInt(editItemQuantity) || 0,
       };
-      setItems(updatedItems);
+      await updateItem(editingIndex, updatedItem);
       setEditModalVisible(false);
     }
   };
@@ -131,7 +106,10 @@ export default function InventoryScreen() {
               {/* Botão Salvar */}
               <TouchableOpacity
                 style={styles.mainButton}
-                onPress={handleSaveEdit}
+                onPress={() => {
+                  handleSaveEdit();
+                  setEditModalVisible(false); // Fecha o modal
+                }}
               >
                 <Text style={styles.buttonText}>Salvar</Text>
               </TouchableOpacity>
@@ -139,9 +117,12 @@ export default function InventoryScreen() {
               {/* Botão Excluir */}
               <TouchableOpacity
                 style={[styles.mainButton, styles.deleteButton]}
-                onPress={() =>
-                  editingIndex !== null && handleRemoveItem(editingIndex)
-                }
+                onPress={() => {
+                  if (editingIndex !== null) {
+                    removeItem(editingIndex);
+                  }
+                  setEditModalVisible(false); // Fecha o modal
+                }}
               >
                 <Text style={styles.buttonText}>Excluir</Text>
               </TouchableOpacity>
@@ -149,22 +130,13 @@ export default function InventoryScreen() {
               {/* Botão Sair */}
               <TouchableOpacity
                 style={[styles.mainButton, styles.exitButton]}
-                onPress={() => setEditModalVisible(false)}
+                onPress={() => setEditModalVisible(false)} // Fecha o modal
               >
                 <Text style={styles.buttonText}>Sair</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
-
-        {/* Área de busca */}
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBox}>
-            <ThemedText style={styles.searchPlaceholder}>
-              Pesquisar...
-            </ThemedText>
-          </View>
-        </View>
 
         {/* Lista de Itens */}
         <View style={styles.listContainer}>
@@ -215,27 +187,6 @@ export default function InventoryScreen() {
 
 // Estilos
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: MAIN_COLOR, // Fundo do cabeçalho
-  },
-  headerLogo: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#FFFFFF", // Texto branco no cabeçalho
-  },
-
-  // Modal Genérico
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
@@ -270,18 +221,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     marginBottom: 10,
   },
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
-  },
-  // Botão principal (Salvar, Excluir)
   mainButton: {
     padding: 10,
     borderRadius: 6,
     alignItems: "center",
-    marginBottom: 10, // Espaçamento entre os botões
+    marginBottom: 10,
     width: "100%",
     alignSelf: "center",
     shadowColor: "#000",
@@ -300,39 +244,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   deleteButton: {
-    backgroundColor: "#FF364E", // Vermelho para o botão Excluir
+    backgroundColor: "#FF364E",
   },
   exitButton: {
-    backgroundColor: "#808080", // Cinza para o botão Sair
-    marginTop: 20, // Maior espaçamento acima do botão Sair
+    backgroundColor: "#808080",
+    marginTop: 20,
   },
-
-  // Área de busca
-  searchContainer: {
-    width: "100%",
-    alignSelf: "center",
-    marginTop: 15,
-  },
-  searchBox: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: "#202020",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-    backgroundColor: "#FFFFFF",
-  },
-  searchPlaceholder: {
-    color: "#555555",
-  },
-
-  // Lista
   listContainer: {
     flex: 1,
     width: "100%",
@@ -384,10 +301,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-
-  // Botões de + e -
   plusButton: {
-    backgroundColor: "#A3D977", // Verde mais escuro, ainda pastel
+    backgroundColor: "#A3D977",
     borderRadius: 200,
     width: 35,
     height: 35,

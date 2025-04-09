@@ -11,9 +11,11 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import { useInventory } from "@/contexts/InventoryContext";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
+  const { addItem } = useInventory();
 
   // Tela para adicionar produtos
   const AddProductScreen = () => {
@@ -22,11 +24,22 @@ export default function AddTabScreen() {
     const [quantity, setQuantity] = useState("");
     const [price, setPrice] = useState("");
 
-    const handleSaveProduct = () => {
+    const handleSaveProduct = async () => {
       if (!name.trim() || !quantity.trim()) {
         Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
         return;
       }
+
+      const newProduct = {
+        id: Date.now(),
+        name,
+        category,
+        quantity: parseInt(quantity, 10),
+        price: parseFloat(price) || 0,
+      };
+
+      await addItem(newProduct);
+
       Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
       setName("");
       setCategory("");
@@ -79,52 +92,8 @@ export default function AddTabScreen() {
     );
   };
 
-  // Tela para adicionar devedores
-  const AddDebtorScreen = () => {
-    const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
-
-    const handleSaveDebtor = () => {
-      if (!name.trim() || !amount.trim()) {
-        Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
-        return;
-      }
-      Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
-      setName("");
-      setAmount("");
-    };
-
-    return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Adicionar Devedor</Text>
-
-        <Text style={styles.label}>Nome do Devedor</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Ex: João Silva"
-        />
-
-        <Text style={styles.label}>Valor</Text>
-        <TextInput
-          style={styles.input}
-          value={amount}
-          onChangeText={setAmount}
-          placeholder="Ex: 150.00"
-          keyboardType="decimal-pad"
-        />
-
-        <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Salvar Devedor</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Tabs na parte superior */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[
@@ -142,26 +111,9 @@ export default function AddTabScreen() {
             Produto
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === "debtor" && styles.activeTabButton,
-          ]}
-          onPress={() => setActiveTab("debtor")}
-        >
-          <Text
-            style={[
-              styles.tabButtonText,
-              activeTab === "debtor" && styles.activeTabButtonText,
-            ]}
-          >
-            Devedor
-          </Text>
-        </TouchableOpacity>
       </View>
 
-      {/* Conteúdo da aba ativa */}
-      {activeTab === "product" ? <AddProductScreen /> : <AddDebtorScreen />}
+      {activeTab === "product" && <AddProductScreen />}
     </SafeAreaView>
   );
 }
