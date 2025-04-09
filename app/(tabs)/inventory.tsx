@@ -1,5 +1,5 @@
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemedText } from "@/components/ThemedText";
 import {
   StyleSheet,
   View,
@@ -10,14 +10,15 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useInventory } from "@/contexts/InventoryContext";
 
-// Cor principal (inspirada no ícone)
+// Constants
 const MAIN_COLOR = "#F5A689";
 const CANCEL_COLOR = "#FF364E";
 
+// Main Component
 export default function InventoryScreen() {
   const {
     items,
@@ -27,13 +28,14 @@ export default function InventoryScreen() {
     decrementQuantity,
   } = useInventory();
 
-  // Modal de "Editar Item"
+  // State
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editItemName, setEditItemName] = useState("");
   const [editItemQuantity, setEditItemQuantity] = useState("1");
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
-  // Abrir modal de edição
+  // Handlers
   const openEditModal = (index: number) => {
     setEditingIndex(index);
     setEditItemName(items[index].name);
@@ -41,7 +43,6 @@ export default function InventoryScreen() {
     setEditModalVisible(true);
   };
 
-  // Salvar edição
   const handleSaveEdit = async () => {
     if (editingIndex !== null) {
       const updatedItem = {
@@ -54,139 +55,197 @@ export default function InventoryScreen() {
     }
   };
 
+  // Filtered items based on search query
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}
-    >
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          padding: 20,
-          gap: 16,
-        }}
-      >
-        <ThemedView
-          style={{
-            flexDirection: "row",
-            gap: 8,
-            backgroundColor: "transparent",
-          }}
-        >
-          <ThemedText type="title" style={{ color: "#202020" }}>
-            Inventário
-          </ThemedText>
-        </ThemedView>
-
-        {/* Modal de Editar Item */}
-        <Modal
-          animationType="slide"
-          transparent={true}
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Header />
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <EditItemModal
           visible={editModalVisible}
-          onRequestClose={() => setEditModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Editar Item</Text>
-              <TextInput
-                placeholder="Nome do item"
-                value={editItemName}
-                onChangeText={setEditItemName}
-                style={styles.modalInput}
-              />
-              <TextInput
-                placeholder="Quantidade"
-                value={editItemQuantity}
-                onChangeText={setEditItemQuantity}
-                keyboardType="numeric"
-                style={styles.modalInput}
-              />
-
-              {/* Botão Salvar */}
-              <TouchableOpacity
-                style={styles.mainButton}
-                onPress={() => {
-                  handleSaveEdit();
-                  setEditModalVisible(false); // Fecha o modal
-                }}
-              >
-                <Text style={styles.buttonText}>Salvar</Text>
-              </TouchableOpacity>
-
-              {/* Botão Excluir */}
-              <TouchableOpacity
-                style={[styles.mainButton, styles.deleteButton]}
-                onPress={() => {
-                  if (editingIndex !== null) {
-                    removeItem(editingIndex);
-                  }
-                  setEditModalVisible(false); // Fecha o modal
-                }}
-              >
-                <Text style={styles.buttonText}>Excluir</Text>
-              </TouchableOpacity>
-
-              {/* Botão Sair */}
-              <TouchableOpacity
-                style={[styles.mainButton, styles.exitButton]}
-                onPress={() => setEditModalVisible(false)} // Fecha o modal
-              >
-                <Text style={styles.buttonText}>Sair</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
-        {/* Lista de Itens */}
-        <View style={styles.listContainer}>
-          <ThemedText style={styles.listTitle}>Lista de Itens</ThemedText>
-          {items.map((item, index) => (
-            <Pressable
-              key={index}
-              onPress={() => openEditModal(index)}
-              style={styles.listItem}
-            >
-              <View
-                style={{ flexDirection: "column", alignItems: "flex-start" }}
-              >
-                <ThemedText style={styles.listItemTexBold}>
-                  {item.name}
-                </ThemedText>
-                <ThemedText style={styles.listItemText}>
-                  quantidade:{" "}
-                  <ThemedText style={styles.listItemTexBold}>
-                    {item.quantity}
-                  </ThemedText>
-                </ThemedText>
-              </View>
-              <View style={styles.actionsContainer}>
-                {/* Botão + */}
-                <TouchableOpacity
-                  style={[styles.plusButton, { marginLeft: 5 }]}
-                  onPress={() => incrementQuantity(index)}
-                >
-                  <Text style={styles.buttonText}>+</Text>
-                </TouchableOpacity>
-
-                {/* Botão - */}
-                <TouchableOpacity
-                  style={[styles.minusButton, { marginLeft: 5 }]}
-                  onPress={() => decrementQuantity(index)}
-                >
-                  <Text style={styles.buttonText}>-</Text>
-                </TouchableOpacity>
-              </View>
-            </Pressable>
-          ))}
-        </View>
+          onClose={() => setEditModalVisible(false)}
+          itemName={editItemName}
+          setItemName={setEditItemName}
+          itemQuantity={editItemQuantity}
+          setItemQuantity={setEditItemQuantity}
+          onSave={handleSaveEdit}
+          onDelete={() => {
+            if (editingIndex !== null) removeItem(editingIndex);
+            setEditModalVisible(false);
+          }}
+        />
+        <ItemList
+          items={filteredItems}
+          onEdit={openEditModal}
+          onIncrement={incrementQuantity}
+          onDecrement={decrementQuantity}
+        />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-// Estilos
+// Subcomponents
+const Header = () => (
+  <ThemedView style={styles.header}>
+    <ThemedText type="title" style={styles.headerText}>
+      Inventário
+    </ThemedText>
+  </ThemedView>
+);
+
+const SearchBar = ({
+  searchQuery,
+  setSearchQuery,
+}: {
+  searchQuery: string;
+  setSearchQuery: (text: string) => void;
+}) => (
+  <TextInput
+    style={styles.searchBar}
+    placeholder="Pesquisar por nome do item..."
+    value={searchQuery}
+    onChangeText={setSearchQuery}
+  />
+);
+
+const EditItemModal = ({
+  visible,
+  onClose,
+  itemName,
+  setItemName,
+  itemQuantity,
+  setItemQuantity,
+  onSave,
+  onDelete,
+}: {
+  visible: boolean;
+  onClose: () => void;
+  itemName: string;
+  setItemName: (text: string) => void;
+  itemQuantity: string;
+  setItemQuantity: (text: string) => void;
+  onSave: () => void;
+  onDelete: () => void;
+}) => (
+  <Modal
+    animationType="slide"
+    transparent={true}
+    visible={visible}
+    onRequestClose={onClose}
+  >
+    <View style={styles.modalOverlay}>
+      <View style={styles.modalContainer}>
+        <Text style={styles.modalTitle}>Editar Item</Text>
+        <TextInput
+          placeholder="Nome do item"
+          value={itemName}
+          onChangeText={setItemName}
+          style={styles.modalInput}
+        />
+        <TextInput
+          placeholder="Quantidade"
+          value={itemQuantity}
+          onChangeText={setItemQuantity}
+          keyboardType="numeric"
+          style={styles.modalInput}
+        />
+        <TouchableOpacity style={styles.mainButton} onPress={onSave}>
+          <Text style={styles.buttonText}>Salvar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.mainButton, styles.deleteButton]}
+          onPress={onDelete}
+        >
+          <Text style={styles.buttonText}>Excluir</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.mainButton, styles.exitButton]}
+          onPress={onClose}
+        >
+          <Text style={styles.buttonText}>Sair</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+);
+
+const ItemList = ({
+  items,
+  onEdit,
+  onIncrement,
+  onDecrement,
+}: {
+  items: { name: string; quantity: number }[];
+  onEdit: (index: number) => void;
+  onIncrement: (index: number) => void;
+  onDecrement: (index: number) => void;
+}) => (
+  <View style={styles.listContainer}>
+    <ThemedText style={styles.listTitle}>Lista de Itens</ThemedText>
+    {items.map((item, index) => (
+      <Pressable
+        key={index}
+        onPress={() => onEdit(index)}
+        style={styles.listItem}
+      >
+        <View style={styles.listItemDetails}>
+          <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
+          <ThemedText style={styles.listItemText}>
+            quantidade:{" "}
+            <ThemedText style={styles.listItemTexBold}>
+              {item.quantity}
+            </ThemedText>
+          </ThemedText>
+        </View>
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity
+            style={styles.plusButton}
+            onPress={() => onIncrement(index)}
+          >
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.minusButton}
+            onPress={() => onDecrement(index)}
+          >
+            <Text style={styles.buttonText}>-</Text>
+          </TouchableOpacity>
+        </View>
+      </Pressable>
+    ))}
+  </View>
+);
+
+// Styles
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    padding: 20,
+    gap: 16,
+  },
+  header: {
+    flexDirection: "row",
+    gap: 8,
+    backgroundColor: "transparent",
+  },
+  headerText: {
+    color: "#202020",
+  },
+  searchBar: {
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+    marginBottom: 10,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
@@ -210,14 +269,6 @@ const styles = StyleSheet.create({
     borderColor: "#DDD",
     borderRadius: 10,
     padding: 10,
-    shadowColor: "#202020",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
     backgroundColor: "#FFFFFF",
     marginBottom: 10,
   },
@@ -226,22 +277,11 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     alignItems: "center",
     marginBottom: 10,
-    width: "100%",
-    alignSelf: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     backgroundColor: "#A3D977",
   },
   buttonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
-    textAlign: "center",
   },
   deleteButton: {
     backgroundColor: "#FF364E",
@@ -252,11 +292,8 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    width: "100%",
-    alignSelf: "center",
     marginTop: 10,
     gap: 10,
-    paddingBottom: 40,
   },
   listTitle: {
     fontSize: 18,
@@ -275,20 +312,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderRadius: 10,
-    shadowColor: "#202020",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
     backgroundColor: "#FFFFFF",
     marginBottom: 5,
-    width: "100%",
-    alignSelf: "center",
-    position: "relative",
-    zIndex: 1,
+  },
+  listItemDetails: {
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
   listItemTexBold: {
     color: "#333333",
@@ -300,41 +329,22 @@ const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 5,
   },
   plusButton: {
     backgroundColor: "#A3D977",
     borderRadius: 200,
     width: 35,
     height: 35,
-    display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   minusButton: {
     backgroundColor: CANCEL_COLOR,
     borderRadius: 200,
     width: 35,
     height: 35,
-    display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
 });
