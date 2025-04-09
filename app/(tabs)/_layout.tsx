@@ -14,16 +14,19 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "#4D9FFF", // Cor da aba selecionada
+        tabBarInactiveTintColor: "#C0C0C0", // Cor da aba não selecionada
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: "absolute",
+            backgroundColor: Colors[colorScheme ?? "light"].background, // Set background color
           },
-          default: {},
+          default: {
+            backgroundColor: Colors[colorScheme ?? "light"].background, // Set background color
+          },
         }),
       }}
     >
@@ -55,11 +58,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="category"
+        name="debtors"
         options={{
-          title: "Categorias",
+          title: "Devedores",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="tag.fill" color={color} />
+            <IconSymbol size={28} name="creditcard.fill" color={color} />
           ),
         }}
       />
