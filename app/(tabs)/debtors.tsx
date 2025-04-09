@@ -1,129 +1,222 @@
-import { StyleSheet, Image, Platform } from "react-native";
+// MommyStockHub/screens/DebtorsScreen.tsx
 
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+} from "react-native";
+
+type Debtor = {
+  id: string;
+  name: string;
+  amount: number;
+  status: "open" | "paid";
+};
 
 export default function DebtorsScreen() {
+  const [debtors, setDebtors] = useState<Debtor[]>([
+    { id: "1", name: "Cliente A", amount: 100, status: "open" },
+    { id: "2", name: "Cliente B", amount: 200, status: "paid" },
+  ]);
+
+  // Marcar como pago
+  const handleMarkAsPaid = (debtorId: string) => {
+    setDebtors((prev) =>
+      prev.map((d) => (d.id === debtorId ? { ...d, status: "paid" } : d))
+    );
+  };
+
+  // Excluir devedor
+  const handleDelete = (debtorId: string) => {
+    Alert.alert(
+      "Excluir Devedor",
+      "Tem certeza que deseja excluir este devedor?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => {
+            setDebtors((prev) => prev.filter((d) => d.id !== debtorId));
+          },
+        },
+      ]
+    );
+  };
+
+  // Navegar para tela de adicionar devedor
+  const handleAddDebtor = () => {
+    Alert.alert(
+      "Adicionar Devedor",
+      "Navegar para tela ou abrir modal de cadastro."
+    );
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Devedores</Text>
+
+        <FlatList
+          data={debtors}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <Text style={styles.emptyList}>
+              Nenhum devedor cadastrado no momento.
+            </Text>
+          }
+          renderItem={({ item }) => (
+            <View style={styles.debtorCard}>
+              <View style={styles.debtorInfo}>
+                <Text style={styles.debtorName}>{item.name}</Text>
+                <Text style={styles.debtorAmount}>
+                  Valor: R$ {item.amount.toFixed(2)}
+                </Text>
+                <Text
+                  style={[
+                    styles.debtorStatus,
+                    item.status === "open"
+                      ? styles.statusOpen
+                      : styles.statusPaid,
+                  ]}
+                >
+                  {item.status === "open" ? "Em Aberto" : "Pago"}
+                </Text>
+              </View>
+              <View style={styles.actions}>
+                {item.status === "open" && (
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.markPaidButton]}
+                    onPress={() => handleMarkAsPaid(item.id)}
+                  >
+                    <Text style={styles.actionButtonText}>Marcar Pago</Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.deleteButton]}
+                  onPress={() => handleDelete(item.id)}
+                >
+                  <Text style={styles.actionButtonText}>Excluir</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>
-        This app includes example code to help you get started.
-      </ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          and{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{" "}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the
-          web version, press <ThemedText type="defaultSemiBold">w</ThemedText>{" "}
-          in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the{" "}
-          <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to
-          provide files for different screen densities
-        </ThemedText>
-        <Image
-          source={require("@/assets/images/react-logo.png")}
-          style={{ alignSelf: "center" }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText>{" "}
-          to see how to load{" "}
-          <ThemedText style={{ fontFamily: "SpaceMono" }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook
-          lets you inspect what the user's current color scheme is, and so you
-          can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">
-            components/HelloWave.tsx
-          </ThemedText>{" "}
-          component uses the powerful{" "}
-          <ThemedText type="defaultSemiBold">
-            react-native-reanimated
-          </ThemedText>{" "}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The{" "}
-              <ThemedText type="defaultSemiBold">
-                components/ParallaxScrollView.tsx
-              </ThemedText>{" "}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+
+        <TouchableOpacity style={styles.addButton} onPress={handleAddDebtor}>
+          <Text style={styles.addButtonText}>Adicionar Devedor</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
   },
-  titleContainer: {
+  container: {
+    flex: 1,
+    paddingTop: 24,
+    paddingHorizontal: 16,
+    backgroundColor: "#f8f9fa",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+    color: "#333",
+  },
+  listContainer: {
+    paddingBottom: 16,
+  },
+  emptyList: {
+    textAlign: "center",
+    marginTop: 20,
+    color: "#999",
+    fontSize: 16,
+    fontStyle: "italic",
+  },
+  debtorCard: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 12,
     flexDirection: "row",
-    gap: 8,
+    justifyContent: "space-between",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  debtorInfo: {
+    flex: 1,
+  },
+  debtorName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  debtorAmount: {
+    fontSize: 14,
+    marginVertical: 4,
+    color: "#555",
+  },
+  debtorStatus: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  statusOpen: {
+    color: "#FF6347", // Vermelho para "Em Aberto"
+  },
+  statusPaid: {
+    color: "#32CD32", // Verde para "Pago"
+  },
+  actions: {
+    flexDirection: "row",
+  },
+  actionButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  markPaidButton: {
+    backgroundColor: "#1E90FF",
+  },
+  deleteButton: {
+    backgroundColor: "#FF6347",
+  },
+  actionButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  addButton: {
+    backgroundColor: "#1E90FF",
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginTop: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  addButtonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: 16,
   },
 });

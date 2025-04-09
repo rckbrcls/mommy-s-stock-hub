@@ -29,11 +29,6 @@ export default function InventoryScreen() {
     { name: "Sal", quantity: 4 },
   ]);
 
-  // Modal de "Adicionar Item"
-  const [modalVisible, setModalVisible] = useState(false);
-  const [newItemName, setNewItemName] = useState("");
-  const [newItemQuantity, setNewItemQuantity] = useState("1");
-
   // Modal de "Editar Item"
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -53,18 +48,6 @@ export default function InventoryScreen() {
       updatedItems[index].quantity -= 1;
       setItems(updatedItems);
     }
-  };
-
-  // Adicionar item
-  const handleAddItem = () => {
-    const newItem = {
-      name: newItemName || "Novo Item",
-      quantity: parseInt(newItemQuantity) || 1,
-    };
-    setItems([...items, newItem]);
-    setNewItemName("");
-    setNewItemQuantity("1");
-    setModalVisible(false);
   };
 
   // Remover item
@@ -121,49 +104,6 @@ export default function InventoryScreen() {
           </ThemedText>
         </ThemedView>
 
-        {/* Modal de Adicionar Item */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Novo Item</Text>
-              <TextInput
-                placeholder="Nome do item"
-                value={newItemName}
-                onChangeText={setNewItemName}
-                style={styles.modalInput}
-              />
-              <TextInput
-                placeholder="Quantidade"
-                value={newItemQuantity}
-                onChangeText={setNewItemQuantity}
-                keyboardType="numeric"
-                style={styles.modalInput}
-              />
-
-              {/* Botão Adicionar */}
-              <TouchableOpacity
-                style={styles.mainButton}
-                onPress={handleAddItem}
-              >
-                <Text style={styles.buttonText}>Adicionar</Text>
-              </TouchableOpacity>
-
-              {/* Botão Sair (sem ação adicional) */}
-              <TouchableOpacity
-                style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.buttonText}>Sair</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
         {/* Modal de Editar Item */}
         <Modal
           animationType="slide"
@@ -206,7 +146,7 @@ export default function InventoryScreen() {
                 <Text style={styles.buttonText}>Excluir</Text>
               </TouchableOpacity>
 
-              {/* Botão Sair (sem ação adicional) */}
+              {/* Botão Sair */}
               <TouchableOpacity
                 style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
                 onPress={() => setEditModalVisible(false)}
@@ -225,14 +165,6 @@ export default function InventoryScreen() {
             </ThemedText>
           </View>
         </View>
-
-        {/* Botão de Adicionar Item */}
-        <TouchableOpacity
-          style={[styles.mainButton, { width: "100%" }]}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.buttonText}>Adicionar Item</Text>
-        </TouchableOpacity>
 
         {/* Lista de Itens */}
         <View style={styles.listContainer}>
