@@ -17,7 +17,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import { ThemedView } from "@/components/ThemedView";
 
 // Cor principal (inspirada no ícone)
-const MAIN_COLOR = "#4D9FFF";
+const MAIN_COLOR = "#F5A689";
 const CANCEL_COLOR = "#FF364E";
 
 export default function InventoryScreen() {
@@ -138,7 +138,7 @@ export default function InventoryScreen() {
 
               {/* Botão Excluir */}
               <TouchableOpacity
-                style={styles.mainButton}
+                style={[styles.mainButton, styles.deleteButton]}
                 onPress={() =>
                   editingIndex !== null && handleRemoveItem(editingIndex)
                 }
@@ -148,7 +148,7 @@ export default function InventoryScreen() {
 
               {/* Botão Sair */}
               <TouchableOpacity
-                style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
+                style={[styles.mainButton, styles.exitButton]}
                 onPress={() => setEditModalVisible(false)}
               >
                 <Text style={styles.buttonText}>Sair</Text>
@@ -276,13 +276,12 @@ const styles = StyleSheet.create({
     left: -35,
     position: "absolute",
   },
-  // Botão principal (Adicionar, Salvar, Excluir, Sair)
+  // Botão principal (Salvar, Excluir)
   mainButton: {
-    backgroundColor: MAIN_COLOR,
     padding: 10,
     borderRadius: 6,
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: 10, // Espaçamento entre os botões
     width: "100%",
     alignSelf: "center",
     shadowColor: "#000",
@@ -293,11 +292,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    backgroundColor: "#A3D977",
   },
   buttonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  deleteButton: {
+    backgroundColor: "#FF364E", // Vermelho para o botão Excluir
+  },
+  exitButton: {
+    backgroundColor: "#808080", // Cinza para o botão Sair
+    marginTop: 20, // Maior espaçamento acima do botão Sair
   },
 
   // Área de busca
@@ -380,7 +387,7 @@ const styles = StyleSheet.create({
 
   // Botões de + e -
   plusButton: {
-    backgroundColor: MAIN_COLOR,
+    backgroundColor: "#A3D977", // Verde mais escuro, ainda pastel
     borderRadius: 200,
     width: 35,
     height: 35,
