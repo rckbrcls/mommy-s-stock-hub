@@ -33,6 +33,8 @@ export default function InventoryScreen() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editItemName, setEditItemName] = useState("");
   const [editItemQuantity, setEditItemQuantity] = useState("1");
+  const [editItemCategory, setEditItemCategory] = useState("");
+  const [editItemPrice, setEditItemPrice] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   // Handlers
@@ -40,6 +42,8 @@ export default function InventoryScreen() {
     setEditingIndex(index);
     setEditItemName(items[index].name);
     setEditItemQuantity(items[index].quantity.toString());
+    setEditItemCategory(items[index].category || "");
+    setEditItemPrice(items[index].price?.toString() || "");
     setEditModalVisible(true);
   };
 
@@ -49,6 +53,8 @@ export default function InventoryScreen() {
         ...items[editingIndex],
         name: editItemName,
         quantity: parseInt(editItemQuantity) || 0,
+        category: editItemCategory,
+        price: parseFloat(editItemPrice) || 0,
       };
       await updateItem(editingIndex, updatedItem);
       setEditModalVisible(false);
@@ -72,6 +78,10 @@ export default function InventoryScreen() {
           setItemName={setEditItemName}
           itemQuantity={editItemQuantity}
           setItemQuantity={setEditItemQuantity}
+          itemCategory={editItemCategory}
+          setItemCategory={setEditItemCategory}
+          itemPrice={editItemPrice}
+          setItemPrice={setEditItemPrice}
           onSave={handleSaveEdit}
           onDelete={() => {
             if (editingIndex !== null) removeItem(editingIndex);
@@ -120,6 +130,10 @@ const EditItemModal = ({
   setItemName,
   itemQuantity,
   setItemQuantity,
+  itemCategory,
+  setItemCategory,
+  itemPrice,
+  setItemPrice,
   onSave,
   onDelete,
 }: {
@@ -129,6 +143,10 @@ const EditItemModal = ({
   setItemName: (text: string) => void;
   itemQuantity: string;
   setItemQuantity: (text: string) => void;
+  itemCategory: string;
+  setItemCategory: (text: string) => void;
+  itemPrice: string;
+  setItemPrice: (text: string) => void;
   onSave: () => void;
   onDelete: () => void;
 }) => (
@@ -141,12 +159,16 @@ const EditItemModal = ({
     <View style={styles.modalOverlay}>
       <View style={styles.modalContainer}>
         <Text style={styles.modalTitle}>Editar Item</Text>
+
+        <Text style={styles.modalLabel}>Nome do Item</Text>
         <TextInput
           placeholder="Nome do item"
           value={itemName}
           onChangeText={setItemName}
           style={styles.modalInput}
         />
+
+        <Text style={styles.modalLabel}>Quantidade</Text>
         <TextInput
           placeholder="Quantidade"
           value={itemQuantity}
@@ -154,6 +176,24 @@ const EditItemModal = ({
           keyboardType="numeric"
           style={styles.modalInput}
         />
+
+        <Text style={styles.modalLabel}>Categoria</Text>
+        <TextInput
+          placeholder="Categoria"
+          value={itemCategory}
+          onChangeText={setItemCategory}
+          style={styles.modalInput}
+        />
+
+        <Text style={styles.modalLabel}>Preço</Text>
+        <TextInput
+          placeholder="Preço"
+          value={itemPrice}
+          onChangeText={setItemPrice}
+          keyboardType="decimal-pad"
+          style={styles.modalInput}
+        />
+
         <TouchableOpacity style={styles.mainButton} onPress={onSave}>
           <Text style={styles.buttonText}>Salvar</Text>
         </TouchableOpacity>
@@ -180,7 +220,12 @@ const ItemList = ({
   onIncrement,
   onDecrement,
 }: {
-  items: { name: string; quantity: number }[];
+  items: {
+    name: string;
+    quantity: number;
+    category?: string;
+    price?: number;
+  }[];
   onEdit: (index: number) => void;
   onIncrement: (index: number) => void;
   onDecrement: (index: number) => void;
@@ -196,11 +241,27 @@ const ItemList = ({
         <View style={styles.listItemDetails}>
           <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
           <ThemedText style={styles.listItemText}>
-            quantidade:{" "}
+            Quantidade:{" "}
             <ThemedText style={styles.listItemTexBold}>
               {item.quantity}
             </ThemedText>
           </ThemedText>
+          {item.category && (
+            <ThemedText style={styles.listItemText}>
+              Categoria:{" "}
+              <ThemedText style={styles.listItemTexBold}>
+                {item.category}
+              </ThemedText>
+            </ThemedText>
+          )}
+          {item.price !== undefined && (
+            <ThemedText style={styles.listItemText}>
+              Preço:{" "}
+              <ThemedText style={styles.listItemTexBold}>
+                R$ {item.price.toFixed(2)}
+              </ThemedText>
+            </ThemedText>
+          )}
         </View>
         <View style={styles.actionsContainer}>
           <TouchableOpacity
@@ -263,6 +324,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
     color: MAIN_COLOR,
+  },
+  modalLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 4,
   },
   modalInput: {
     borderWidth: 1,

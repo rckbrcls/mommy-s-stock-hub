@@ -1,27 +1,44 @@
 // MommyStockHub/screens/HomeScreen.tsx
 
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import {
   View,
   Text,
-  FlatList,
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   Image,
 } from "react-native";
-
-type Product = {
-  id: string;
-  name: string;
-  quantity: number;
-};
+import { useInventory } from "../../contexts/InventoryContext";
+import { useDebtors } from "../../contexts/DebtorContext";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const [lowStock, setLowStock] = useState<Product[]>([]);
+  const { items } = useInventory();
+  const { debtors } = useDebtors();
+
+  // Calcular dados dinâmicos
+  const totalProducts = items.length;
+  const totalCategories = useMemo(() => {
+    const categories = new Set(
+      items.map((item) => item.category || "Sem Categoria")
+    );
+    return categories.size;
+  }, [items]);
+  const lowStock = useMemo(
+    () => items.filter((item) => item.quantity < 5),
+    [items]
+  );
+
+  // Maiores devedores
+  const topDebtors = useMemo(() => {
+    return debtors
+      .filter((debtor) => debtor.status === "open")
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 3); // Pegar os 3 maiores devedores
+  }, [debtors]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -35,25 +52,26 @@ export default function HomeScreen() {
           }}
         >
           <Image
-            source={require("../../assets/images/logo.png")} // Caminho relativo ao arquivo atual
+            source={require("../../assets/images/logo.png")}
             style={{ width: 100, height: 100 }}
           />
           <Text style={[styles.title, { flexShrink: 1, textAlign: "left" }]}>
             Bem-vindo(a) ao Mommy Stock Hub!
           </Text>
         </View>
+
         {/* Seção de resumo */}
         <View style={styles.summaryContainer}>
           <View style={styles.summaryCard}>
-            <Text style={styles.summaryValue}>50</Text>
+            <Text style={styles.summaryValue}>{totalProducts}</Text>
             <Text style={styles.summaryLabel}>Produtos</Text>
           </View>
           <View style={styles.summaryCard}>
-            <Text style={styles.summaryValue}>5</Text>
+            <Text style={styles.summaryValue}>{totalCategories}</Text>
             <Text style={styles.summaryLabel}>Categorias</Text>
           </View>
           <View style={styles.summaryCard}>
-            <Text style={styles.summaryValue}>3</Text>
+            <Text style={styles.summaryValue}>{lowStock.length}</Text>
             <Text style={styles.summaryLabel}>Em Falta</Text>
           </View>
         </View>
@@ -79,29 +97,38 @@ export default function HomeScreen() {
               Nenhum produto em falta por enquanto.
             </Text>
           )}
-        </View>
-
-        {/* Botões principais */}
-        <View style={styles.buttonsContainer}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("inventory" as never)}
           >
             <Text style={styles.buttonText}>Ver Estoque</Text>
           </TouchableOpacity>
+        </View>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("add" as never)}
-          >
-            <Text style={styles.buttonText}>Adicionar Produto</Text>
-          </TouchableOpacity>
-
+        {/* Resumo de devedores */}
+        <View style={styles.lowStockSection}>
+          <Text style={styles.sectionTitle}>💰 Maiores Devedores:</Text>
+          {topDebtors.length > 0 ? (
+            <View style={styles.lowStockContainer}>
+              {topDebtors.map((debtor) => (
+                <View key={debtor.id} style={styles.lowStockCard}>
+                  <Text style={styles.lowStockName}>{debtor.name}</Text>
+                  <Text style={styles.lowStockQuantity}>
+                    Valor: R$ {debtor.amount.toFixed(2)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.emptyList}>
+              Nenhum devedor pendente no momento.
+            </Text>
+          )}
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("debtors" as never)}
           >
-            <Text style={styles.buttonText}>Devedores</Text>
+            <Text style={styles.buttonText}>Ver Devedores</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -117,14 +144,12 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingHorizontal: 16,
-    paddingTop: 24,
-    paddingBottom: 16,
+    paddingBottom: 60,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#333",
-
     textAlign: "left",
   },
   summaryContainer: {
@@ -178,7 +203,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   lowStockCard: {
-    flexBasis: "48%", // Dois cards por linha
+    flexBasis: "48%",
     backgroundColor: "#fff",
     padding: 16,
     borderRadius: 8,
@@ -216,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5A689",
     paddingVertical: 14,
     borderRadius: 8,
-    marginBottom: 16,
+    marginTop: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
