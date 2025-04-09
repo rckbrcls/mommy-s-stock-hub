@@ -23,11 +23,11 @@ export default function AddTabScreen() {
   const AddProductScreen = () => {
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [price, setPrice] = useState("");
+    const [quantity, setQuantity] = useState<number | null>(null);
+    const [price, setPrice] = useState<string>("");
 
     const handleSaveProduct = async () => {
-      if (!name.trim() || !quantity.trim()) {
+      if (!name.trim() || quantity === null) {
         Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
         return;
       }
@@ -36,8 +36,8 @@ export default function AddTabScreen() {
         id: Date.now(),
         name,
         category,
-        quantity: parseInt(quantity, 10),
-        price: parseFloat(price) || 0,
+        quantity,
+        price: parseFloat(price.replace("R$", "").replace(",", ".")) || 0,
       };
 
       await addItem(newProduct);
@@ -45,8 +45,23 @@ export default function AddTabScreen() {
       Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
       setName("");
       setCategory("");
-      setQuantity("");
+      setQuantity(null);
       setPrice("");
+    };
+
+    const handleQuantityChange = (value: string) => {
+      const numericValue = value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
+      setQuantity(numericValue ? parseInt(numericValue, 10) : null);
+    };
+
+    const handlePriceChange = (value: string) => {
+      const numericValue = value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
+      if (numericValue) {
+        const formattedValue = (parseFloat(numericValue) / 100).toFixed(2); // Divide por 100 para formatar como moeda
+        setPrice(`R$ ${formattedValue.replace(".", ",")}`);
+      } else {
+        setPrice("");
+      }
     };
 
     return (
@@ -72,8 +87,8 @@ export default function AddTabScreen() {
         <Text style={styles.label}>Quantidade</Text>
         <TextInput
           style={styles.input}
-          value={quantity}
-          onChangeText={setQuantity}
+          value={quantity !== null ? quantity.toString() : ""}
+          onChangeText={handleQuantityChange}
           placeholder="Ex: 10"
           keyboardType="numeric"
         />
@@ -82,9 +97,9 @@ export default function AddTabScreen() {
         <TextInput
           style={styles.input}
           value={price}
-          onChangeText={setPrice}
-          placeholder="Ex: 5.99"
-          keyboardType="decimal-pad"
+          onChangeText={handlePriceChange}
+          placeholder="Ex: R$ 5,99"
+          keyboardType="numeric"
         />
 
         <TouchableOpacity onPress={handleSaveProduct} style={styles.saveButton}>
@@ -97,7 +112,7 @@ export default function AddTabScreen() {
   // Tela para adicionar devedores
   const AddDebtorScreen = () => {
     const [name, setName] = useState("");
-    const [amount, setAmount] = useState("");
+    const [amount, setAmount] = useState<string>("");
 
     const handleSaveDebtor = async () => {
       if (!name.trim() || !amount.trim()) {
@@ -108,7 +123,7 @@ export default function AddTabScreen() {
       const newDebtor = {
         id: Date.now(),
         name,
-        amount: parseFloat(amount),
+        amount: parseFloat(amount.replace("R$", "").replace(",", ".")) || 0,
         status: "open" as "open", // Status inicial como "Em Aberto"
       };
 
@@ -117,6 +132,16 @@ export default function AddTabScreen() {
       Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
       setName("");
       setAmount("");
+    };
+
+    const handleAmountChange = (value: string) => {
+      const numericValue = value.replace(/[^0-9]/g, ""); // Remove caracteres não numéricos
+      if (numericValue) {
+        const formattedValue = (parseFloat(numericValue) / 100).toFixed(2); // Divide por 100 para formatar como moeda
+        setAmount(`R$ ${formattedValue.replace(".", ",")}`);
+      } else {
+        setAmount("");
+      }
     };
 
     return (
@@ -135,9 +160,9 @@ export default function AddTabScreen() {
         <TextInput
           style={styles.input}
           value={amount}
-          onChangeText={setAmount}
-          placeholder="Ex: 100.00"
-          keyboardType="decimal-pad"
+          onChangeText={handleAmountChange}
+          placeholder="Ex: R$ 100,00"
+          keyboardType="numeric"
         />
 
         <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
