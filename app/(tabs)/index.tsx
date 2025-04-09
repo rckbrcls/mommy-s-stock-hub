@@ -1,129 +1,232 @@
-import { StyleSheet, Image, Platform } from "react-native";
+// MommyStockHub/screens/HomeScreen.tsx
 
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useNavigation } from "expo-router";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  Image,
+} from "react-native";
+
+type Product = {
+  id: string;
+  name: string;
+  quantity: number;
+};
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+  const [lowStock, setLowStock] = useState<Product[]>([]);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>
-        This app includes example code to help you get started.
-      </ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          and{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{" "}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the
-          web version, press <ThemedText type="defaultSemiBold">w</ThemedText>{" "}
-          in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the{" "}
-          <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to
-          provide files for different screen densities
-        </ThemedText>
-        <Image
-          source={require("@/assets/images/react-logo.png")}
-          style={{ alignSelf: "center" }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText>{" "}
-          to see how to load{" "}
-          <ThemedText style={{ fontFamily: "SpaceMono" }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook
-          lets you inspect what the user's current color scheme is, and so you
-          can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">
-            components/HelloWave.tsx
-          </ThemedText>{" "}
-          component uses the powerful{" "}
-          <ThemedText type="defaultSemiBold">
-            react-native-reanimated
-          </ThemedText>{" "}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The{" "}
-              <ThemedText type="defaultSemiBold">
-                components/ParallaxScrollView.tsx
-              </ThemedText>{" "}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View
+          style={{
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "row",
+            paddingBottom: 20,
+          }}
+        >
+          <Image
+            source={require("../../assets/images/logo.png")} // Caminho relativo ao arquivo atual
+            style={{ width: 100, height: 100 }}
+          />
+          <Text style={[styles.title, { flexShrink: 1, textAlign: "left" }]}>
+            Bem-vindo(a) ao Mommy Stock Hub!
+          </Text>
+        </View>
+        {/* Seção de resumo */}
+        <View style={styles.summaryContainer}>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryValue}>50</Text>
+            <Text style={styles.summaryLabel}>Produtos</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryValue}>5</Text>
+            <Text style={styles.summaryLabel}>Categorias</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryValue}>3</Text>
+            <Text style={styles.summaryLabel}>Em Falta</Text>
+          </View>
+        </View>
+
+        {/* Lista de produtos com baixo estoque */}
+        <View style={styles.lowStockSection}>
+          <Text style={styles.sectionTitle}>
+            📉 Produtos com baixo estoque:
+          </Text>
+          {lowStock.length > 0 ? (
+            <View style={styles.lowStockContainer}>
+              {lowStock.map((item) => (
+                <View key={item.id} style={styles.lowStockCard}>
+                  <Text style={styles.lowStockName}>{item.name}</Text>
+                  <Text style={styles.lowStockQuantity}>
+                    Qtd: {item.quantity}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.emptyList}>
+              Nenhum produto em falta por enquanto.
+            </Text>
+          )}
+        </View>
+
+        {/* Botões principais */}
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("inventory" as never)}
+          >
+            <Text style={styles.buttonText}>Ver Estoque</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("add" as never)}
+          >
+            <Text style={styles.buttonText}>Adicionar Produto</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("debtors" as never)}
+          >
+            <Text style={styles.buttonText}>Devedores</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
   },
-  titleContainer: {
+  scrollContainer: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+    paddingBottom: 16,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+
+    textAlign: "left",
+  },
+  summaryContainer: {
     flexDirection: "row",
-    gap: 8,
+    justifyContent: "space-between",
+    marginBottom: 24,
+  },
+  summaryCard: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 16,
+    marginHorizontal: 4,
+    borderRadius: 8,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  summaryValue: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1E90FF",
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: "#666",
+  },
+  lowStockSection: {
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 8,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1E90FF",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  lowStockContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  lowStockCard: {
+    flexBasis: "48%", // Dois cards por linha
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 12,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  lowStockName: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  lowStockQuantity: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+  },
+  emptyList: {
+    fontSize: 14,
+    color: "#999",
+    marginTop: 8,
+    fontStyle: "italic",
+    textAlign: "center",
+  },
+  buttonsContainer: {
+    marginTop: 24,
+  },
+  button: {
+    backgroundColor: "#1E90FF",
+    paddingVertical: 14,
+    borderRadius: 8,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "600",
+    fontSize: 16,
   },
 });

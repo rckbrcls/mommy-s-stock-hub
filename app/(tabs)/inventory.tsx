@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
-} from "react-native";
+  ScrollView,
+} from "react-native"; // Adicione esta importação
 import React, { useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
@@ -96,174 +97,187 @@ export default function InventoryScreen() {
   };
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
     >
-      <ThemedView
-        style={{
-          flexDirection: "row",
-          gap: 8,
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          padding: 20,
+          gap: 16,
         }}
       >
-        <ThemedText type="title">Iventário</ThemedText>
-      </ThemedView>
-      {/* Modal de Adicionar Item */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Novo Item</Text>
-            <TextInput
-              placeholder="Nome do item"
-              value={newItemName}
-              onChangeText={setNewItemName}
-              style={styles.modalInput}
-            />
-            <TextInput
-              placeholder="Quantidade"
-              value={newItemQuantity}
-              onChangeText={setNewItemQuantity}
-              keyboardType="numeric"
-              style={styles.modalInput}
-            />
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            backgroundColor: "transparent",
+          }}
+        >
+          <ThemedText type="title" style={{ color: "#202020" }}>
+            Inventário
+          </ThemedText>
+        </ThemedView>
 
-            {/* Botão Adicionar */}
-            <TouchableOpacity style={styles.mainButton} onPress={handleAddItem}>
-              <Text style={styles.buttonText}>Adicionar</Text>
-            </TouchableOpacity>
+        {/* Modal de Adicionar Item */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Novo Item</Text>
+              <TextInput
+                placeholder="Nome do item"
+                value={newItemName}
+                onChangeText={setNewItemName}
+                style={styles.modalInput}
+              />
+              <TextInput
+                placeholder="Quantidade"
+                value={newItemQuantity}
+                onChangeText={setNewItemQuantity}
+                keyboardType="numeric"
+                style={styles.modalInput}
+              />
 
-            {/* Botão Sair (sem ação adicional) */}
-            <TouchableOpacity
-              style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.buttonText}>Sair</Text>
-            </TouchableOpacity>
+              {/* Botão Adicionar */}
+              <TouchableOpacity
+                style={styles.mainButton}
+                onPress={handleAddItem}
+              >
+                <Text style={styles.buttonText}>Adicionar</Text>
+              </TouchableOpacity>
+
+              {/* Botão Sair (sem ação adicional) */}
+              <TouchableOpacity
+                style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={styles.buttonText}>Sair</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal de Editar Item */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={editModalVisible}
+          onRequestClose={() => setEditModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Editar Item</Text>
+              <TextInput
+                placeholder="Nome do item"
+                value={editItemName}
+                onChangeText={setEditItemName}
+                style={styles.modalInput}
+              />
+              <TextInput
+                placeholder="Quantidade"
+                value={editItemQuantity}
+                onChangeText={setEditItemQuantity}
+                keyboardType="numeric"
+                style={styles.modalInput}
+              />
+
+              {/* Botão Salvar */}
+              <TouchableOpacity
+                style={styles.mainButton}
+                onPress={handleSaveEdit}
+              >
+                <Text style={styles.buttonText}>Salvar</Text>
+              </TouchableOpacity>
+
+              {/* Botão Excluir */}
+              <TouchableOpacity
+                style={styles.mainButton}
+                onPress={() =>
+                  editingIndex !== null && handleRemoveItem(editingIndex)
+                }
+              >
+                <Text style={styles.buttonText}>Excluir</Text>
+              </TouchableOpacity>
+
+              {/* Botão Sair (sem ação adicional) */}
+              <TouchableOpacity
+                style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
+                onPress={() => setEditModalVisible(false)}
+              >
+                <Text style={styles.buttonText}>Sair</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Área de busca */}
+        <View style={styles.searchContainer}>
+          <View style={styles.searchBox}>
+            <ThemedText style={styles.searchPlaceholder}>
+              Pesquisar...
+            </ThemedText>
           </View>
         </View>
-      </Modal>
 
-      {/* Modal de Editar Item */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={editModalVisible}
-        onRequestClose={() => setEditModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Editar Item</Text>
-            <TextInput
-              placeholder="Nome do item"
-              value={editItemName}
-              onChangeText={setEditItemName}
-              style={styles.modalInput}
-            />
-            <TextInput
-              placeholder="Quantidade"
-              value={editItemQuantity}
-              onChangeText={setEditItemQuantity}
-              keyboardType="numeric"
-              style={styles.modalInput}
-            />
+        {/* Botão de Adicionar Item */}
+        <TouchableOpacity
+          style={[styles.mainButton, { width: "100%" }]}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.buttonText}>Adicionar Item</Text>
+        </TouchableOpacity>
 
-            {/* Botão Salvar */}
-            <TouchableOpacity
-              style={styles.mainButton}
-              onPress={handleSaveEdit}
+        {/* Lista de Itens */}
+        <View style={styles.listContainer}>
+          <ThemedText style={styles.listTitle}>Lista de Itens</ThemedText>
+          {items.map((item, index) => (
+            <Pressable
+              key={index}
+              onPress={() => openEditModal(index)}
+              style={styles.listItem}
             >
-              <Text style={styles.buttonText}>Salvar</Text>
-            </TouchableOpacity>
-
-            {/* Botão Excluir */}
-            <TouchableOpacity
-              style={styles.mainButton}
-              onPress={() =>
-                editingIndex !== null && handleRemoveItem(editingIndex)
-              }
-            >
-              <Text style={styles.buttonText}>Excluir</Text>
-            </TouchableOpacity>
-
-            {/* Botão Sair (sem ação adicional) */}
-            <TouchableOpacity
-              style={[styles.mainButton, { backgroundColor: CANCEL_COLOR }]}
-              onPress={() => setEditModalVisible(false)}
-            >
-              <Text style={styles.buttonText}>Sair</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Área de busca */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBox}>
-          <ThemedText style={styles.searchPlaceholder}>Pesquisar...</ThemedText>
-        </View>
-      </View>
-
-      {/* Botão de Adicionar Item */}
-      <TouchableOpacity
-        style={[styles.mainButton, { width: "100%" }]}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.buttonText}>Adicionar Item</Text>
-      </TouchableOpacity>
-
-      {/* Lista de Itens */}
-      <View style={styles.listContainer}>
-        <ThemedText style={styles.listTitle}>Lista de Itens</ThemedText>
-        {items.map((item, index) => (
-          <Pressable
-            key={index}
-            onPress={() => openEditModal(index)}
-            style={styles.listItem}
-          >
-            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
-              <ThemedText style={styles.listItemTexBold}>
-                {item.name}
-              </ThemedText>
-              <ThemedText style={styles.listItemText}>
-                quantidade:{" "}
+              <View
+                style={{ flexDirection: "column", alignItems: "flex-start" }}
+              >
                 <ThemedText style={styles.listItemTexBold}>
-                  {item.quantity}
+                  {item.name}
                 </ThemedText>
-              </ThemedText>
-            </View>
-            <View style={styles.actionsContainer}>
-              {/* Botão + */}
-              <TouchableOpacity
-                style={[styles.plusButton, { marginLeft: 5 }]}
-                onPress={() => incrementQuantity(index)}
-              >
-                <Text style={styles.buttonText}>+</Text>
-              </TouchableOpacity>
+                <ThemedText style={styles.listItemText}>
+                  quantidade:{" "}
+                  <ThemedText style={styles.listItemTexBold}>
+                    {item.quantity}
+                  </ThemedText>
+                </ThemedText>
+              </View>
+              <View style={styles.actionsContainer}>
+                {/* Botão + */}
+                <TouchableOpacity
+                  style={[styles.plusButton, { marginLeft: 5 }]}
+                  onPress={() => incrementQuantity(index)}
+                >
+                  <Text style={styles.buttonText}>+</Text>
+                </TouchableOpacity>
 
-              {/* Botão - */}
-              <TouchableOpacity
-                style={[styles.minusButton, { marginLeft: 5 }]}
-                onPress={() => decrementQuantity(index)}
-              >
-                <Text style={styles.buttonText}>-</Text>
-              </TouchableOpacity>
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    </ParallaxScrollView>
+                {/* Botão - */}
+                <TouchableOpacity
+                  style={[styles.minusButton, { marginLeft: 5 }]}
+                  onPress={() => decrementQuantity(index)}
+                >
+                  <Text style={styles.buttonText}>-</Text>
+                </TouchableOpacity>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -386,7 +400,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 10,
     gap: 10,
-    paddingBottom: 20,
+    paddingBottom: 40,
   },
   listTitle: {
     fontSize: 18,
