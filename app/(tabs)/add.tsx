@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
+import { v4 as uuidv4 } from "uuid";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
@@ -71,7 +72,7 @@ export default function AddTabScreen() {
       }
 
       const newProduct = {
-        id: Date.now(),
+        id: uuidv4(), // Gerar um id único
         name,
         category,
         quantity,

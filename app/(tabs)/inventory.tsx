@@ -30,7 +30,7 @@ export default function InventoryScreen() {
 
   // State
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingIndex, setEditingIndex] = useState<string | null>(null);
   const [editItemName, setEditItemName] = useState("");
   const [editItemQuantity, setEditItemQuantity] = useState("1");
   const [editItemCategory, setEditItemCategory] = useState("");
@@ -51,19 +51,22 @@ export default function InventoryScreen() {
   );
 
   // Handlers
-  const openEditModal = (index: number) => {
-    setEditingIndex(index);
-    setEditItemName(items[index].name);
-    setEditItemQuantity(items[index].quantity.toString());
-    setEditItemCategory(items[index].category || "");
-    setEditItemPrice(items[index].price?.toString() || "");
-    setEditModalVisible(true);
+  const openEditModal = (id: string) => {
+    const item = items.find((item) => item.id === id);
+    if (item) {
+      setEditingIndex(id); // Agora armazenamos o id
+      setEditItemName(item.name);
+      setEditItemQuantity(item.quantity.toString());
+      setEditItemCategory(item.category || "");
+      setEditItemPrice(item.price?.toString() || "");
+      setEditModalVisible(true);
+    }
   };
 
   const handleSaveEdit = async () => {
     if (editingIndex !== null) {
       const updatedItem = {
-        ...items[editingIndex],
+        id: editingIndex, // Usar o id armazenado
         name: editItemName,
         quantity: parseInt(editItemQuantity) || 0,
         category: editItemCategory,
@@ -137,9 +140,9 @@ export default function InventoryScreen() {
         />
         <ItemList
           items={filteredItems}
-          onEdit={openEditModal}
-          onIncrement={incrementQuantity}
-          onDecrement={decrementQuantity}
+          onEdit={(id) => openEditModal(id)}
+          onIncrement={(id) => incrementQuantity(id)}
+          onDecrement={(id) => decrementQuantity(id)}
         />
       </ScrollView>
     </SafeAreaView>
@@ -417,21 +420,22 @@ const ItemList = ({
   onDecrement,
 }: {
   items: {
+    id: string; // Adicionar id aqui
     name: string;
     quantity: number;
     category?: string;
     price?: number;
   }[];
-  onEdit: (index: number) => void;
-  onIncrement: (index: number) => void;
-  onDecrement: (index: number) => void;
+  onEdit: (id: string) => void;
+  onIncrement: (id: string) => void;
+  onDecrement: (id: string) => void;
 }) => (
   <View style={styles.listContainer}>
     <ThemedText style={styles.listTitle}>Lista de Itens</ThemedText>
-    {items.map((item, index) => (
+    {items.map((item) => (
       <Pressable
-        key={index}
-        onPress={() => onEdit(index)}
+        key={item.id} // Usar id como chave
+        onPress={() => onEdit(item.id)}
         style={styles.listItem}
       >
         <View style={styles.listItemDetails}>
@@ -462,13 +466,13 @@ const ItemList = ({
         <View style={styles.actionsContainer}>
           <TouchableOpacity
             style={styles.plusButton}
-            onPress={() => onIncrement(index)}
+            onPress={() => onIncrement(item.id)}
           >
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.minusButton}
-            onPress={() => onDecrement(index)}
+            onPress={() => onDecrement(item.id)}
           >
             <Text style={styles.buttonText}>-</Text>
           </TouchableOpacity>

@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface InventoryItem {
-  id: number;
+  id: string;
   name: string;
   quantity: number;
   category?: string;
@@ -12,10 +12,10 @@ interface InventoryItem {
 interface InventoryContextProps {
   items: InventoryItem[];
   addItem: (item: InventoryItem) => Promise<void>;
-  updateItem: (index: number, updatedItem: InventoryItem) => Promise<void>;
-  removeItem: (index: number) => Promise<void>;
-  incrementQuantity: (index: number) => Promise<void>;
-  decrementQuantity: (index: number) => Promise<void>;
+  updateItem: (id: string, updatedItem: InventoryItem) => Promise<void>;
+  removeItem: (id: string) => Promise<void>;
+  incrementQuantity: (id: string) => Promise<void>;
+  decrementQuantity: (id: string) => Promise<void>;
 }
 
 const InventoryContext = createContext<InventoryContextProps | undefined>(
@@ -49,33 +49,35 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Atualizar item
-  const updateItem = async (index: number, updatedItem: InventoryItem) => {
-    const updatedItems = [...items];
-    updatedItems[index] = updatedItem;
+  const updateItem = async (id: string, updatedItem: InventoryItem) => {
+    const updatedItems = items.map((item) =>
+      item.id === id ? updatedItem : item
+    );
     await saveItemsToStorage(updatedItems);
   };
 
   // Remover item
-  const removeItem = async (index: number) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
+  const removeItem = async (id: string) => {
+    const updatedItems = items.filter((item) => item.id !== id);
     await saveItemsToStorage(updatedItems);
   };
 
   // Incrementar quantidade
-  const incrementQuantity = async (index: number) => {
-    const updatedItems = [...items];
-    updatedItems[index].quantity += 1;
+  const incrementQuantity = async (id: string) => {
+    const updatedItems = items.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    );
     await saveItemsToStorage(updatedItems);
   };
 
   // Decrementar quantidade
-  const decrementQuantity = async (index: number) => {
-    const updatedItems = [...items];
-    if (updatedItems[index].quantity > 0) {
-      updatedItems[index].quantity -= 1;
-      await saveItemsToStorage(updatedItems);
-    }
+  const decrementQuantity = async (id: string) => {
+    const updatedItems = items.map((item) =>
+      item.id === id && item.quantity > 0
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+    await saveItemsToStorage(updatedItems);
   };
 
   return (
