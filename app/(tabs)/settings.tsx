@@ -66,26 +66,6 @@ export default function SettingsScreen() {
             />
           </View>
         </View>
-
-        {/* Seção de Sincronização */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Sincronização</Text>
-          <View style={styles.item}>
-            <Text style={styles.itemLabel}>Sincronizar com a Nuvem</Text>
-            <Switch
-              value={isCloudSyncEnabled}
-              onValueChange={handleToggleCloudSync}
-            />
-          </View>
-        </View>
-
-        {/* Seção de Conta */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Conta</Text>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutButtonText}>Sair da Conta</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -95,11 +75,9 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
   },
   container: {
     padding: 16,
-    backgroundColor: "#fff",
   },
   title: {
     fontSize: 24,
