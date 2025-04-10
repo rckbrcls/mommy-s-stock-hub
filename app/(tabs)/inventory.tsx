@@ -36,6 +36,19 @@ export default function InventoryScreen() {
   const [editItemCategory, setEditItemCategory] = useState("");
   const [editItemPrice, setEditItemPrice] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [selectedCategory, setSelectedCategory] = useState(""); // Valor inicial vazio
+  const [sortType, setSortType] = useState<
+    "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | ""
+  >(""); // State for sorting
+
+  // Extract unique categories
+  const categories = Array.from(
+    new Set(
+      items
+        .map((item) => item.category)
+        .filter((category): category is string => category !== undefined)
+    )
+  );
 
   // Handlers
   const openEditModal = (index: number) => {
@@ -61,16 +74,50 @@ export default function InventoryScreen() {
     }
   };
 
-  // Filtered items based on search query
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filtered and sorted items
+  const filteredItems = items
+    .filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter((item) =>
+      selectedCategory ? item.category === selectedCategory : true
+    )
+    .sort((a, b) => {
+      if (sortType === "priceAsc") {
+        return (a.price || 0) - (b.price || 0);
+      } else if (sortType === "priceDesc") {
+        return (b.price || 0) - (a.price || 0);
+      } else if (sortType === "quantityAsc") {
+        return a.quantity - b.quantity;
+      } else if (sortType === "quantityDesc") {
+        return b.quantity - a.quantity;
+      }
+      return 0;
+    });
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Header />
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <View>
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+
+          <View style={{ flexDirection: "row", gap: 6 }}>
+            <View style={{ flex: 1 }}>
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                categories={categories}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <SortOptions sortType={sortType} setSortType={setSortType} />
+            </View>
+          </View>
+        </View>
         <EditItemModal
           visible={editModalVisible}
           onClose={() => setEditModalVisible(false)}
@@ -122,6 +169,155 @@ const SearchBar = ({
     onChangeText={setSearchQuery}
   />
 );
+
+const CategoryFilter = ({
+  selectedCategory,
+  setSelectedCategory,
+  categories,
+}: {
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
+  categories: string[];
+}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSelectCategory = (category: string) => {
+    setSelectedCategory(category);
+    setModalVisible(false);
+  };
+
+  return (
+    <View style={styles.filterContainer}>
+      <TouchableOpacity
+        style={styles.categoryButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.categoryButtonText}>
+          {selectedCategory || "Todas as Categorias"}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal para exibir as categorias */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Selecione uma Categoria</Text>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectCategory("")}
+            >
+              <Text style={styles.modalOptionText}>Todas as Categorias</Text>
+            </TouchableOpacity>
+            {categories.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.modalOption}
+                onPress={() => handleSelectCategory(category)}
+              >
+                <Text style={styles.modalOptionText}>{category}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={[styles.mainButton, styles.exitButton]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+const SortOptions = ({
+  sortType,
+  setSortType,
+}: {
+  sortType: "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | "";
+  setSortType: (
+    type: "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | ""
+  ) => void;
+}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSelectSort = (
+    type: "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | ""
+  ) => {
+    setSortType(type);
+    setModalVisible(false);
+  };
+
+  return (
+    <View style={styles.filterContainer}>
+      <TouchableOpacity
+        style={styles.categoryButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.categoryButtonText}>
+          {sortType === "priceAsc"
+            ? "Menor Preço"
+            : sortType === "priceDesc"
+            ? "Maior Preço"
+            : sortType === "quantityAsc"
+            ? "Menor Quantidade"
+            : sortType === "quantityDesc"
+            ? "Maior Quantidade"
+            : "Selecione"}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal para exibir as opções de ordenação */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Ordenar por:</Text>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectSort("priceAsc")}
+            >
+              <Text style={styles.modalOptionText}>Menor Preço</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectSort("priceDesc")}
+            >
+              <Text style={styles.modalOptionText}>Maior Preço</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectSort("quantityAsc")}
+            >
+              <Text style={styles.modalOptionText}>Menor Quantidade</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectSort("quantityDesc")}
+            >
+              <Text style={styles.modalOptionText}>Maior Quantidade</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.mainButton, styles.exitButton]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
 
 const EditItemModal = ({
   visible,
@@ -290,7 +486,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     padding: 20,
     paddingBottom: 60,
-    gap: 16,
+    gap: 10,
   },
   header: {
     flexDirection: "row",
@@ -414,5 +610,70 @@ const styles = StyleSheet.create({
     height: 35,
     justifyContent: "center",
     alignItems: "center",
+  },
+  filterContainer: {
+    marginBottom: 5,
+  },
+  filterLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 4,
+  },
+  categoryButton: {
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+  },
+  categoryButtonText: {
+    color: "#333",
+    fontSize: 16,
+  },
+  modalOption: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEE",
+  },
+  modalOptionText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF",
+    overflow: "hidden",
+    marginBottom: 10, // Adicione margem para evitar sobreposição
+  },
+  picker: {
+    height: 50, // Ajuste a altura para garantir visibilidade
+    width: "100%",
+  },
+  sortContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    gap: 10,
+  },
+  sortLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  sortButton: {
+    padding: 10,
+    borderRadius: 6,
+    backgroundColor: "#EEE",
+  },
+  sortButtonActive: {
+    backgroundColor: MAIN_COLOR,
+  },
+  sortButtonText: {
+    color: "#333",
+    fontWeight: "bold",
   },
 });
