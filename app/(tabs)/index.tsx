@@ -45,7 +45,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <ThemedView
+        <View
           style={{
             alignItems: "center",
             display: "flex",
@@ -62,10 +62,10 @@ export default function HomeScreen() {
           >
             Bem-vindo(a) ao Mommy Stock Hub!
           </ThemedText>
-        </ThemedView>
+        </View>
 
         {/* Seção de resumo */}
-        <ThemedView style={styles.summaryContainer}>
+        <View style={styles.summaryContainer}>
           <ThemedView style={styles.summaryCard}>
             <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
             <ThemedText style={styles.summaryLabel}>Produtos</ThemedText>
@@ -82,7 +82,7 @@ export default function HomeScreen() {
             </ThemedText>
             <ThemedText style={styles.summaryLabel}>Em Falta</ThemedText>
           </ThemedView>
-        </ThemedView>
+        </View>
 
         {/* Lista de produtos com baixo estoque */}
         <ThemedView style={styles.lowStockSection}>
