@@ -1,42 +1,21 @@
 // MommyStockHub/screens/SettingsScreen.tsx
 
-import { useNavigation } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Switch,
-  TouchableOpacity,
-  Alert,
   SafeAreaView,
   ScrollView,
 } from "react-native";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function SettingsScreen() {
-  const navigation = useNavigation();
-
-  // Estados de exemplo para configurações
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const { isDarkTheme, toggleTheme } = useTheme();
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const [isCloudSyncEnabled, setIsCloudSyncEnabled] = useState(false);
 
-  // Exemplo de logout
-  const handleLogout = () => {
-    Alert.alert("Sair da Conta", "Tem certeza que deseja sair?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Sair",
-        style: "destructive",
-        onPress: () => {
-          Alert.alert("Logout", "Usuário desconectado.");
-        },
-      },
-    ]);
-  };
-
-  // Funções de toggle (mock)
-  const handleToggleTheme = () => setIsDarkTheme((prev) => !prev);
   const handleToggleNotifications = () =>
     setIsNotificationsEnabled((prev) => !prev);
   const handleToggleCloudSync = () => setIsCloudSyncEnabled((prev) => !prev);
@@ -51,7 +30,7 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>Aparência</Text>
           <View style={styles.item}>
             <Text style={styles.itemLabel}>Tema Escuro</Text>
-            <Switch value={isDarkTheme} onValueChange={handleToggleTheme} />
+            <Switch value={isDarkTheme} onValueChange={toggleTheme} />
           </View>
         </View>
 
@@ -96,7 +75,6 @@ const styles = StyleSheet.create({
     color: "#555",
   },
   item: {
-    backgroundColor: "#f0f0f0",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -108,21 +86,5 @@ const styles = StyleSheet.create({
   itemLabel: {
     fontSize: 16,
     color: "#333",
-  },
-  logoutButton: {
-    backgroundColor: "#FF6347",
-    paddingVertical: 14,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  logoutButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "600",
-    fontSize: 16,
   },
 });
