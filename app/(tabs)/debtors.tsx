@@ -11,6 +11,8 @@ import {
   SafeAreaView,
   TextInput,
   Modal,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 import { ThemedText } from "@/components/ThemedText";
@@ -52,33 +54,35 @@ const SortOptions = ({
         animationType="slide"
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <ThemedText style={styles.modalTitle}>Ordenar por:</ThemedText>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={() => handleSelectSort("amountAsc")}
-            >
-              <ThemedText style={styles.modalOptionText}>
-                Menos Devendo
-              </ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={() => handleSelectSort("amountDesc")}
-            >
-              <ThemedText style={styles.modalOptionText}>
-                Mais Devendo
-              </ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.mainButton, styles.exitButton]}
-              onPress={() => setModalVisible(false)}
-            >
-              <ThemedText style={styles.buttonText}>Fechar</ThemedText>
-            </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <ThemedText style={styles.modalTitle}>Ordenar por:</ThemedText>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={() => handleSelectSort("amountAsc")}
+              >
+                <ThemedText style={styles.modalOptionText}>
+                  Menos Devendo
+                </ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={() => handleSelectSort("amountDesc")}
+              >
+                <ThemedText style={styles.modalOptionText}>
+                  Mais Devendo
+                </ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.mainButton, styles.exitButton]}
+                onPress={() => setModalVisible(false)}
+              >
+                <ThemedText style={styles.buttonText}>Fechar</ThemedText>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
@@ -201,83 +205,85 @@ export default function DebtorsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <ThemedText style={styles.title}>Devedores</ThemedText>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <ThemedText style={styles.title}>Devedores</ThemedText>
 
-        {/* Barra de Pesquisa */}
-        <TextInput
-          style={styles.searchBar}
-          placeholder="Pesquisar devedores..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
+          {/* Barra de Pesquisa */}
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Pesquisar devedores..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
 
-        {/* Filtro de Status e Opções de Ordenação */}
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <View style={{ flex: 1 }}>
-            <StatusFilter
-              statusFilter={statusFilter}
-              setStatusFilter={setStatusFilter}
-            />
+          {/* Filtro de Status e Opções de Ordenação */}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ flex: 1 }}>
+              <StatusFilter
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <SortOptions sortType={sortType} setSortType={setSortType} />
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <SortOptions sortType={sortType} setSortType={setSortType} />
-          </View>
-        </View>
 
-        <FlatList
-          data={filteredDebtors}
-          keyExtractor={(item) => item.id.toString()} // Usar o id como chave
-          contentContainerStyle={styles.listContainer}
-          ListEmptyComponent={
-            <ThemedText style={styles.emptyList}>
-              Nenhum devedor encontrado.
-            </ThemedText>
-          }
-          renderItem={({ item }) => (
-            <ThemedView style={styles.debtorCard}>
-              <View style={styles.debtorInfo}>
-                <ThemedText style={styles.debtorName}>{item.name}</ThemedText>
-                <ThemedText style={styles.debtorAmount}>
-                  Valor: R$ {item?.amount?.toFixed(2)}
-                </ThemedText>
-                <ThemedText
-                  style={[
-                    styles.debtorStatus,
-                    item.status === "open"
-                      ? styles.statusOpen
-                      : styles.statusPaid,
-                  ]}
-                >
-                  {item.status === "open" ? "Em Aberto" : "Pago"}
-                </ThemedText>
-              </View>
-              <View style={styles.actions}>
-                {item.status === "open" && (
+          <FlatList
+            data={filteredDebtors}
+            keyExtractor={(item) => item.id.toString()} // Usar o id como chave
+            contentContainerStyle={styles.listContainer}
+            ListEmptyComponent={
+              <ThemedText style={styles.emptyList}>
+                Nenhum devedor encontrado.
+              </ThemedText>
+            }
+            renderItem={({ item }) => (
+              <ThemedView style={styles.debtorCard}>
+                <View style={styles.debtorInfo}>
+                  <ThemedText style={styles.debtorName}>{item.name}</ThemedText>
+                  <ThemedText style={styles.debtorAmount}>
+                    Valor: R$ {item?.amount?.toFixed(2)}
+                  </ThemedText>
+                  <ThemedText
+                    style={[
+                      styles.debtorStatus,
+                      item.status === "open"
+                        ? styles.statusOpen
+                        : styles.statusPaid,
+                    ]}
+                  >
+                    {item.status === "open" ? "Em Aberto" : "Pago"}
+                  </ThemedText>
+                </View>
+                <View style={styles.actions}>
+                  {item.status === "open" && (
+                    <TouchableOpacity
+                      style={[styles.actionButton, styles.markPaidButton]}
+                      onPress={() => handleMarkAsPaid(item.id)}
+                    >
+                      <ThemedText style={styles.actionButtonText}>
+                        Marcar Pago
+                      </ThemedText>
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
-                    style={[styles.actionButton, styles.markPaidButton]}
-                    onPress={() => handleMarkAsPaid(item.id)}
+                    style={[styles.actionButton, styles.deleteButton]}
+                    onPress={() => handleDelete(item.id)}
                   >
                     <ThemedText style={styles.actionButtonText}>
-                      Marcar Pago
+                      Excluir
                     </ThemedText>
                   </TouchableOpacity>
-                )}
-                <TouchableOpacity
-                  style={[styles.actionButton, styles.deleteButton]}
-                  onPress={() => handleDelete(item.id)}
-                >
-                  <ThemedText style={styles.actionButtonText}>
-                    Excluir
-                  </ThemedText>
-                </TouchableOpacity>
-              </View>
-            </ThemedView>
-          )}
-        />
-      </View>
-    </SafeAreaView>
+                </View>
+              </ThemedView>
+            )}
+          />
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

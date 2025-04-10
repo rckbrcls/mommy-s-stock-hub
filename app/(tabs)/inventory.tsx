@@ -9,6 +9,8 @@ import {
   Text,
   Pressable,
   ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -99,53 +101,55 @@ export default function InventoryScreen() {
     });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Header />
-        <View>
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-          />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Header />
+          <View>
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
 
-          <View style={{ flexDirection: "row", gap: 6 }}>
-            <View style={{ flex: 1 }}>
-              <CategoryFilter
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                categories={categories}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <SortOptions sortType={sortType} setSortType={setSortType} />
+            <View style={{ flexDirection: "row", gap: 6 }}>
+              <View style={{ flex: 1 }}>
+                <CategoryFilter
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  categories={categories}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <SortOptions sortType={sortType} setSortType={setSortType} />
+              </View>
             </View>
           </View>
-        </View>
-        <EditItemModal
-          visible={editModalVisible}
-          onClose={() => setEditModalVisible(false)}
-          itemName={editItemName}
-          setItemName={setEditItemName}
-          itemQuantity={editItemQuantity}
-          setItemQuantity={setEditItemQuantity}
-          itemCategory={editItemCategory}
-          setItemCategory={setEditItemCategory}
-          itemPrice={editItemPrice}
-          setItemPrice={setEditItemPrice}
-          onSave={handleSaveEdit}
-          onDelete={() => {
-            if (editingIndex !== null) removeItem(editingIndex);
-            setEditModalVisible(false);
-          }}
-        />
-        <ItemList
-          items={filteredItems}
-          onEdit={(id) => openEditModal(id)}
-          onIncrement={(id) => incrementQuantity(id)}
-          onDecrement={(id) => decrementQuantity(id)}
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <EditItemModal
+            visible={editModalVisible}
+            onClose={() => setEditModalVisible(false)}
+            itemName={editItemName}
+            setItemName={setEditItemName}
+            itemQuantity={editItemQuantity}
+            setItemQuantity={setEditItemQuantity}
+            itemCategory={editItemCategory}
+            setItemCategory={setEditItemCategory}
+            itemPrice={editItemPrice}
+            setItemPrice={setEditItemPrice}
+            onSave={handleSaveEdit}
+            onDelete={() => {
+              if (editingIndex !== null) removeItem(editingIndex);
+              setEditModalVisible(false);
+            }}
+          />
+          <ItemList
+            items={filteredItems}
+            onEdit={(id) => openEditModal(id)}
+            onIncrement={(id) => incrementQuantity(id)}
+            onDecrement={(id) => decrementQuantity(id)}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -367,61 +371,63 @@ const EditItemModal = ({
     visible={visible}
     onRequestClose={onClose}
   >
-    <View style={styles.modalOverlay}>
-      <ThemedView style={styles.modalContainer}>
-        <ThemedText style={styles.modalTitle}>Editar Item</ThemedText>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.modalOverlay}>
+        <ThemedView style={styles.modalContainer}>
+          <ThemedText style={styles.modalTitle}>Editar Item</ThemedText>
 
-        <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
-        <TextInput
-          placeholder="Nome do item"
-          value={itemName}
-          onChangeText={setItemName}
-          style={styles.modalInput}
-        />
+          <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
+          <TextInput
+            placeholder="Nome do item"
+            value={itemName}
+            onChangeText={setItemName}
+            style={styles.modalInput}
+          />
 
-        <ThemedText style={styles.modalLabel}>Quantidade</ThemedText>
-        <TextInput
-          placeholder="Quantidade"
-          value={itemQuantity}
-          onChangeText={setItemQuantity}
-          keyboardType="numeric"
-          style={styles.modalInput}
-        />
+          <ThemedText style={styles.modalLabel}>Quantidade</ThemedText>
+          <TextInput
+            placeholder="Quantidade"
+            value={itemQuantity}
+            onChangeText={setItemQuantity}
+            keyboardType="numeric"
+            style={styles.modalInput}
+          />
 
-        <ThemedText style={styles.modalLabel}>Categoria</ThemedText>
-        <TextInput
-          placeholder="Categoria"
-          value={itemCategory}
-          onChangeText={setItemCategory}
-          style={styles.modalInput}
-        />
+          <ThemedText style={styles.modalLabel}>Categoria</ThemedText>
+          <TextInput
+            placeholder="Categoria"
+            value={itemCategory}
+            onChangeText={setItemCategory}
+            style={styles.modalInput}
+          />
 
-        <ThemedText style={styles.modalLabel}>Preço</ThemedText>
-        <TextInput
-          placeholder="Preço"
-          value={itemPrice}
-          onChangeText={setItemPrice}
-          keyboardType="decimal-pad"
-          style={styles.modalInput}
-        />
+          <ThemedText style={styles.modalLabel}>Preço</ThemedText>
+          <TextInput
+            placeholder="Preço"
+            value={itemPrice}
+            onChangeText={setItemPrice}
+            keyboardType="decimal-pad"
+            style={styles.modalInput}
+          />
 
-        <TouchableOpacity style={styles.mainButton} onPress={onSave}>
-          <ThemedText style={styles.buttonText}>Salvar</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.mainButton, styles.deleteButton]}
-          onPress={onDelete}
-        >
-          <ThemedText style={styles.buttonText}>Excluir</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.mainButton, styles.exitButton]}
-          onPress={onClose}
-        >
-          <ThemedText style={styles.buttonText}>Sair</ThemedText>
-        </TouchableOpacity>
-      </ThemedView>
-    </View>
+          <TouchableOpacity style={styles.mainButton} onPress={onSave}>
+            <ThemedText style={styles.buttonText}>Salvar</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.mainButton, styles.deleteButton]}
+            onPress={onDelete}
+          >
+            <ThemedText style={styles.buttonText}>Excluir</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.mainButton, styles.exitButton]}
+            onPress={onClose}
+          >
+            <ThemedText style={styles.buttonText}>Sair</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+      </View>
+    </TouchableWithoutFeedback>
   </Modal>
 );
 

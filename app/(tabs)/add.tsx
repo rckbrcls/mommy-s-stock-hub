@@ -10,9 +10,11 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
-  FlatList, // Importar FlatList
-  KeyboardAvoidingView, // Importar KeyboardAvoidingView
+  FlatList,
+  KeyboardAvoidingView,
   Platform,
+  Keyboard,
+  TouchableWithoutFeedback, // Importar o componente
 } from "react-native";
 import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
@@ -90,78 +92,85 @@ export default function AddTabScreen() {
     };
 
     return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <ThemedText style={styles.label}>Nome do Produto</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Ex: Sabonete"
-        />
-
-        <ThemedText style={styles.label}>Categoria</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={category}
-          onChangeText={handleCategoryChange}
-          placeholder="Ex: Higiene"
-        />
-        {/* Dropdown de sugestões */}
-        {filteredCategories.length > 0 && (
-          <FlatList
-            data={filteredCategories}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.suggestionItem}
-                onPress={() => handleSelectCategory(item)}
-              >
-                <ThemedText style={styles.suggestionText}>{item}</ThemedText>
-              </TouchableOpacity>
-            )}
-            style={styles.suggestionsContainer}
-            keyboardShouldPersistTaps="handled" // Permitir interação com o dropdown
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ThemedText style={styles.label}>Nome do Produto</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Ex: Sabonete"
           />
-        )}
 
-        <ThemedText style={styles.label}>Quantidade</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={quantity !== null ? quantity.toString() : ""}
-          onChangeText={(value) => {
-            const numericValue = value.replace(/[^0-9]/g, "");
-            setQuantity(numericValue ? parseInt(numericValue, 10) : null);
-          }}
-          placeholder="Ex: 10"
-          keyboardType="numeric"
-        />
+          <ThemedText style={styles.label}>Categoria</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={category}
+            onChangeText={handleCategoryChange}
+            placeholder="Ex: Higiene"
+          />
+          {/* Dropdown de sugestões */}
+          {filteredCategories.length > 0 && (
+            <FlatList
+              data={filteredCategories}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionItem}
+                  onPress={() => handleSelectCategory(item)}
+                >
+                  <ThemedText style={styles.suggestionText}>{item}</ThemedText>
+                </TouchableOpacity>
+              )}
+              style={styles.suggestionsContainer}
+              keyboardShouldPersistTaps="handled" // Permitir interação com o dropdown
+            />
+          )}
 
-        <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={price}
-          onChangeText={(value) => {
-            const numericValue = value.replace(/[^0-9]/g, "");
-            if (numericValue) {
-              const formattedValue = (parseFloat(numericValue) / 100).toFixed(
-                2
-              );
-              setPrice(`R$ ${formattedValue.replace(".", ",")}`);
-            } else {
-              setPrice("");
-            }
-          }}
-          placeholder="Ex: R$ 5,99"
-          keyboardType="numeric"
-        />
+          <ThemedText style={styles.label}>Quantidade</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={quantity !== null ? quantity.toString() : ""}
+            onChangeText={(value) => {
+              const numericValue = value.replace(/[^0-9]/g, "");
+              setQuantity(numericValue ? parseInt(numericValue, 10) : null);
+            }}
+            placeholder="Ex: 10"
+            keyboardType="numeric"
+          />
 
-        <TouchableOpacity onPress={handleSaveProduct} style={styles.saveButton}>
-          <ThemedText style={styles.saveButtonText}>Salvar Produto</ThemedText>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+          <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={price}
+            onChangeText={(value) => {
+              const numericValue = value.replace(/[^0-9]/g, "");
+              if (numericValue) {
+                const formattedValue = (parseFloat(numericValue) / 100).toFixed(
+                  2
+                );
+                setPrice(`R$ ${formattedValue.replace(".", ",")}`);
+              } else {
+                setPrice("");
+              }
+            }}
+            placeholder="Ex: R$ 5,99"
+            keyboardType="numeric"
+          />
+
+          <TouchableOpacity
+            onPress={handleSaveProduct}
+            style={styles.saveButton}
+          >
+            <ThemedText style={styles.saveButtonText}>
+              Salvar Produto
+            </ThemedText>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -201,28 +210,35 @@ export default function AddTabScreen() {
     };
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Ex: Cliente A"
-        />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Ex: Cliente A"
+          />
 
-        <ThemedText style={styles.label}>Valor Devido</ThemedText>
-        <TextInput
-          style={styles.input}
-          value={amount}
-          onChangeText={handleAmountChange}
-          placeholder="Ex: R$ 100,00"
-          keyboardType="numeric"
-        />
+          <ThemedText style={styles.label}>Valor Devido</ThemedText>
+          <TextInput
+            style={styles.input}
+            value={amount}
+            onChangeText={handleAmountChange}
+            placeholder="Ex: R$ 100,00"
+            keyboardType="numeric"
+          />
 
-        <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
-          <ThemedText style={styles.saveButtonText}>Salvar Devedor</ThemedText>
-        </TouchableOpacity>
-      </ScrollView>
+          <TouchableOpacity
+            onPress={handleSaveDebtor}
+            style={styles.saveButton}
+          >
+            <ThemedText style={styles.saveButtonText}>
+              Salvar Devedor
+            </ThemedText>
+          </TouchableOpacity>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     );
   };
 
