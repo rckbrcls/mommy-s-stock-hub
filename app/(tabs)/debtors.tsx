@@ -10,17 +10,164 @@ import {
   Alert,
   SafeAreaView,
   TextInput,
+  Modal,
 } from "react-native";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
+
+const SortOptions = ({
+  sortType,
+  setSortType,
+}: {
+  sortType: "amountAsc" | "amountDesc" | "";
+  setSortType: (type: "amountAsc" | "amountDesc" | "") => void;
+}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSelectSort = (type: "amountAsc" | "amountDesc" | "") => {
+    setSortType(type);
+    setModalVisible(false);
+  };
+
+  return (
+    <View style={styles.filterContainer}>
+      <TouchableOpacity
+        style={styles.categoryButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.categoryButtonText}>
+          {sortType === "amountAsc"
+            ? "Menos Devendo"
+            : sortType === "amountDesc"
+            ? "Mais Devendo"
+            : "Ordenar"}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal para exibir as opções de ordenação */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Ordenar por:</Text>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectSort("amountAsc")}
+            >
+              <Text style={styles.modalOptionText}>Menos Devendo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectSort("amountDesc")}
+            >
+              <Text style={styles.modalOptionText}>Mais Devendo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.mainButton, styles.exitButton]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+const StatusFilter = ({
+  statusFilter,
+  setStatusFilter,
+}: {
+  statusFilter: "open" | "paid" | "";
+  setStatusFilter: (status: "open" | "paid" | "") => void;
+}) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSelectStatus = (status: "open" | "paid" | "") => {
+    setStatusFilter(status);
+    setModalVisible(false);
+  };
+
+  return (
+    <View style={styles.filterContainer}>
+      <TouchableOpacity
+        style={styles.categoryButton}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.categoryButtonText}>
+          {statusFilter === "open"
+            ? "Em Aberto"
+            : statusFilter === "paid"
+            ? "Pagos"
+            : "Filtrar Status"}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal para exibir as opções de status */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Filtrar por Status:</Text>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectStatus("open")}
+            >
+              <Text style={styles.modalOptionText}>Em Aberto</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectStatus("paid")}
+            >
+              <Text style={styles.modalOptionText}>Pagos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={() => handleSelectStatus("")}
+            >
+              <Text style={styles.modalOptionText}>Todos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.mainButton, styles.exitButton]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.buttonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
 
 export default function DebtorsScreen() {
   const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores
   const [searchQuery, setSearchQuery] = useState(""); // Estado para a barra de pesquisa
+  const [sortType, setSortType] = useState<"amountAsc" | "amountDesc" | "">(""); // Ordenação
+  const [statusFilter, setStatusFilter] = useState<"open" | "paid" | "">(""); // Filtro de status
 
-  // Filtrar devedores com base no nome
-  const filteredDebtors = debtors.filter((debtor) =>
-    debtor.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filtrar devedores com base no nome, status e ordenação
+  const filteredDebtors = debtors
+    .filter((debtor) =>
+      debtor.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter((debtor) => (statusFilter ? debtor.status === statusFilter : true))
+    .sort((a, b) => {
+      if (sortType === "amountAsc") {
+        return a.amount - b.amount;
+      } else if (sortType === "amountDesc") {
+        return b.amount - a.amount;
+      }
+      return 0;
+    });
 
   // Marcar como pago
   const handleMarkAsPaid = async (debtorId: number) => {
@@ -63,6 +210,19 @@ export default function DebtorsScreen() {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
+
+        {/* Filtro de Status e Opções de Ordenação */}
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <View style={{ flex: 1 }}>
+            <StatusFilter
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <SortOptions sortType={sortType} setSortType={setSortType} />
+          </View>
+        </View>
 
         <FlatList
           data={filteredDebtors}
@@ -141,6 +301,62 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     backgroundColor: "#fff",
+  },
+  filterContainer: {
+    marginBottom: 10,
+  },
+  categoryButton: {
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+  },
+  categoryButtonText: {
+    color: "#333",
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "#FFFFFF",
+    padding: 20,
+    borderRadius: 10,
+    width: "90%",
+  },
+  modalTitle: {
+    fontWeight: "bold",
+    fontSize: 18,
+    marginBottom: 10,
+    color: "#333",
+  },
+  modalOption: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEE",
+  },
+  modalOptionText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  mainButton: {
+    padding: 10,
+    borderRadius: 6,
+    alignItems: "center",
+    marginTop: 10,
+    backgroundColor: "#A3D977",
+  },
+  exitButton: {
+    backgroundColor: "#808080",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
   },
   listContainer: {
     paddingBottom: 16,
