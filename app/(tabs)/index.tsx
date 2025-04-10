@@ -121,7 +121,7 @@ export default function HomeScreen() {
                   <View key={debtor.id} style={styles.lowStockCard}>
                     <Text style={styles.lowStockName}>{debtor.name}</Text>
                     <Text style={styles.lowStockQuantity}>
-                      Valor: R$ {debtor.amount.toFixed(2)}
+                      Valor: R$ {debtor?.amount?.toFixed(2)}
                     </Text>
                   </View>
                 )
@@ -140,18 +140,24 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Resumo de categorias */}
+        {/* Resumo de categorias mais em falta */}
         <View style={styles.lowStockSection}>
-          <Text style={styles.sectionTitle}>📂 Categorias Existentes:</Text>
+          <Text style={styles.sectionTitle}>📂 Categorias Mais em Falta:</Text>
           {totalCategories > 0 ? (
             <View style={styles.lowStockContainer}>
-              {Array.from(
-                new Set(items.map((item) => item.category || "Sem Categoria"))
+              {Object.entries(
+                items.reduce((acc, item) => {
+                  const category = item.category || "Sem Categoria";
+                  acc[category] = (acc[category] || 0) + item.quantity;
+                  return acc;
+                }, {} as Record<string, number>)
               )
-                .slice(0, 4) // Limitar a 4 itens
-                .map((category, index) => (
+                .sort((a, b) => a[1] - b[1]) // Ordenar pelas categorias com menos itens
+                .slice(0, 4) // Limitar a 4 categorias
+                .map(([category, quantity], index) => (
                   <View key={index} style={styles.lowStockCard}>
                     <Text style={styles.lowStockName}>{category}</Text>
+                    <Text style={styles.lowStockQuantity}>Qtd: {quantity}</Text>
                   </View>
                 ))}
             </View>
