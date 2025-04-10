@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useInventory } from "../../contexts/InventoryContext";
 import { useDebtors } from "../../contexts/DebtorContext";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -43,7 +45,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View
+        <ThemedView
           style={{
             alignItems: "center",
             display: "flex",
@@ -55,96 +57,110 @@ export default function HomeScreen() {
             source={require("../../assets/images/logo.png")}
             style={{ width: 100, height: 100 }}
           />
-          <Text style={[styles.title, { flexShrink: 1, textAlign: "left" }]}>
+          <ThemedText
+            style={[styles.title, { flexShrink: 1, textAlign: "left" }]}
+          >
             Bem-vindo(a) ao Mommy Stock Hub!
-          </Text>
-        </View>
+          </ThemedText>
+        </ThemedView>
 
         {/* Seção de resumo */}
-        <View style={styles.summaryContainer}>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryValue}>{totalProducts}</Text>
-            <Text style={styles.summaryLabel}>Produtos</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryValue}>{totalCategories}</Text>
-            <Text style={styles.summaryLabel}>Categorias</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryValue}>{lowStock.length}</Text>
-            <Text style={styles.summaryLabel}>Em Falta</Text>
-          </View>
-        </View>
+        <ThemedView style={styles.summaryContainer}>
+          <ThemedView style={styles.summaryCard}>
+            <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
+            <ThemedText style={styles.summaryLabel}>Produtos</ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.summaryCard}>
+            <ThemedText style={styles.summaryValue}>
+              {totalCategories}
+            </ThemedText>
+            <ThemedText style={styles.summaryLabel}>Categorias</ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.summaryCard}>
+            <ThemedText style={styles.summaryValue}>
+              {lowStock.length}
+            </ThemedText>
+            <ThemedText style={styles.summaryLabel}>Em Falta</ThemedText>
+          </ThemedView>
+        </ThemedView>
 
         {/* Lista de produtos com baixo estoque */}
-        <View style={styles.lowStockSection}>
-          <Text style={styles.sectionTitle}>
+        <ThemedView style={styles.lowStockSection}>
+          <ThemedText style={styles.sectionTitle}>
             📉 Produtos com baixo estoque:
-          </Text>
+          </ThemedText>
           {lowStock.length > 0 ? (
-            <View style={styles.lowStockContainer}>
+            <ThemedView style={styles.lowStockContainer}>
               {lowStock.slice(0, 4).map(
                 (
                   item // Limitar a 4 itens
                 ) => (
-                  <View key={item.id} style={styles.lowStockCard}>
-                    <Text style={styles.lowStockName}>{item.name}</Text>
-                    <Text style={styles.lowStockQuantity}>
+                  <ThemedView key={item.id} style={styles.lowStockCard}>
+                    <ThemedText style={styles.lowStockName}>
+                      {item.name}
+                    </ThemedText>
+                    <ThemedText style={styles.lowStockQuantity}>
                       Qtd: {item.quantity}
-                    </Text>
-                  </View>
+                    </ThemedText>
+                  </ThemedView>
                 )
               )}
-            </View>
+            </ThemedView>
           ) : (
-            <Text style={styles.emptyList}>
+            <ThemedText style={styles.emptyList}>
               Nenhum produto em falta por enquanto.
-            </Text>
+            </ThemedText>
           )}
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("inventory" as never)}
           >
-            <Text style={styles.buttonText}>Ver Estoque</Text>
+            <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
           </TouchableOpacity>
-        </View>
+        </ThemedView>
 
         {/* Resumo de devedores */}
-        <View style={styles.lowStockSection}>
-          <Text style={styles.sectionTitle}>💰 Maiores Devedores:</Text>
+        <ThemedView style={styles.lowStockSection}>
+          <ThemedText style={styles.sectionTitle}>
+            💰 Maiores Devedores:
+          </ThemedText>
           {topDebtors.length > 0 ? (
-            <View style={styles.lowStockContainer}>
+            <ThemedView style={styles.lowStockContainer}>
               {topDebtors.slice(0, 4).map(
                 (
                   debtor // Limitar a 4 itens
                 ) => (
-                  <View key={debtor.id} style={styles.lowStockCard}>
-                    <Text style={styles.lowStockName}>{debtor.name}</Text>
-                    <Text style={styles.lowStockQuantity}>
+                  <ThemedView key={debtor.id} style={styles.lowStockCard}>
+                    <ThemedText style={styles.lowStockName}>
+                      {debtor.name}
+                    </ThemedText>
+                    <ThemedText style={styles.lowStockQuantity}>
                       Valor: R$ {debtor?.amount?.toFixed(2)}
-                    </Text>
-                  </View>
+                    </ThemedText>
+                  </ThemedView>
                 )
               )}
-            </View>
+            </ThemedView>
           ) : (
-            <Text style={styles.emptyList}>
+            <ThemedText style={styles.emptyList}>
               Nenhum devedor pendente no momento.
-            </Text>
+            </ThemedText>
           )}
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("debtors" as never)}
           >
-            <Text style={styles.buttonText}>Ver Devedores</Text>
+            <ThemedText style={styles.buttonText}>Ver Devedores</ThemedText>
           </TouchableOpacity>
-        </View>
+        </ThemedView>
 
         {/* Resumo de categorias mais em falta */}
-        <View style={styles.lowStockSection}>
-          <Text style={styles.sectionTitle}>📂 Categorias Mais em Falta:</Text>
+        <ThemedView style={styles.lowStockSection}>
+          <ThemedText style={styles.sectionTitle}>
+            📂 Categorias Mais em Falta:
+          </ThemedText>
           {totalCategories > 0 ? (
-            <View style={styles.lowStockContainer}>
+            <ThemedView style={styles.lowStockContainer}>
               {Object.entries(
                 items.reduce((acc, item) => {
                   const category = item.category || "Sem Categoria";
@@ -155,24 +171,28 @@ export default function HomeScreen() {
                 .sort((a, b) => a[1] - b[1]) // Ordenar pelas categorias com menos itens
                 .slice(0, 4) // Limitar a 4 categorias
                 .map(([category, quantity], index) => (
-                  <View key={index} style={styles.lowStockCard}>
-                    <Text style={styles.lowStockName}>{category}</Text>
-                    <Text style={styles.lowStockQuantity}>Qtd: {quantity}</Text>
-                  </View>
+                  <ThemedView key={index} style={styles.lowStockCard}>
+                    <ThemedText style={styles.lowStockName}>
+                      {category}
+                    </ThemedText>
+                    <ThemedText style={styles.lowStockQuantity}>
+                      Qtd: {quantity}
+                    </ThemedText>
+                  </ThemedView>
                 ))}
-            </View>
+            </ThemedView>
           ) : (
-            <Text style={styles.emptyList}>
+            <ThemedText style={styles.emptyList}>
               Nenhuma categoria cadastrada no momento.
-            </Text>
+            </ThemedText>
           )}
           <TouchableOpacity
             style={styles.button}
             onPress={() => navigation.navigate("inventory" as never)} // Botão para ir ao estoque
           >
-            <Text style={styles.buttonText}>Ver Estoque</Text>
+            <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
           </TouchableOpacity>
-        </View>
+        </ThemedView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -181,7 +201,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
   },
   scrollContainer: {
     flexGrow: 1,
@@ -191,7 +210,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
     textAlign: "left",
   },
   summaryContainer: {
@@ -201,7 +219,6 @@ const styles = StyleSheet.create({
   },
   summaryCard: {
     flex: 1,
-    backgroundColor: "#fff",
     padding: 16,
     marginHorizontal: 4,
     borderRadius: 8,
@@ -219,7 +236,6 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: 14,
-    color: "#666",
   },
   lowStockSection: {
     marginBottom: 24,
@@ -228,7 +244,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: "#fff",
     padding: 16,
     borderRadius: 8,
   },
@@ -246,7 +261,6 @@ const styles = StyleSheet.create({
   },
   lowStockCard: {
     flexBasis: "48%",
-    backgroundColor: "#fff",
     padding: 16,
     borderRadius: 8,
     marginBottom: 12,
@@ -260,18 +274,16 @@ const styles = StyleSheet.create({
   lowStockName: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#333",
     marginBottom: 8,
     textAlign: "center",
   },
   lowStockQuantity: {
     fontSize: 14,
-    color: "#666",
+
     textAlign: "center",
   },
   emptyList: {
     fontSize: 14,
-    color: "#999",
     marginTop: 8,
     fontStyle: "italic",
     textAlign: "center",
