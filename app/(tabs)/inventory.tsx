@@ -566,8 +566,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   listItem: {
-    borderWidth: 1,
-    padding: 10,
+    padding: 16,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

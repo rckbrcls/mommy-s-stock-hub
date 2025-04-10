@@ -10,6 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
@@ -23,22 +24,24 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Configurações</Text>
+        <ThemedText style={styles.title}>Configurações</ThemedText>
 
         {/* Seção de Tema */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Aparência</Text>
+          <ThemedText style={styles.sectionTitle}>Aparência</ThemedText>
           <View style={styles.item}>
-            <Text style={styles.itemLabel}>Tema Escuro</Text>
+            <ThemedText style={styles.itemLabel}>Tema Escuro</ThemedText>
             <Switch value={isDarkTheme} onValueChange={toggleTheme} />
           </View>
         </View>
 
         {/* Seção de Notificações */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Notificações</Text>
+          <ThemedText style={styles.sectionTitle}>Notificações</ThemedText>
           <View style={styles.item}>
-            <Text style={styles.itemLabel}>Ativar Notificações</Text>
+            <ThemedText style={styles.itemLabel}>
+              Ativar Notificações
+            </ThemedText>
             <Switch
               value={isNotificationsEnabled}
               onValueChange={handleToggleNotifications}
@@ -63,7 +66,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 24,
     textAlign: "center",
-    color: "#333",
   },
   section: {
     marginBottom: 24,
@@ -72,7 +74,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 12,
-    color: "#555",
   },
   item: {
     paddingVertical: 12,
@@ -85,6 +86,5 @@ const styles = StyleSheet.create({
   },
   itemLabel: {
     fontSize: 16,
-    color: "#333",
   },
 });
