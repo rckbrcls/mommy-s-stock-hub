@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Debtor {
-  id: number;
+  id: string;
   name: string;
   amount: number;
   status: "open" | "paid";
@@ -11,9 +11,9 @@ interface Debtor {
 interface DebtorContextProps {
   debtors: Debtor[];
   addDebtor: (debtor: Debtor) => Promise<void>;
-  updateDebtor: (index: number, updatedDebtor: Debtor) => Promise<void>;
-  removeDebtor: (index: number) => Promise<void>;
-  markAsPaid: (index: number) => Promise<void>;
+  updateDebtor: (id: string, updatedDebtor: Debtor) => Promise<void>;
+  removeDebtor: (id: string) => Promise<void>;
+  markAsPaid: (id: string) => Promise<void>;
 }
 
 const DebtorContext = createContext<DebtorContextProps | undefined>(undefined);
@@ -45,23 +45,24 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Atualizar devedor
-  const updateDebtor = async (index: number, updatedDebtor: Debtor) => {
-    const updatedDebtors = [...debtors];
-    updatedDebtors[index] = updatedDebtor;
+  const updateDebtor = async (id: string, updatedDebtor: Debtor) => {
+    const updatedDebtors = debtors.map((debtor) =>
+      debtor.id === id ? updatedDebtor : debtor
+    );
     await saveDebtorsToStorage(updatedDebtors);
   };
 
   // Remover devedor
-  const removeDebtor = async (index: number) => {
-    const updatedDebtors = [...debtors];
-    updatedDebtors.splice(index, 1);
+  const removeDebtor = async (id: string) => {
+    const updatedDebtors = debtors.filter((debtor) => debtor.id !== id);
     await saveDebtorsToStorage(updatedDebtors);
   };
 
   // Marcar devedor como pago
-  const markAsPaid = async (index: number) => {
-    const updatedDebtors = [...debtors];
-    updatedDebtors[index].status = "paid";
+  const markAsPaid = async (id: string) => {
+    const updatedDebtors: Debtor[] = debtors.map((debtor) =>
+      debtor.id === id ? { ...debtor, status: "paid" } : debtor
+    );
     await saveDebtorsToStorage(updatedDebtors);
   };
 

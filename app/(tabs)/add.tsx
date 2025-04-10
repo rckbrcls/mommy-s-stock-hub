@@ -178,7 +178,7 @@ export default function AddTabScreen() {
       }
 
       const newDebtor = {
-        id: Date.now(),
+        id: uuidv4(), // Gerar um id único
         name,
         amount: parseFloat(amount.replace("R$", "").replace(",", ".")) || 0,
         status: "open" as "open", // Status inicial como "Em Aberto"

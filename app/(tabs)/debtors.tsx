@@ -170,15 +170,12 @@ export default function DebtorsScreen() {
     });
 
   // Marcar como pago
-  const handleMarkAsPaid = async (debtorId: number) => {
-    const index = debtors.findIndex((d) => d.id === debtorId);
-    if (index !== -1) {
-      await markAsPaid(index);
-    }
+  const handleMarkAsPaid = async (debtorId: string) => {
+    await markAsPaid(debtorId);
   };
 
   // Excluir devedor
-  const handleDelete = async (debtorId: number) => {
+  const handleDelete = async (debtorId: string) => {
     Alert.alert(
       "Excluir Devedor",
       "Tem certeza que deseja excluir este devedor?",
@@ -188,10 +185,7 @@ export default function DebtorsScreen() {
           text: "Excluir",
           style: "destructive",
           onPress: async () => {
-            const index = debtors.findIndex((d) => d.id === debtorId);
-            if (index !== -1) {
-              await removeDebtor(index);
-            }
+            await removeDebtor(debtorId);
           },
         },
       ]
@@ -226,7 +220,7 @@ export default function DebtorsScreen() {
 
         <FlatList
           data={filteredDebtors}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()} // Usar o id como chave
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={
             <Text style={styles.emptyList}>Nenhum devedor encontrado.</Text>
@@ -247,9 +241,6 @@ export default function DebtorsScreen() {
                   ]}
                 >
                   {item.status === "open" ? "Em Aberto" : "Pago"}
-                </Text>
-                <Text style={styles.debtorAmount}>
-                  Valor: R$ {item?.amount?.toFixed(2)}
                 </Text>
               </View>
               <View style={styles.actions}>
