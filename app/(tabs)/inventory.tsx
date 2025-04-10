@@ -152,9 +152,7 @@ export default function InventoryScreen() {
 // Subcomponents
 const Header = () => (
   <ThemedView style={styles.header}>
-    <ThemedText type="title" style={styles.headerText}>
-      Inventário
-    </ThemedText>
+    <ThemedText type="title">Inventário</ThemedText>
   </ThemedView>
 );
 
@@ -356,10 +354,10 @@ const EditItemModal = ({
     onRequestClose={onClose}
   >
     <View style={styles.modalOverlay}>
-      <View style={styles.modalContainer}>
+      <ThemedView style={styles.modalContainer}>
         <Text style={styles.modalTitle}>Editar Item</Text>
 
-        <Text style={styles.modalLabel}>Nome do Item</Text>
+        <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
         <TextInput
           placeholder="Nome do item"
           value={itemName}
@@ -367,7 +365,7 @@ const EditItemModal = ({
           style={styles.modalInput}
         />
 
-        <Text style={styles.modalLabel}>Quantidade</Text>
+        <ThemedText style={styles.modalLabel}>Quantidade</ThemedText>
         <TextInput
           placeholder="Quantidade"
           value={itemQuantity}
@@ -376,7 +374,7 @@ const EditItemModal = ({
           style={styles.modalInput}
         />
 
-        <Text style={styles.modalLabel}>Categoria</Text>
+        <ThemedText style={styles.modalLabel}>Categoria</ThemedText>
         <TextInput
           placeholder="Categoria"
           value={itemCategory}
@@ -384,7 +382,7 @@ const EditItemModal = ({
           style={styles.modalInput}
         />
 
-        <Text style={styles.modalLabel}>Preço</Text>
+        <ThemedText style={styles.modalLabel}>Preço</ThemedText>
         <TextInput
           placeholder="Preço"
           value={itemPrice}
@@ -408,7 +406,7 @@ const EditItemModal = ({
         >
           <Text style={styles.buttonText}>Sair</Text>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
     </View>
   </Modal>
 );
@@ -436,47 +434,48 @@ const ItemList = ({
       <Pressable
         key={item.id} // Usar id como chave
         onPress={() => onEdit(item.id)}
-        style={styles.listItem}
       >
-        <View style={styles.listItemDetails}>
-          <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
-          <ThemedText style={styles.listItemText}>
-            Quantidade:{" "}
-            <ThemedText style={styles.listItemTexBold}>
-              {item.quantity}
-            </ThemedText>
-          </ThemedText>
-          {item.category && (
-            <ThemedText style={styles.listItemText}>
-              Categoria:{" "}
+        <ThemedView style={styles.listItem}>
+          <View style={styles.listItemDetails}>
+            <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
+            <ThemedText>
+              Quantidade:{" "}
               <ThemedText style={styles.listItemTexBold}>
-                {item.category}
+                {item.quantity}
               </ThemedText>
             </ThemedText>
-          )}
-          {item.price !== undefined && (
-            <ThemedText style={styles.listItemText}>
-              Preço:{" "}
-              <ThemedText style={styles.listItemTexBold}>
-                R$ {item.price.toFixed(2)}
+            {item.category && (
+              <ThemedText>
+                Categoria:{" "}
+                <ThemedText style={styles.listItemTexBold}>
+                  {item.category}
+                </ThemedText>
               </ThemedText>
-            </ThemedText>
-          )}
-        </View>
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity
-            style={styles.plusButton}
-            onPress={() => onIncrement(item.id)}
-          >
-            <Text style={styles.buttonText}>+</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.minusButton}
-            onPress={() => onDecrement(item.id)}
-          >
-            <Text style={styles.buttonText}>-</Text>
-          </TouchableOpacity>
-        </View>
+            )}
+            {item.price !== undefined && (
+              <ThemedText>
+                Preço:{" "}
+                <ThemedText style={styles.listItemTexBold}>
+                  R$ {item.price.toFixed(2)}
+                </ThemedText>
+              </ThemedText>
+            )}
+          </View>
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              style={styles.plusButton}
+              onPress={() => onIncrement(item.id)}
+            >
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.minusButton}
+              onPress={() => onDecrement(item.id)}
+            >
+              <Text style={styles.buttonText}>-</Text>
+            </TouchableOpacity>
+          </View>
+        </ThemedView>
       </Pressable>
     ))}
   </View>
@@ -497,9 +496,6 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: "transparent",
   },
-  headerText: {
-    color: "#202020",
-  },
   searchBar: {
     borderWidth: 1,
     borderColor: "#DDD",
@@ -515,7 +511,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: "#FFFFFF",
     padding: 20,
     borderRadius: 10,
     width: "90%",
@@ -529,7 +524,6 @@ const styles = StyleSheet.create({
   modalLabel: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#333",
     marginBottom: 4,
   },
   modalInput: {
@@ -566,7 +560,6 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333333",
     marginBottom: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#EEE",
@@ -574,13 +567,11 @@ const styles = StyleSheet.create({
   },
   listItem: {
     borderWidth: 1,
-    borderColor: "#EEE",
     padding: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderRadius: 10,
-    backgroundColor: "#FFFFFF",
     marginBottom: 5,
   },
   listItemDetails: {
@@ -588,12 +579,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   listItemTexBold: {
-    color: "#333333",
     fontWeight: "bold",
   },
-  listItemText: {
-    color: "#333333",
-  },
+
   actionsContainer: {
     flexDirection: "row",
     alignItems: "center",
