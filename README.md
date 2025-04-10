@@ -45,11 +45,17 @@ npm install
 npm start
 ```
 
+This will open the Expo developer tools in your browser. From there, you can:
+
+- Press `i` to run the app in the iOS simulator (macOS only)
+- Press `a` to run the app in the Android emulator
+- Scan the QR code with the **Expo Go** app on your mobile device to test on a physical device
+
 ---
 
 ## 👩‍👦 Inspiration
 
-This app was originally created to help a friend’s mom run her shop more efficiently. It’s designed to be **simple**, **friendly**, and **practical** — like a helping hand in her daily routine.
+This app was born from a personal story — it was originally created to help a friend’s mom manage her small store with ease. She needed a solution that didn’t require technical skills but still offered powerful features to track and organize her stock. **Mommy’s Stock HUB** was built to be **simple**, **friendly**, and **practical** — like a digital assistant in her pocket, making her everyday tasks easier and more efficient.
 
 ---
 
@@ -58,3 +64,16 @@ This app was originally created to help a friend’s mom run her shop more effic
 This project is licensed under the [MIT License](LICENSE).
 
 ---
+
+## 🌐 Contributing
+
+We welcome contributions from the community! Whether it's reporting bugs, suggesting features, or submitting pull requests, your input helps improve this project for everyone.
+
+To contribute:
+
+1. Fork the repository
+2. Create a new branch for your feature or fix
+3. Commit your changes
+4. Submit a pull request with a clear description
+
+Please make sure your code follows the existing style and includes relevant tests if applicable.
