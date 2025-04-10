@@ -76,7 +76,7 @@ export default function DebtorsScreen() {
               <View style={styles.debtorInfo}>
                 <Text style={styles.debtorName}>{item.name}</Text>
                 <Text style={styles.debtorAmount}>
-                  Valor: R$ {item.amount.toFixed(2)}
+                  Valor: R$ {item?.amount?.toFixed(2)}
                 </Text>
                 <Text
                   style={[
@@ -87,6 +87,9 @@ export default function DebtorsScreen() {
                   ]}
                 >
                   {item.status === "open" ? "Em Aberto" : "Pago"}
+                </Text>
+                <Text style={styles.debtorAmount}>
+                  Valor: R$ {item?.amount?.toFixed(2)}
                 </Text>
               </View>
               <View style={styles.actions}>
