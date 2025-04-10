@@ -13,6 +13,8 @@ import {
   Modal,
 } from "react-native";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 
 const SortOptions = ({
   sortType,
@@ -34,13 +36,13 @@ const SortOptions = ({
         style={styles.categoryButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.categoryButtonText}>
+        <ThemedText style={styles.categoryButtonText}>
           {sortType === "amountAsc"
             ? "Menos Devendo"
             : sortType === "amountDesc"
             ? "Mais Devendo"
             : "Ordenar"}
-        </Text>
+        </ThemedText>
       </TouchableOpacity>
 
       {/* Modal para exibir as opções de ordenação */}
@@ -52,24 +54,28 @@ const SortOptions = ({
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Ordenar por:</Text>
+            <ThemedText style={styles.modalTitle}>Ordenar por:</ThemedText>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => handleSelectSort("amountAsc")}
             >
-              <Text style={styles.modalOptionText}>Menos Devendo</Text>
+              <ThemedText style={styles.modalOptionText}>
+                Menos Devendo
+              </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => handleSelectSort("amountDesc")}
             >
-              <Text style={styles.modalOptionText}>Mais Devendo</Text>
+              <ThemedText style={styles.modalOptionText}>
+                Mais Devendo
+              </ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.mainButton, styles.exitButton]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.buttonText}>Fechar</Text>
+              <ThemedText style={styles.buttonText}>Fechar</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -98,13 +104,13 @@ const StatusFilter = ({
         style={styles.categoryButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.categoryButtonText}>
+        <ThemedText style={styles.categoryButtonText}>
           {statusFilter === "open"
             ? "Em Aberto"
             : statusFilter === "paid"
             ? "Pagos"
             : "Filtrar Status"}
-        </Text>
+        </ThemedText>
       </TouchableOpacity>
 
       {/* Modal para exibir as opções de status */}
@@ -116,30 +122,32 @@ const StatusFilter = ({
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Filtrar por Status:</Text>
+            <ThemedText style={styles.modalTitle}>
+              Filtrar por Status:
+            </ThemedText>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => handleSelectStatus("open")}
             >
-              <Text style={styles.modalOptionText}>Em Aberto</Text>
+              <ThemedText style={styles.modalOptionText}>Em Aberto</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => handleSelectStatus("paid")}
             >
-              <Text style={styles.modalOptionText}>Pagos</Text>
+              <ThemedText style={styles.modalOptionText}>Pagos</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
               onPress={() => handleSelectStatus("")}
             >
-              <Text style={styles.modalOptionText}>Todos</Text>
+              <ThemedText style={styles.modalOptionText}>Todos</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.mainButton, styles.exitButton]}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.buttonText}>Fechar</Text>
+              <ThemedText style={styles.buttonText}>Fechar</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -195,7 +203,7 @@ export default function DebtorsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Devedores</Text>
+        <ThemedText style={styles.title}>Devedores</ThemedText>
 
         {/* Barra de Pesquisa */}
         <TextInput
@@ -223,16 +231,18 @@ export default function DebtorsScreen() {
           keyExtractor={(item) => item.id.toString()} // Usar o id como chave
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={
-            <Text style={styles.emptyList}>Nenhum devedor encontrado.</Text>
+            <ThemedText style={styles.emptyList}>
+              Nenhum devedor encontrado.
+            </ThemedText>
           }
           renderItem={({ item }) => (
-            <View style={styles.debtorCard}>
+            <ThemedView style={styles.debtorCard}>
               <View style={styles.debtorInfo}>
-                <Text style={styles.debtorName}>{item.name}</Text>
-                <Text style={styles.debtorAmount}>
+                <ThemedText style={styles.debtorName}>{item.name}</ThemedText>
+                <ThemedText style={styles.debtorAmount}>
                   Valor: R$ {item?.amount?.toFixed(2)}
-                </Text>
-                <Text
+                </ThemedText>
+                <ThemedText
                   style={[
                     styles.debtorStatus,
                     item.status === "open"
@@ -241,7 +251,7 @@ export default function DebtorsScreen() {
                   ]}
                 >
                   {item.status === "open" ? "Em Aberto" : "Pago"}
-                </Text>
+                </ThemedText>
               </View>
               <View style={styles.actions}>
                 {item.status === "open" && (
@@ -249,17 +259,21 @@ export default function DebtorsScreen() {
                     style={[styles.actionButton, styles.markPaidButton]}
                     onPress={() => handleMarkAsPaid(item.id)}
                   >
-                    <Text style={styles.actionButtonText}>Marcar Pago</Text>
+                    <ThemedText style={styles.actionButtonText}>
+                      Marcar Pago
+                    </ThemedText>
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
                   style={[styles.actionButton, styles.deleteButton]}
                   onPress={() => handleDelete(item.id)}
                 >
-                  <Text style={styles.actionButtonText}>Excluir</Text>
+                  <ThemedText style={styles.actionButtonText}>
+                    Excluir
+                  </ThemedText>
                 </TouchableOpacity>
               </View>
-            </View>
+            </ThemedView>
           )}
         />
       </View>
@@ -270,20 +284,17 @@ export default function DebtorsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
   },
   container: {
     flex: 1,
     paddingTop: 24,
     paddingHorizontal: 16,
-    backgroundColor: "#f8f9fa",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
     textAlign: "center",
-    color: "#333",
   },
   searchBar: {
     borderWidth: 1,
@@ -360,7 +371,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   debtorCard: {
-    backgroundColor: "#fff",
     padding: 16,
     borderRadius: 8,
     marginBottom: 12,
@@ -379,12 +389,10 @@ const styles = StyleSheet.create({
   debtorName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
   },
   debtorAmount: {
     fontSize: 14,
     marginVertical: 4,
-    color: "#555",
   },
   debtorStatus: {
     fontSize: 14,
