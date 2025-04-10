@@ -17,6 +17,7 @@ import {
 import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 import { v4 as uuidv4 } from "uuid";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
@@ -93,9 +94,7 @@ export default function AddTabScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <Text style={styles.title}>Adicionar Produto</Text>
-
-        <Text style={styles.label}>Nome do Produto</Text>
+        <ThemedText style={styles.label}>Nome do Produto</ThemedText>
         <TextInput
           style={styles.input}
           value={name}
@@ -103,7 +102,7 @@ export default function AddTabScreen() {
           placeholder="Ex: Sabonete"
         />
 
-        <Text style={styles.label}>Categoria</Text>
+        <ThemedText style={styles.label}>Categoria</ThemedText>
         <TextInput
           style={styles.input}
           value={category}
@@ -120,7 +119,7 @@ export default function AddTabScreen() {
                 style={styles.suggestionItem}
                 onPress={() => handleSelectCategory(item)}
               >
-                <Text style={styles.suggestionText}>{item}</Text>
+                <ThemedText style={styles.suggestionText}>{item}</ThemedText>
               </TouchableOpacity>
             )}
             style={styles.suggestionsContainer}
@@ -128,7 +127,7 @@ export default function AddTabScreen() {
           />
         )}
 
-        <Text style={styles.label}>Quantidade</Text>
+        <ThemedText style={styles.label}>Quantidade</ThemedText>
         <TextInput
           style={styles.input}
           value={quantity !== null ? quantity.toString() : ""}
@@ -140,7 +139,7 @@ export default function AddTabScreen() {
           keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Preço (opcional)</Text>
+        <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
         <TextInput
           style={styles.input}
           value={price}
@@ -160,7 +159,7 @@ export default function AddTabScreen() {
         />
 
         <TouchableOpacity onPress={handleSaveProduct} style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Salvar Produto</Text>
+          <ThemedText style={styles.saveButtonText}>Salvar Produto</ThemedText>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -203,9 +202,7 @@ export default function AddTabScreen() {
 
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Adicionar Devedor</Text>
-
-        <Text style={styles.label}>Nome do Devedor</Text>
+        <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
         <TextInput
           style={styles.input}
           value={name}
@@ -213,7 +210,7 @@ export default function AddTabScreen() {
           placeholder="Ex: Cliente A"
         />
 
-        <Text style={styles.label}>Valor Devido</Text>
+        <ThemedText style={styles.label}>Valor Devido</ThemedText>
         <TextInput
           style={styles.input}
           value={amount}
@@ -223,7 +220,7 @@ export default function AddTabScreen() {
         />
 
         <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Salvar Devedor</Text>
+          <ThemedText style={styles.saveButtonText}>Salvar Devedor</ThemedText>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -239,14 +236,14 @@ export default function AddTabScreen() {
           ]}
           onPress={() => setActiveTab("product")}
         >
-          <Text
+          <ThemedText
             style={[
               styles.tabButtonText,
               activeTab === "product" && styles.activeTabButtonText,
             ]}
           >
             Produto
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -255,14 +252,14 @@ export default function AddTabScreen() {
           ]}
           onPress={() => setActiveTab("debtor")}
         >
-          <Text
+          <ThemedText
             style={[
               styles.tabButtonText,
               activeTab === "debtor" && styles.activeTabButtonText,
             ]}
           >
             Devedor
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
       </View>
 
@@ -276,13 +273,9 @@ export default function AddTabScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
   },
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
   },
   tabButton: {
     flex: 1,
@@ -295,7 +288,6 @@ const styles = StyleSheet.create({
   },
   tabButtonText: {
     fontSize: 16,
-    color: "#555",
   },
   activeTabButtonText: {
     color: "#F5A689",
@@ -303,20 +295,17 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
-    backgroundColor: "#fff",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: "#333",
   },
   label: {
     marginBottom: 8,
     fontSize: 16,
     fontWeight: "500",
-    color: "#555",
   },
   input: {
     borderWidth: 1,
