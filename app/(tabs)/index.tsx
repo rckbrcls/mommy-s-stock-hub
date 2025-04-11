@@ -235,12 +235,13 @@ const styles = StyleSheet.create({
   },
   lowStockSection: {
     marginBottom: 24,
+    paddingVertical: 24,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#F5A689",
-    marginBottom: 12,
+    marginBottom: 24,
     textAlign: "center",
   },
   lowStockContainer: {
