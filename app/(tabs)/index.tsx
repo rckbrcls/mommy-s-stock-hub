@@ -15,6 +15,7 @@ import { useInventory } from "../../contexts/InventoryContext";
 import { useDebtors } from "../../contexts/DebtorContext";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { Card } from "@/components/Card";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -66,10 +67,10 @@ export default function HomeScreen() {
 
         {/* Seção de resumo */}
         <View style={styles.summaryContainer}>
-          <ThemedView style={styles.summaryCard}>
+          <Card style={styles.summaryCard}>
             <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
             <ThemedText style={styles.summaryLabel}>Produtos</ThemedText>
-          </ThemedView>
+          </Card>
           <ThemedView style={styles.summaryCard}>
             <ThemedText style={styles.summaryValue}>
               {totalCategories}
@@ -120,7 +121,7 @@ export default function HomeScreen() {
         </ThemedView>
 
         {/* Resumo de devedores */}
-        <ThemedView style={styles.lowStockSection}>
+        <Card style={styles.lowStockSection}>
           <ThemedText style={styles.sectionTitle}>
             💰 Maiores Devedores:
           </ThemedText>
@@ -152,10 +153,10 @@ export default function HomeScreen() {
           >
             <ThemedText style={styles.buttonText}>Ver Devedores</ThemedText>
           </TouchableOpacity>
-        </ThemedView>
+        </Card>
 
         {/* Resumo de categorias mais em falta */}
-        <ThemedView style={styles.lowStockSection}>
+        <Card style={styles.lowStockSection}>
           <ThemedText style={styles.sectionTitle}>
             📂 Categorias Mais em Falta:
           </ThemedText>
@@ -171,14 +172,14 @@ export default function HomeScreen() {
                 .sort((a, b) => a[1] - b[1]) // Ordenar pelas categorias com menos itens
                 .slice(0, 4) // Limitar a 4 categorias
                 .map(([category, quantity], index) => (
-                  <ThemedView key={index} style={styles.lowStockCard}>
+                  <Card key={index} style={styles.lowStockCard}>
                     <ThemedText style={styles.lowStockName}>
                       {category}
                     </ThemedText>
                     <ThemedText style={styles.lowStockQuantity}>
                       Qtd: {quantity}
                     </ThemedText>
-                  </ThemedView>
+                  </Card>
                 ))}
             </ThemedView>
           ) : (
@@ -192,7 +193,7 @@ export default function HomeScreen() {
           >
             <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
           </TouchableOpacity>
-        </ThemedView>
+        </Card>
       </ScrollView>
     </SafeAreaView>
   );
@@ -223,11 +224,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderRadius: 8,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   summaryValue: {
     fontSize: 20,
@@ -239,13 +235,6 @@ const styles = StyleSheet.create({
   },
   lowStockSection: {
     marginBottom: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    padding: 16,
-    borderRadius: 8,
   },
   sectionTitle: {
     fontSize: 20,
@@ -262,14 +251,8 @@ const styles = StyleSheet.create({
   lowStockCard: {
     flexBasis: "48%",
     padding: 16,
-    borderRadius: 8,
     marginBottom: 12,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   lowStockName: {
     fontSize: 16,
