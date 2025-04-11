@@ -15,6 +15,9 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useInventory } from "@/contexts/InventoryContext";
+import { Card } from "@/components/Card";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { Ionicons } from "@expo/vector-icons";
 
 // Constants
 const MAIN_COLOR = "#F5A689";
@@ -166,14 +169,36 @@ const SearchBar = ({
 }: {
   searchQuery: string;
   setSearchQuery: (text: string) => void;
-}) => (
-  <TextInput
-    style={styles.searchBar}
-    placeholder="Pesquisar por nome do item..."
-    value={searchQuery}
-    onChangeText={setSearchQuery}
-  />
-);
+}) => {
+  const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
+
+  return (
+    <Card
+      style={{
+        marginBottom: 10,
+        padding: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        borderRadius: 20,
+      }}
+    >
+      <Ionicons
+        name="search"
+        size={20}
+        color={textColor}
+        style={{ marginRight: 8 }}
+      />
+
+      <TextInput
+        style={[styles.searchBar, { color: textColor }]}
+        placeholder="Pesquisar por nome do item..."
+        placeholderTextColor={textColor} // Ajusta a cor do placeholder
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+    </Card>
+  );
+};
 
 const CategoryFilter = ({
   selectedCategory,
@@ -193,13 +218,21 @@ const CategoryFilter = ({
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity
-        style={styles.categoryButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <ThemedText style={styles.categoryButtonText}>
-          {selectedCategory || "Todas as Categorias"}
-        </ThemedText>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Card
+          style={{
+            padding: 6,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 30,
+          }}
+        >
+          <ThemedText style={styles.categoryButtonText}>
+            {selectedCategory || "Categoria"}
+          </ThemedText>
+        </Card>
       </TouchableOpacity>
 
       {/* Modal para exibir as categorias */}
@@ -266,21 +299,29 @@ const SortOptions = ({
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity
-        style={styles.categoryButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <ThemedText style={styles.categoryButtonText}>
-          {sortType === "priceAsc"
-            ? "Menor Preço"
-            : sortType === "priceDesc"
-            ? "Maior Preço"
-            : sortType === "quantityAsc"
-            ? "Menor Quantidade"
-            : sortType === "quantityDesc"
-            ? "Maior Quantidade"
-            : "Selecione"}
-        </ThemedText>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Card
+          style={{
+            padding: 6,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 30,
+          }}
+        >
+          <ThemedText style={styles.categoryButtonText}>
+            {sortType === "priceAsc"
+              ? "Menor Preço"
+              : sortType === "priceDesc"
+              ? "Maior Preço"
+              : sortType === "quantityAsc"
+              ? "Menor Quantidade"
+              : sortType === "quantityDesc"
+              ? "Maior Quantidade"
+              : "Ordenar"}
+          </ThemedText>
+        </Card>
       </TouchableOpacity>
 
       {/* Modal para exibir as opções de ordenação */}
@@ -455,7 +496,7 @@ const ItemList = ({
         key={item.id} // Usar id como chave
         onPress={() => onEdit(item.id)}
       >
-        <ThemedView style={styles.listItem}>
+        <Card style={styles.listItem}>
           <View style={styles.listItemDetails}>
             <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
             <ThemedText>
@@ -495,7 +536,7 @@ const ItemList = ({
               <ThemedText style={styles.buttonText}>-</ThemedText>
             </TouchableOpacity>
           </View>
-        </ThemedView>
+        </Card>
       </Pressable>
     ))}
   </View>
@@ -517,12 +558,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   searchBar: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 10,
+    backgroundColor: "transparent", // Deixe transparente para herdar o fundo do Card
   },
   modalOverlay: {
     flex: 1,
@@ -586,12 +622,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   listItem: {
-    padding: 16,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: 10,
-    marginBottom: 5,
   },
   listItemDetails: {
     flexDirection: "column",
@@ -625,16 +658,9 @@ const styles = StyleSheet.create({
   filterContainer: {
     marginBottom: 5,
   },
-
-  categoryButton: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
-    padding: 10,
-    alignItems: "center",
-  },
   categoryButtonText: {
     fontSize: 16,
+    alignSelf: "center",
   },
   modalOption: {
     padding: 10,
