@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   searchBar: {
-    backgroundColor: "transparent", // Deixe transparente para herdar o fundo do Card
+    backgroundColor: "transparent",
   },
   modalOverlay: {
     flex: 1,
@@ -659,8 +659,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   categoryButtonText: {
-    fontSize: 16,
-    alignSelf: "center",
+    fontSize: 14,
+    fontWeight: "600",
   },
   modalOption: {
     padding: 10,

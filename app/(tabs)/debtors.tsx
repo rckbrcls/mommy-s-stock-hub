@@ -17,6 +17,9 @@ import {
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { Card } from "@/components/Card";
+import { Ionicons } from "@expo/vector-icons";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const SortOptions = ({
   sortType,
@@ -34,17 +37,25 @@ const SortOptions = ({
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity
-        style={styles.categoryButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <ThemedText style={styles.categoryButtonText}>
-          {sortType === "amountAsc"
-            ? "Menos Devendo"
-            : sortType === "amountDesc"
-            ? "Mais Devendo"
-            : "Ordenar"}
-        </ThemedText>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Card
+          style={{
+            padding: 6,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 30,
+          }}
+        >
+          <ThemedText style={styles.categoryButtonText}>
+            {sortType === "amountAsc"
+              ? "Menos Devendo"
+              : sortType === "amountDesc"
+              ? "Mais Devendo"
+              : "Ordenar"}
+          </ThemedText>
+        </Card>
       </TouchableOpacity>
 
       {/* Modal para exibir as opções de ordenação */}
@@ -104,17 +115,25 @@ const StatusFilter = ({
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity
-        style={styles.categoryButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <ThemedText style={styles.categoryButtonText}>
-          {statusFilter === "open"
-            ? "Em Aberto"
-            : statusFilter === "paid"
-            ? "Pagos"
-            : "Filtrar Status"}
-        </ThemedText>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <Card
+          style={{
+            padding: 6,
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 30,
+          }}
+        >
+          <ThemedText style={styles.categoryButtonText}>
+            {statusFilter === "open"
+              ? "Em Aberto"
+              : statusFilter === "paid"
+              ? "Pagos"
+              : "Filtrar Status"}
+          </ThemedText>
+        </Card>
       </TouchableOpacity>
 
       {/* Modal para exibir as opções de status */}
@@ -165,6 +184,7 @@ export default function DebtorsScreen() {
   const [searchQuery, setSearchQuery] = useState(""); // Estado para a barra de pesquisa
   const [sortType, setSortType] = useState<"amountAsc" | "amountDesc" | "">(""); // Ordenação
   const [statusFilter, setStatusFilter] = useState<"open" | "paid" | "">(""); // Filtro de status
+  const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
   // Filtrar devedores com base no nome, status e ordenação
   const filteredDebtors = debtors
@@ -211,12 +231,29 @@ export default function DebtorsScreen() {
           <ThemedText style={styles.title}>Devedores</ThemedText>
 
           {/* Barra de Pesquisa */}
-          <TextInput
-            style={styles.searchBar}
-            placeholder="Pesquisar devedores..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 20,
+            }}
+          >
+            <Ionicons
+              name="search"
+              size={20}
+              color={textColor}
+              style={{ marginRight: 8 }}
+            />
+            <TextInput
+              style={[styles.searchBar, { color: textColor }]}
+              placeholder="Pesquisar devedores..."
+              placeholderTextColor={textColor}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </Card>
 
           {/* Filtro de Status e Opções de Ordenação */}
           <View style={{ flexDirection: "row", gap: 10 }}>
@@ -303,12 +340,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   searchBar: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
   },
   filterContainer: {
     marginBottom: 10,
@@ -322,8 +354,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   categoryButtonText: {
-    color: "#333",
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "600",
   },
   modalOverlay: {
     flex: 1,
