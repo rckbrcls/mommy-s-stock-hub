@@ -71,22 +71,22 @@ export default function HomeScreen() {
             <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
             <ThemedText style={styles.summaryLabel}>Produtos</ThemedText>
           </Card>
-          <ThemedView style={styles.summaryCard}>
+          <Card style={styles.summaryCard}>
             <ThemedText style={styles.summaryValue}>
               {totalCategories}
             </ThemedText>
             <ThemedText style={styles.summaryLabel}>Categorias</ThemedText>
-          </ThemedView>
-          <ThemedView style={styles.summaryCard}>
+          </Card>
+          <Card style={styles.summaryCard}>
             <ThemedText style={styles.summaryValue}>
               {lowStock.length}
             </ThemedText>
             <ThemedText style={styles.summaryLabel}>Em Falta</ThemedText>
-          </ThemedView>
+          </Card>
         </View>
 
         {/* Lista de produtos com baixo estoque */}
-        <ThemedView style={styles.lowStockSection}>
+        <Card style={styles.lowStockSection}>
           <ThemedText style={styles.sectionTitle}>
             📉 Produtos com baixo estoque:
           </ThemedText>
@@ -96,14 +96,14 @@ export default function HomeScreen() {
                 (
                   item // Limitar a 4 itens
                 ) => (
-                  <ThemedView key={item.id} style={styles.lowStockCard}>
+                  <Card key={item.id} style={styles.lowStockCard}>
                     <ThemedText style={styles.lowStockName}>
                       {item.name}
                     </ThemedText>
                     <ThemedText style={styles.lowStockQuantity}>
                       Qtd: {item.quantity}
                     </ThemedText>
-                  </ThemedView>
+                  </Card>
                 )
               )}
             </ThemedView>
@@ -118,7 +118,7 @@ export default function HomeScreen() {
           >
             <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
           </TouchableOpacity>
-        </ThemedView>
+        </Card>
 
         {/* Resumo de devedores */}
         <Card style={styles.lowStockSection}>
@@ -131,14 +131,14 @@ export default function HomeScreen() {
                 (
                   debtor // Limitar a 4 itens
                 ) => (
-                  <ThemedView key={debtor.id} style={styles.lowStockCard}>
+                  <Card key={debtor.id} style={styles.lowStockCard}>
                     <ThemedText style={styles.lowStockName}>
                       {debtor.name}
                     </ThemedText>
                     <ThemedText style={styles.lowStockQuantity}>
                       Valor: R$ {debtor?.amount?.toFixed(2)}
                     </ThemedText>
-                  </ThemedView>
+                  </Card>
                 )
               )}
             </ThemedView>

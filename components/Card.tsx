@@ -8,8 +8,13 @@ export const Card = ({ children, style }: ViewProps) => {
     "shadowColor"
   );
 
+  const borderColor = useThemeColor(
+    { light: undefined, dark: undefined },
+    "borderColor"
+  );
+
   return (
-    <ThemedView style={[styles.cardStyle, style, { shadowColor }]}>
+    <ThemedView style={[styles.cardStyle, style, { shadowColor, borderColor }]}>
       {children}
     </ThemedView>
   );
@@ -19,9 +24,10 @@ const styles = StyleSheet.create({
   cardStyle: {
     borderRadius: 8,
     padding: 16,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.01,
-    shadowRadius: 4,
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 5,
+    borderWidth: 1,
   },
 });
