@@ -263,7 +263,6 @@ const styles = StyleSheet.create({
   },
   lowStockQuantity: {
     fontSize: 14,
-
     textAlign: "center",
   },
   emptyList: {
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#F5A689",
-    paddingVertical: 14,
+    paddingVertical: 10,
     borderRadius: 8,
     marginTop: 16,
     shadowColor: "#000",

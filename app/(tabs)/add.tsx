@@ -20,6 +20,7 @@ import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 import { v4 as uuidv4 } from "uuid";
 import { ThemedText } from "@/components/ThemedText";
+import { Card } from "@/components/Card";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
@@ -98,31 +99,60 @@ export default function AddTabScreen() {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <ThemedText style={styles.label}>Nome do Produto</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="Ex: Sabonete"
-          />
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="Ex: Sabonete"
+            />
+          </Card>
 
           <ThemedText style={styles.label}>Categoria</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={category}
-            onChangeText={handleCategoryChange}
-            placeholder="Ex: Higiene"
-          />
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <TextInput
+              style={styles.input}
+              value={category}
+              onChangeText={handleCategoryChange}
+              placeholder="Ex: Higiene"
+            />
+          </Card>
           {/* Dropdown de sugestões */}
           {filteredCategories.length > 0 && (
             <FlatList
               data={filteredCategories}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.suggestionItem}
-                  onPress={() => handleSelectCategory(item)}
-                >
-                  <ThemedText style={styles.suggestionText}>{item}</ThemedText>
+                <TouchableOpacity onPress={() => handleSelectCategory(item)}>
+                  <Card
+                    style={{
+                      marginBottom: 10,
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      borderRadius: 8,
+                    }}
+                  >
+                    <ThemedText style={styles.suggestionText}>
+                      {item}
+                    </ThemedText>
+                  </Card>
                 </TouchableOpacity>
               )}
               style={styles.suggestionsContainer}
@@ -131,35 +161,54 @@ export default function AddTabScreen() {
           )}
 
           <ThemedText style={styles.label}>Quantidade</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={quantity !== null ? quantity.toString() : ""}
-            onChangeText={(value) => {
-              const numericValue = value.replace(/[^0-9]/g, "");
-              setQuantity(numericValue ? parseInt(numericValue, 10) : null);
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 8,
             }}
-            placeholder="Ex: 10"
-            keyboardType="numeric"
-          />
-
+          >
+            <TextInput
+              style={styles.input}
+              value={quantity !== null ? quantity.toString() : ""}
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, "");
+                setQuantity(numericValue ? parseInt(numericValue, 10) : null);
+              }}
+              placeholder="Ex: 10"
+              keyboardType="numeric"
+            />
+          </Card>
           <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={price}
-            onChangeText={(value) => {
-              const numericValue = value.replace(/[^0-9]/g, "");
-              if (numericValue) {
-                const formattedValue = (parseFloat(numericValue) / 100).toFixed(
-                  2
-                );
-                setPrice(`R$ ${formattedValue.replace(".", ",")}`);
-              } else {
-                setPrice("");
-              }
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 8,
             }}
-            placeholder="Ex: R$ 5,99"
-            keyboardType="numeric"
-          />
+          >
+            <TextInput
+              style={styles.input}
+              value={price}
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, "");
+                if (numericValue) {
+                  const formattedValue = (
+                    parseFloat(numericValue) / 100
+                  ).toFixed(2);
+                  setPrice(`R$ ${formattedValue.replace(".", ",")}`);
+                } else {
+                  setPrice("");
+                }
+              }}
+              placeholder="Ex: R$ 5,99"
+              keyboardType="numeric"
+            />
+          </Card>
 
           <TouchableOpacity
             onPress={handleSaveProduct}
@@ -213,21 +262,41 @@ export default function AddTabScreen() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.container}>
           <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="Ex: Cliente A"
-          />
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="Ex: Cliente A"
+            />
+          </Card>
 
           <ThemedText style={styles.label}>Valor Devido</ThemedText>
-          <TextInput
-            style={styles.input}
-            value={amount}
-            onChangeText={handleAmountChange}
-            placeholder="Ex: R$ 100,00"
-            keyboardType="numeric"
-          />
+          <Card
+            style={{
+              marginBottom: 10,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            <TextInput
+              style={styles.input}
+              value={amount}
+              onChangeText={handleAmountChange}
+              placeholder="Ex: R$ 100,00"
+              keyboardType="numeric"
+            />
+          </Card>
 
           <TouchableOpacity
             onPress={handleSaveDebtor}
@@ -324,16 +393,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "transparent",
   },
   saveButton: {
     backgroundColor: "#F5A689",
-    paddingVertical: 16,
+    paddingVertical: 10,
     borderRadius: 8,
     marginTop: 16,
   },
@@ -345,9 +409,7 @@ const styles = StyleSheet.create({
   },
   suggestionsContainer: {
     maxHeight: 150,
-    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#ddd",
     borderRadius: 8,
     marginTop: -8,
     marginBottom: 16,
@@ -360,6 +422,5 @@ const styles = StyleSheet.create({
   },
   suggestionText: {
     fontSize: 16,
-    color: "#333",
   },
 });
