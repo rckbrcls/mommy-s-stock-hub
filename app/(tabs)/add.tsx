@@ -21,6 +21,8 @@ import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto 
 import { v4 as uuidv4 } from "uuid";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedInput } from "@/components/ThemedInput";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
@@ -34,6 +36,7 @@ export default function AddTabScreen() {
     const [quantity, setQuantity] = useState<number | null>(null);
     const [price, setPrice] = useState<string>("");
     const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
+    const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
     // Extrair categorias únicas do inventário
     const allCategories = Array.from(
@@ -99,40 +102,22 @@ export default function AddTabScreen() {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <ThemedText style={styles.label}>Nome do Produto</ThemedText>
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 8,
-            }}
-          >
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-              placeholder="Ex: Sabonete"
-            />
-          </Card>
+
+          <ThemedInput
+            value={name}
+            onChangeText={setName}
+            placeholder="Ex: Sabonete"
+          />
 
           <ThemedText style={styles.label}>Categoria</ThemedText>
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 8,
-            }}
-          >
-            <TextInput
-              style={styles.input}
-              value={category}
-              onChangeText={handleCategoryChange}
-              placeholder="Ex: Higiene"
-            />
-          </Card>
+          <ThemedInput
+            style={[styles.input, { color: textColor }]}
+            placeholderTextColor={textColor}
+            value={category}
+            onChangeText={handleCategoryChange}
+            placeholder="Ex: Higiene"
+          />
+
           {/* Dropdown de sugestões */}
           {filteredCategories.length > 0 && (
             <FlatList
@@ -161,54 +146,39 @@ export default function AddTabScreen() {
           )}
 
           <ThemedText style={styles.label}>Quantidade</ThemedText>
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 8,
+
+          <ThemedInput
+            style={[styles.input, { color: textColor }]}
+            placeholderTextColor={textColor}
+            value={quantity !== null ? quantity.toString() : ""}
+            onChangeText={(value) => {
+              const numericValue = value.replace(/[^0-9]/g, "");
+              setQuantity(numericValue ? parseInt(numericValue, 10) : null);
             }}
-          >
-            <TextInput
-              style={styles.input}
-              value={quantity !== null ? quantity.toString() : ""}
-              onChangeText={(value) => {
-                const numericValue = value.replace(/[^0-9]/g, "");
-                setQuantity(numericValue ? parseInt(numericValue, 10) : null);
-              }}
-              placeholder="Ex: 10"
-              keyboardType="numeric"
-            />
-          </Card>
+            placeholder="Ex: 10"
+            keyboardType="numeric"
+          />
+
           <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 8,
+
+          <ThemedInput
+            style={[styles.input, { color: textColor }]}
+            placeholderTextColor={textColor}
+            value={price}
+            onChangeText={(value) => {
+              const numericValue = value.replace(/[^0-9]/g, "");
+              if (numericValue) {
+                const formattedValue = (parseFloat(numericValue) / 100).toFixed(
+                  2
+                );
+                setPrice(`R$ ${formattedValue.replace(".", ",")}`);
+              } else {
+                setPrice("");
+              }
             }}
-          >
-            <TextInput
-              style={styles.input}
-              value={price}
-              onChangeText={(value) => {
-                const numericValue = value.replace(/[^0-9]/g, "");
-                if (numericValue) {
-                  const formattedValue = (
-                    parseFloat(numericValue) / 100
-                  ).toFixed(2);
-                  setPrice(`R$ ${formattedValue.replace(".", ",")}`);
-                } else {
-                  setPrice("");
-                }
-              }}
-              placeholder="Ex: R$ 5,99"
-              keyboardType="numeric"
-            />
-          </Card>
+            placeholder="Ex: R$ 5,99"
+            keyboardType="numeric"
+          />
 
           <TouchableOpacity
             onPress={handleSaveProduct}
@@ -227,6 +197,7 @@ export default function AddTabScreen() {
   const AddDebtorScreen = () => {
     const [name, setName] = useState("");
     const [amount, setAmount] = useState<string>("");
+    const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
     const handleSaveDebtor = async () => {
       if (!name.trim() || !amount.trim()) {
@@ -262,41 +233,25 @@ export default function AddTabScreen() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.container}>
           <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 8,
-            }}
-          >
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-              placeholder="Ex: Cliente A"
-            />
-          </Card>
+
+          <TextInput
+            style={[styles.input, { color: textColor }]}
+            placeholderTextColor={textColor}
+            value={name}
+            onChangeText={setName}
+            placeholder="Ex: Cliente A"
+          />
 
           <ThemedText style={styles.label}>Valor Devido</ThemedText>
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 8,
-            }}
-          >
-            <TextInput
-              style={styles.input}
-              value={amount}
-              onChangeText={handleAmountChange}
-              placeholder="Ex: R$ 100,00"
-              keyboardType="numeric"
-            />
-          </Card>
+
+          <TextInput
+            style={[styles.input, { color: textColor }]}
+            placeholderTextColor={textColor}
+            value={amount}
+            onChangeText={handleAmountChange}
+            placeholder="Ex: R$ 100,00"
+            keyboardType="numeric"
+          />
 
           <TouchableOpacity
             onPress={handleSaveDebtor}
@@ -392,9 +347,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  input: {
-    backgroundColor: "transparent",
-  },
+  input: {},
   saveButton: {
     backgroundColor: "#F5A689",
     paddingVertical: 10,

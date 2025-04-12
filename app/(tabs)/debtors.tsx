@@ -14,9 +14,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
+import { useDebtors } from "@/contexts/DebtorContext";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -248,8 +247,8 @@ export default function DebtorsScreen() {
             />
             <TextInput
               style={[styles.searchBar, { color: textColor }]}
-              placeholder="Pesquisar devedores..."
               placeholderTextColor={textColor}
+              placeholder="Pesquisar devedores..."
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
@@ -278,7 +277,7 @@ export default function DebtorsScreen() {
               </ThemedText>
             }
             renderItem={({ item }) => (
-              <ThemedView style={styles.debtorCard}>
+              <Card style={styles.debtorCard}>
                 <View style={styles.debtorInfo}>
                   <ThemedText style={styles.debtorName}>{item.name}</ThemedText>
                   <ThemedText style={styles.debtorAmount}>
@@ -315,7 +314,7 @@ export default function DebtorsScreen() {
                     </ThemedText>
                   </TouchableOpacity>
                 </View>
-              </ThemedView>
+              </Card>
             )}
           />
         </View>
@@ -409,17 +408,10 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   debtorCard: {
-    padding: 16,
-    borderRadius: 8,
     marginBottom: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   debtorInfo: {
     flex: 1,
