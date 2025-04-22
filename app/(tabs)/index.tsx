@@ -77,11 +77,11 @@ export default function HomeScreen() {
   }, [debtors]);
 
   const stockByCategory = useMemo(() => {
-    const categoryData = items.reduce((acc, item) => {
+    const categoryData = items.reduce<Record<string, number>>((acc, item) => {
       const category = item.category || "Sem Categoria";
       acc[category] = (acc[category] || 0) + item.quantity;
       return acc;
-    }, {} as Record<string, number>);
+    }, {});
 
     return {
       labels: Object.keys(categoryData),
@@ -93,13 +93,15 @@ export default function HomeScreen() {
     };
   }, [items]);
 
-  const debtorsData = debtors.map((debtor, index) => ({
-    name: debtor.name,
-    amount: debtor.amount,
-    color: pieChartColors[index]?.color,
-    legendFontColor: pieChartColors[index]?.legendFontColor,
-    legendFontSize: 12,
-  }));
+  const debtorsData = useMemo(() => {
+    return debtors.map((debtor, index) => ({
+      name: debtor.name,
+      amount: debtor.amount,
+      color: pieChartColors[index]?.color,
+      legendFontColor: pieChartColors[index]?.legendFontColor,
+      legendFontSize: 12,
+    }));
+  }, [debtors]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
