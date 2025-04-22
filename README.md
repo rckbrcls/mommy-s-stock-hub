@@ -62,18 +62,3 @@ This app was born from a personal story — it was originally created to help a 
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 🌐 Contributing
-
-We welcome contributions from the community! Whether it's reporting bugs, suggesting features, or submitting pull requests, your input helps improve this project for everyone.
-
-To contribute:
-
-1. Fork the repository
-2. Create a new branch for your feature or fix
-3. Commit your changes
-4. Submit a pull request with a clear description
-
-Please make sure your code follows the existing style and includes relevant tests if applicable.
