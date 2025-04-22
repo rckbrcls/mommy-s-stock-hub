@@ -10,12 +10,16 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Dimensions,
 } from "react-native";
 import { useInventory } from "../../contexts/InventoryContext";
 import { useDebtors } from "../../contexts/DebtorContext";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
+import { BarChart, PieChart } from "react-native-chart-kit";
+
+const screenWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -41,6 +45,35 @@ export default function HomeScreen() {
       .filter((debtor) => debtor.status === "open")
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 3); // Pegar os 3 maiores devedores
+  }, [debtors]);
+
+  // Dados para o gráfico de barras (estoque por categoria)
+  const stockByCategory = useMemo(() => {
+    const categoryData = items.reduce((acc, item) => {
+      const category = item.category || "Sem Categoria";
+      acc[category] = (acc[category] || 0) + item.quantity;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return {
+      labels: Object.keys(categoryData),
+      datasets: [
+        {
+          data: Object.values(categoryData),
+        },
+      ],
+    };
+  }, [items]);
+
+  // Dados para o gráfico de pizza (devedores)
+  const debtorsData = useMemo(() => {
+    return debtors.map((debtor) => ({
+      name: debtor.name,
+      amount: debtor.amount,
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 12,
+    }));
   }, [debtors]);
 
   return (
@@ -194,6 +227,48 @@ export default function HomeScreen() {
             <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
           </TouchableOpacity>
         </Card>
+
+        {/* Gráfico de barras: Estoque por categoria */}
+        <Card style={styles.chartContainer}>
+          <ThemedText style={styles.sectionTitle}>
+            📊 Estoque por Categoria
+          </ThemedText>
+          <BarChart
+            data={stockByCategory}
+            width={screenWidth - 64}
+            height={220}
+            yAxisLabel="Qtd: "
+            yAxisSuffix=""
+            chartConfig={{
+              backgroundColor: "#fff",
+              backgroundGradientFrom: "#f5f5f5",
+              backgroundGradientTo: "#f5f5f5",
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            }}
+            style={styles.chart}
+          />
+        </Card>
+
+        {/* Gráfico de pizza: Devedores */}
+        <Card style={styles.chartContainer}>
+          <ThemedText style={styles.sectionTitle}>
+            💰 Distribuição dos Devedores
+          </ThemedText>
+          <PieChart
+            data={debtorsData}
+            width={screenWidth - 32}
+            height={220}
+            chartConfig={{
+              color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
+            }}
+            accessor={"amount"}
+            backgroundColor={"transparent"}
+            paddingLeft={"15"}
+            absolute
+          />
+        </Card>
       </ScrollView>
     </SafeAreaView>
   );
@@ -290,5 +365,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "600",
     fontSize: 16,
+  },
+  chartContainer: {
+    marginBottom: 24,
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  chart: {
+    marginVertical: 8,
+    borderRadius: 8,
   },
 });
