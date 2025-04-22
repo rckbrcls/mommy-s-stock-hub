@@ -1,16 +1,9 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
-
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
@@ -18,16 +11,6 @@ export default function TabLayout() {
         tabBarInactiveTintColor: "#C0C0C0", // Cor da aba não selecionada
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: "absolute",
-            backgroundColor: Colors[colorScheme ?? "light"].background, // Set background color
-          },
-          default: {
-            backgroundColor: Colors[colorScheme ?? "light"].background, // Set background color
-          },
-        }),
       }}
     >
       <Tabs.Screen
@@ -44,7 +27,7 @@ export default function TabLayout() {
         options={{
           title: "Inventário",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="archivebox.fill" color={color} />
+            <IconSymbol size={28} name="archivebox" color={color} />
           ),
         }}
       />
@@ -53,7 +36,7 @@ export default function TabLayout() {
         options={{
           title: "Adicionar",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="plus.circle.fill" color={color} />
+            <IconSymbol size={28} name="add-circle" color={color} />
           ),
         }}
       />
@@ -62,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: "Devedores",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="creditcard.fill" color={color} />
+            <IconSymbol size={28} name="person" color={color} />
           ),
         }}
       />
@@ -72,7 +55,7 @@ export default function TabLayout() {
           title: "Ajustes",
 
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="gearshape.fill" color={color} />
+            <IconSymbol size={28} name="gear" color={color} />
           ),
         }}
       />

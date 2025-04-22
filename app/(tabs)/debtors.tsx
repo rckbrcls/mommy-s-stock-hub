@@ -19,6 +19,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { ThemedView } from "@/components/ThemedView";
 
 const SortOptions = ({
   sortType,
@@ -66,7 +67,7 @@ const SortOptions = ({
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
+            <ThemedView style={styles.modalContainer}>
               <ThemedText style={styles.modalTitle}>Ordenar por:</ThemedText>
               <TouchableOpacity
                 style={styles.modalOption}
@@ -90,7 +91,7 @@ const SortOptions = ({
               >
                 <ThemedText style={styles.buttonText}>Fechar</ThemedText>
               </TouchableOpacity>
-            </View>
+            </ThemedView>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -143,7 +144,7 @@ const StatusFilter = ({
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
+          <ThemedView style={styles.modalContainer}>
             <ThemedText style={styles.modalTitle}>
               Filtrar por Status:
             </ThemedText>
@@ -171,7 +172,7 @@ const StatusFilter = ({
             >
               <ThemedText style={styles.buttonText}>Fechar</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         </View>
       </Modal>
     </View>
@@ -363,7 +364,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: "#FFFFFF",
     padding: 20,
     borderRadius: 10,
     width: "90%",
@@ -372,16 +372,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     marginBottom: 10,
-    color: "#333",
   },
   modalOption: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
   },
   modalOptionText: {
     fontSize: 16,
-    color: "#333",
   },
   mainButton: {
     padding: 10,

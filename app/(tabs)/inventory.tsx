@@ -4,13 +4,13 @@ import {
   StyleSheet,
   View,
   Modal,
-  TextInput,
   TouchableOpacity,
   Text,
   Pressable,
   ScrollView,
   Keyboard,
   TouchableWithoutFeedback,
+  TextInput,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -18,6 +18,7 @@ import { useInventory } from "@/contexts/InventoryContext";
 import { Card } from "@/components/Card";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ionicons } from "@expo/vector-icons";
+import { ThemedInput } from "@/components/ThemedInput";
 
 // Constants
 const MAIN_COLOR = "#F5A689";
@@ -418,7 +419,7 @@ const EditItemModal = ({
           <ThemedText style={styles.modalTitle}>Editar Item</ThemedText>
 
           <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
-          <TextInput
+          <ThemedInput
             placeholder="Nome do item"
             value={itemName}
             onChangeText={setItemName}
@@ -426,7 +427,7 @@ const EditItemModal = ({
           />
 
           <ThemedText style={styles.modalLabel}>Quantidade</ThemedText>
-          <TextInput
+          <ThemedInput
             placeholder="Quantidade"
             value={itemQuantity}
             onChangeText={setItemQuantity}
@@ -435,7 +436,7 @@ const EditItemModal = ({
           />
 
           <ThemedText style={styles.modalLabel}>Categoria</ThemedText>
-          <TextInput
+          <ThemedInput
             placeholder="Categoria"
             value={itemCategory}
             onChangeText={setItemCategory}
@@ -443,7 +444,7 @@ const EditItemModal = ({
           />
 
           <ThemedText style={styles.modalLabel}>Preço</ThemedText>
-          <TextInput
+          <ThemedInput
             placeholder="Preço"
             value={itemPrice}
             onChangeText={setItemPrice}

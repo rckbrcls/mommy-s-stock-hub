@@ -101,84 +101,85 @@ export default function AddTabScreen() {
           style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          <ThemedText style={styles.label}>Nome do Produto</ThemedText>
-
-          <ThemedInput
-            value={name}
-            onChangeText={setName}
-            placeholder="Ex: Sabonete"
-          />
-
-          <ThemedText style={styles.label}>Categoria</ThemedText>
-          <ThemedInput
-            style={[styles.input, { color: textColor }]}
-            placeholderTextColor={textColor}
-            value={category}
-            onChangeText={handleCategoryChange}
-            placeholder="Ex: Higiene"
-          />
-
-          {/* Dropdown de sugestões */}
-          {filteredCategories.length > 0 && (
-            <FlatList
-              data={filteredCategories}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleSelectCategory(item)}>
-                  <Card
-                    style={{
-                      marginBottom: 10,
-                      padding: 10,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      borderRadius: 8,
-                    }}
-                  >
-                    <ThemedText style={styles.suggestionText}>
-                      {item}
-                    </ThemedText>
-                  </Card>
-                </TouchableOpacity>
-              )}
-              style={styles.suggestionsContainer}
-              keyboardShouldPersistTaps="handled" // Permitir interação com o dropdown
+          <View>
+            <ThemedText style={styles.label}>Nome do Produto</ThemedText>
+            <ThemedInput
+              value={name}
+              onChangeText={setName}
+              placeholder="Ex: Sabonete"
             />
-          )}
+          </View>
 
-          <ThemedText style={styles.label}>Quantidade</ThemedText>
+          <View>
+            <ThemedText style={styles.label}>Categoria</ThemedText>
+            <ThemedInput
+              placeholderTextColor={textColor}
+              value={category}
+              onChangeText={handleCategoryChange}
+              placeholder="Ex: Higiene"
+            />
 
-          <ThemedInput
-            style={[styles.input, { color: textColor }]}
-            placeholderTextColor={textColor}
-            value={quantity !== null ? quantity.toString() : ""}
-            onChangeText={(value) => {
-              const numericValue = value.replace(/[^0-9]/g, "");
-              setQuantity(numericValue ? parseInt(numericValue, 10) : null);
-            }}
-            placeholder="Ex: 10"
-            keyboardType="numeric"
-          />
+            {/* Dropdown de sugestões */}
+            {filteredCategories.length > 0 && (
+              <FlatList
+                data={filteredCategories}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleSelectCategory(item)}>
+                    <Card
+                      style={{
+                        marginBottom: 10,
+                        padding: 10,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        borderRadius: 8,
+                      }}
+                    >
+                      <ThemedText style={styles.suggestionText}>
+                        {item}
+                      </ThemedText>
+                    </Card>
+                  </TouchableOpacity>
+                )}
+                style={styles.suggestionsContainer}
+                keyboardShouldPersistTaps="handled" // Permitir interação com o dropdown
+              />
+            )}
+          </View>
+          <View>
+            <ThemedText style={styles.label}>Quantidade</ThemedText>
+            <ThemedInput
+              placeholderTextColor={textColor}
+              value={quantity !== null ? quantity.toString() : ""}
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, "");
+                setQuantity(numericValue ? parseInt(numericValue, 10) : null);
+              }}
+              placeholder="Ex: 10"
+              keyboardType="numeric"
+            />
+          </View>
 
-          <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
-
-          <ThemedInput
-            style={[styles.input, { color: textColor }]}
-            placeholderTextColor={textColor}
-            value={price}
-            onChangeText={(value) => {
-              const numericValue = value.replace(/[^0-9]/g, "");
-              if (numericValue) {
-                const formattedValue = (parseFloat(numericValue) / 100).toFixed(
-                  2
-                );
-                setPrice(`R$ ${formattedValue.replace(".", ",")}`);
-              } else {
-                setPrice("");
-              }
-            }}
-            placeholder="Ex: R$ 5,99"
-            keyboardType="numeric"
-          />
+          <View>
+            <ThemedText style={styles.label}>Preço (opcional)</ThemedText>
+            <ThemedInput
+              placeholderTextColor={textColor}
+              value={price}
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, "");
+                if (numericValue) {
+                  const formattedValue = (
+                    parseFloat(numericValue) / 100
+                  ).toFixed(2);
+                  setPrice(`R$ ${formattedValue.replace(".", ",")}`);
+                } else {
+                  setPrice("");
+                }
+              }}
+              placeholder="Ex: R$ 5,99"
+              keyboardType="numeric"
+            />
+          </View>
 
           <TouchableOpacity
             onPress={handleSaveProduct}
@@ -232,26 +233,25 @@ export default function AddTabScreen() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.container}>
-          <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
-
-          <TextInput
-            style={[styles.input, { color: textColor }]}
-            placeholderTextColor={textColor}
-            value={name}
-            onChangeText={setName}
-            placeholder="Ex: Cliente A"
-          />
-
-          <ThemedText style={styles.label}>Valor Devido</ThemedText>
-
-          <TextInput
-            style={[styles.input, { color: textColor }]}
-            placeholderTextColor={textColor}
-            value={amount}
-            onChangeText={handleAmountChange}
-            placeholder="Ex: R$ 100,00"
-            keyboardType="numeric"
-          />
+          <View>
+            <ThemedText style={styles.label}>Nome do Devedor</ThemedText>
+            <ThemedInput
+              placeholderTextColor={textColor}
+              value={name}
+              onChangeText={setName}
+              placeholder="Ex: Cliente A"
+            />
+          </View>
+          <View>
+            <ThemedText style={styles.label}>Valor Devido</ThemedText>
+            <ThemedInput
+              placeholderTextColor={textColor}
+              value={amount}
+              onChangeText={handleAmountChange}
+              placeholder="Ex: R$ 100,00"
+              keyboardType="numeric"
+            />
+          </View>
 
           <TouchableOpacity
             onPress={handleSaveDebtor}
@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
+    gap: 10,
   },
   title: {
     fontSize: 24,
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  input: {},
+
   saveButton: {
     backgroundColor: "#F5A689",
     paddingVertical: 10,
