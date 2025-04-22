@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
@@ -201,7 +202,15 @@ export default function AddTabScreen() {
     const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
     const handleSaveDebtor = async () => {
+      console.log("→ Cliquei no botão Salvar");
+      console.log("📊 name =", JSON.stringify(name));
+      console.log("📊 amount =", JSON.stringify(amount));
+
       if (!name.trim() || !amount.trim()) {
+        console.log("❌ Validação falhou — campos recebidos:", {
+          name: `"${name}"`,
+          amount: `"${amount}"`,
+        });
         Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
         return;
       }
@@ -213,7 +222,8 @@ export default function AddTabScreen() {
         status: "open" as "open", // Status inicial como "Em Aberto"
       };
 
-      await addDebtor(newDebtor); // Usando a função do contexto de devedores
+      console.log("✅ Vai salvar", newDebtor);
+      await addDebtor(newDebtor);
 
       Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
       setName("");

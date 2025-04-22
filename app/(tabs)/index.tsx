@@ -18,6 +18,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
 import { BarChart, PieChart } from "react-native-chart-kit";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -26,28 +27,55 @@ export default function HomeScreen() {
   const { items } = useInventory();
   const { debtors } = useDebtors();
 
-  // Calcular dados dinâmicos
+  // Ensure useThemeColor is called consistently at the top level
+  const backgroundColor = useThemeColor(
+    { light: undefined, dark: undefined },
+    "background"
+  );
+  const color = useThemeColor({ light: undefined, dark: undefined }, "text");
+
+  // Precompute colors for PieChart at the top level
+  // Cor base do tema (chamada única de Hook)
+  const basePieColor = useThemeColor(
+    { light: "rgba(245, 166, 137, 1)", dark: "rgba(245, 166, 137, 1)" },
+    "text"
+  );
+  const legendFontColor = useThemeColor(
+    { light: "#000", dark: "#FFF" },
+    "text"
+  );
+
+  // Gera o array só com lógica normal (useMemo opcional, sem Hooks dentro)
+  const pieChartColors = useMemo(
+    () =>
+      debtors.map((_, index) => ({
+        color: `rgba(245, 166, 137, ${1 - index * 0.2})`, // ajusta a opacidade
+        legendFontColor,
+      })),
+    [debtors, legendFontColor]
+  );
+
   const totalProducts = items.length;
+
   const totalCategories = useMemo(() => {
     const categories = new Set(
       items.map((item) => item.category || "Sem Categoria")
     );
     return categories.size;
   }, [items]);
+
   const lowStock = useMemo(
     () => items.filter((item) => item.quantity < 5),
     [items]
   );
 
-  // Maiores devedores
   const topDebtors = useMemo(() => {
     return debtors
       .filter((debtor) => debtor.status === "open")
       .sort((a, b) => b.amount - a.amount)
-      .slice(0, 3); // Pegar os 3 maiores devedores
+      .slice(0, 3);
   }, [debtors]);
 
-  // Dados para o gráfico de barras (estoque por categoria)
   const stockByCategory = useMemo(() => {
     const categoryData = items.reduce((acc, item) => {
       const category = item.category || "Sem Categoria";
@@ -65,16 +93,13 @@ export default function HomeScreen() {
     };
   }, [items]);
 
-  // Dados para o gráfico de pizza (devedores)
-  const debtorsData = useMemo(() => {
-    return debtors.map((debtor) => ({
-      name: debtor.name,
-      amount: debtor.amount,
-      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 12,
-    }));
-  }, [debtors]);
+  const debtorsData = debtors.map((debtor, index) => ({
+    name: debtor.name,
+    amount: debtor.amount,
+    color: pieChartColors[index]?.color,
+    legendFontColor: pieChartColors[index]?.legendFontColor,
+    legendFontSize: 12,
+  }));
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -240,12 +265,18 @@ export default function HomeScreen() {
             yAxisLabel="Qtd: "
             yAxisSuffix=""
             chartConfig={{
-              backgroundColor: "#fff",
-              backgroundGradientFrom: "#f5f5f5",
-              backgroundGradientTo: "#f5f5f5",
               decimalPlaces: 0,
+              backgroundColor: "transparent",
+              backgroundGradientFrom: backgroundColor,
+              backgroundGradientTo: backgroundColor,
               color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              labelColor: (opacity = 1) => color,
+              style: { borderRadius: 16 },
+              propsForDots: {
+                r: "6",
+                strokeWidth: "2",
+                stroke: "#ffa726",
+              },
             }}
             style={styles.chart}
           />
@@ -370,7 +401,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     padding: 16,
     borderRadius: 8,
-    backgroundColor: "#fff",
+
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
