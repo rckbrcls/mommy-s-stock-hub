@@ -260,28 +260,34 @@ export default function HomeScreen() {
           <ThemedText style={styles.sectionTitle}>
             📊 Estoque por Categoria
           </ThemedText>
-          <BarChart
-            data={stockByCategory}
-            width={screenWidth - 64}
-            height={220}
-            yAxisLabel="Qtd: "
-            yAxisSuffix=""
-            chartConfig={{
-              decimalPlaces: 0,
-              backgroundColor: "transparent",
-              backgroundGradientFrom: backgroundColor,
-              backgroundGradientTo: backgroundColor,
-              color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
-              labelColor: (opacity = 1) => color,
-              style: { borderRadius: 16 },
-              propsForDots: {
-                r: "6",
-                strokeWidth: "2",
-                stroke: "#ffa726",
-              },
-            }}
-            style={styles.chart}
-          />
+          {stockByCategory.datasets[0].data.length > 0 ? (
+            <BarChart
+              data={stockByCategory}
+              width={screenWidth - 64}
+              height={220}
+              yAxisLabel="Qtd: "
+              yAxisSuffix=""
+              chartConfig={{
+                decimalPlaces: 0,
+                backgroundColor: "transparent",
+                backgroundGradientFrom: backgroundColor,
+                backgroundGradientTo: backgroundColor,
+                color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
+                labelColor: (opacity = 1) => color,
+                style: { borderRadius: 16 },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726",
+                },
+              }}
+              style={styles.chart}
+            />
+          ) : (
+            <ThemedText style={styles.emptyList}>
+              Nenhum dado disponível para o gráfico.
+            </ThemedText>
+          )}
         </Card>
 
         {/* Gráfico de pizza: Devedores */}
@@ -289,18 +295,24 @@ export default function HomeScreen() {
           <ThemedText style={styles.sectionTitle}>
             💰 Distribuição dos Devedores
           </ThemedText>
-          <PieChart
-            data={debtorsData}
-            width={screenWidth - 32}
-            height={220}
-            chartConfig={{
-              color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
-            }}
-            accessor={"amount"}
-            backgroundColor={"transparent"}
-            paddingLeft={"15"}
-            absolute
-          />
+          {debtorsData.length > 0 ? (
+            <PieChart
+              data={debtorsData}
+              width={screenWidth - 32}
+              height={220}
+              chartConfig={{
+                color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
+              }}
+              accessor={"amount"}
+              backgroundColor={"transparent"}
+              paddingLeft={"15"}
+              absolute
+            />
+          ) : (
+            <ThemedText style={styles.emptyList}>
+              Nenhum dado disponível para o gráfico.
+            </ThemedText>
+          )}
         </Card>
       </ScrollView>
     </SafeAreaView>

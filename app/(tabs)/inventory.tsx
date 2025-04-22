@@ -11,6 +11,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TextInput,
+  FlatList,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -480,7 +481,7 @@ const ItemList = ({
   onDecrement,
 }: {
   items: {
-    id: string; // Adicionar id aqui
+    id: string;
     name: string;
     quantity: number;
     category?: string;
@@ -490,13 +491,11 @@ const ItemList = ({
   onIncrement: (id: string) => void;
   onDecrement: (id: string) => void;
 }) => (
-  <View style={styles.listContainer}>
-    <ThemedText style={styles.listTitle}>Lista de Itens</ThemedText>
-    {items.map((item) => (
-      <Pressable
-        key={item.id} // Usar id como chave
-        onPress={() => onEdit(item.id)}
-      >
+  <FlatList
+    data={items}
+    keyExtractor={(item) => item.id}
+    renderItem={({ item }) => (
+      <Pressable onPress={() => onEdit(item.id)}>
         <Card style={styles.listItem}>
           <View style={styles.listItemDetails}>
             <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
@@ -539,8 +538,11 @@ const ItemList = ({
           </View>
         </Card>
       </Pressable>
-    ))}
-  </View>
+    )}
+    ListEmptyComponent={
+      <ThemedText style={styles.emptyList}>Nenhum item encontrado.</ThemedText>
+    }
+  />
 );
 
 // Styles
@@ -614,14 +616,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     gap: 10,
   },
-  listTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
-    paddingBottom: 10,
-  },
+
   listItem: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -705,5 +700,11 @@ const styles = StyleSheet.create({
   sortButtonText: {
     color: "#333",
     fontWeight: "bold",
+  },
+  emptyList: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: "#999",
   },
 });

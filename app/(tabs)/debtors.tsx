@@ -228,7 +228,9 @@ export default function DebtorsScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
-          <ThemedText style={styles.title}>Devedores</ThemedText>
+          <ThemedView style={styles.header}>
+            <ThemedText type="title">Devedores</ThemedText>
+          </ThemedView>
 
           {/* Barra de Pesquisa */}
           <Card
@@ -327,6 +329,12 @@ export default function DebtorsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+  },
+  header: {
+    flexDirection: "row",
+    gap: 8,
+    backgroundColor: "transparent",
+    marginBottom: 10,
   },
   container: {
     flex: 1,
