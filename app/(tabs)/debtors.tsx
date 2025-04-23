@@ -13,6 +13,7 @@ import {
   Modal,
   Keyboard,
   TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 import { useDebtors } from "@/contexts/DebtorContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -225,55 +226,62 @@ export default function DebtorsScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <ThemedView style={styles.header}>
-            <ThemedText type="title">Devedores</ThemedText>
-          </ThemedView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View>
+            <ThemedView style={styles.header}>
+              <ThemedText type="title">Devedores</ThemedText>
+            </ThemedView>
 
-          {/* Barra de Pesquisa */}
-          <Card
-            style={{
-              marginBottom: 10,
-              padding: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 20,
-            }}
-          >
-            <Ionicons
-              name="search"
-              size={20}
-              color={textColor}
-              style={{ marginRight: 8 }}
-            />
-            <TextInput
-              style={[styles.searchBar, { color: textColor }]}
-              placeholderTextColor={textColor}
-              placeholder="Pesquisar devedores..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-          </Card>
-
-          {/* Filtro de Status e Opções de Ordenação */}
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1 }}>
-              <StatusFilter
-                statusFilter={statusFilter}
-                setStatusFilter={setStatusFilter}
+            {/* Barra de Pesquisa */}
+            <Card
+              style={{
+                marginBottom: 10,
+                padding: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                borderRadius: 20,
+              }}
+            >
+              <Ionicons
+                name="search"
+                size={20}
+                color={textColor}
+                style={{ marginRight: 8 }}
               />
-            </View>
-            <View style={{ flex: 1 }}>
-              <SortOptions sortType={sortType} setSortType={setSortType} />
+              <TextInput
+                style={[styles.searchBar, { color: textColor }]}
+                placeholderTextColor={textColor}
+                placeholder="Pesquisar devedores..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+            </Card>
+
+            {/* Filtro de Status e Opções de Ordenação */}
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <View style={{ flex: 1 }}>
+                <StatusFilter
+                  statusFilter={statusFilter}
+                  setStatusFilter={setStatusFilter}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <SortOptions sortType={sortType} setSortType={setSortType} />
+              </View>
             </View>
           </View>
+        </TouchableWithoutFeedback>
 
+        <View style={{ flex: 1 }}>
           <FlatList
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            style={{ flex: 1 }}
             data={filteredDebtors}
-            keyExtractor={(item) => item.id.toString()} // Usar o id como chave
-            contentContainerStyle={styles.listContainer}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 16 }}
             ListEmptyComponent={
               <ThemedText style={styles.emptyList}>
                 Nenhum devedor encontrado.
@@ -321,8 +329,8 @@ export default function DebtorsScreen() {
             )}
           />
         </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </View>
+    </SafeAreaView>
   );
 }
 

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
-  ScrollView,
   Keyboard,
   TouchableWithoutFeedback,
   TextInput,
@@ -106,9 +105,9 @@ export default function InventoryScreen() {
     });
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <SafeAreaView style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.fixedSection}>
           <Header />
           <View>
             <SearchBar
@@ -129,32 +128,34 @@ export default function InventoryScreen() {
               </View>
             </View>
           </View>
-          <EditItemModal
-            visible={editModalVisible}
-            onClose={() => setEditModalVisible(false)}
-            itemName={editItemName}
-            setItemName={setEditItemName}
-            itemQuantity={editItemQuantity}
-            setItemQuantity={setEditItemQuantity}
-            itemCategory={editItemCategory}
-            setItemCategory={setEditItemCategory}
-            itemPrice={editItemPrice}
-            setItemPrice={setEditItemPrice}
-            onSave={handleSaveEdit}
-            onDelete={() => {
-              if (editingIndex !== null) removeItem(editingIndex);
-              setEditModalVisible(false);
-            }}
-          />
-          <ItemList
-            items={filteredItems}
-            onEdit={(id) => openEditModal(id)}
-            onIncrement={(id) => incrementQuantity(id)}
-            onDecrement={(id) => decrementQuantity(id)}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+      <View style={styles.listWrapper}>
+        <ItemList
+          items={filteredItems}
+          onEdit={(id) => openEditModal(id)}
+          onIncrement={(id) => incrementQuantity(id)}
+          onDecrement={(id) => decrementQuantity(id)}
+        />
+      </View>
+      <EditItemModal
+        visible={editModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        itemName={editItemName}
+        setItemName={setEditItemName}
+        itemQuantity={editItemQuantity}
+        setItemQuantity={setEditItemQuantity}
+        itemCategory={editItemCategory}
+        setItemCategory={setEditItemCategory}
+        itemPrice={editItemPrice}
+        setItemPrice={setEditItemPrice}
+        onSave={handleSaveEdit}
+        onDelete={() => {
+          if (editingIndex !== null) removeItem(editingIndex);
+          setEditModalVisible(false);
+        }}
+      />
+    </SafeAreaView>
   );
 }
 
@@ -542,6 +543,7 @@ const ItemList = ({
     ListEmptyComponent={
       <ThemedText style={styles.emptyList}>Nenhum item encontrado.</ThemedText>
     }
+    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
   />
 );
 
@@ -550,11 +552,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollContainer: {
-    padding: 20,
-    paddingBottom: 60,
-    gap: 10,
-  },
+  // scrollContainer: {
+  //   padding: 20,
+  //   paddingBottom: 60,
+  //   gap: 10,
+  // },
   header: {
     flexDirection: "row",
     gap: 8,
@@ -706,5 +708,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: "#999",
+  },
+  fixedSection: {
+    padding: 20,
+    gap: 10,
+  },
+  listWrapper: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingBottom: 60,
   },
 });

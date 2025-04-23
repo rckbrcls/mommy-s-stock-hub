@@ -148,7 +148,7 @@ export default function HomeScreen() {
         {/* Lista de produtos com baixo estoque */}
         <Card style={styles.lowStockSection}>
           <ThemedText style={styles.sectionTitle}>
-            📉 Produtos com baixo estoque:
+            Produtos com baixo estoque:
           </ThemedText>
           {lowStock.length > 0 ? (
             <ThemedView style={styles.lowStockContainer}>
@@ -183,7 +183,7 @@ export default function HomeScreen() {
         {/* Resumo de devedores */}
         <Card style={styles.lowStockSection}>
           <ThemedText style={styles.sectionTitle}>
-            💰 Maiores Devedores:
+            Maiores Devedores:
           </ThemedText>
           {topDebtors.length > 0 ? (
             <ThemedView style={styles.lowStockContainer}>
@@ -218,7 +218,7 @@ export default function HomeScreen() {
         {/* Resumo de categorias mais em falta */}
         <Card style={styles.lowStockSection}>
           <ThemedText style={styles.sectionTitle}>
-            📂 Categorias Mais em Falta:
+            Categorias Mais em Falta:
           </ThemedText>
           {totalCategories > 0 ? (
             <ThemedView style={styles.lowStockContainer}>
@@ -258,7 +258,7 @@ export default function HomeScreen() {
         {/* Gráfico de barras: Estoque por categoria */}
         <Card style={styles.chartContainer}>
           <ThemedText style={styles.sectionTitle}>
-            📊 Estoque por Categoria
+            Estoque por Categoria
           </ThemedText>
           {stockByCategory.datasets[0].data.length > 0 ? (
             <BarChart
@@ -293,7 +293,7 @@ export default function HomeScreen() {
         {/* Gráfico de pizza: Devedores */}
         <Card style={styles.chartContainer}>
           <ThemedText style={styles.sectionTitle}>
-            💰 Distribuição dos Devedores
+            Distribuição dos Devedores
           </ThemedText>
           {debtorsData.length > 0 ? (
             <PieChart
@@ -360,9 +360,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#F5A689",
     marginBottom: 24,
-    textAlign: "center",
+    marginTop: 4,
   },
   lowStockContainer: {
     flexDirection: "row",
