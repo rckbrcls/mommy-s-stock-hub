@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { database } from "../database";
+import WDebtor from "../database/Debtor";
+import { Q } from "@nozbe/watermelondb";
 
 interface Debtor {
   id: string;
@@ -23,47 +25,79 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [debtors, setDebtors] = useState<Debtor[]>([]);
 
-  // Carregar devedores do AsyncStorage ao montar o contexto
+  // Carregar devedores do WatermelonDB ao montar o contexto
   useEffect(() => {
     const loadDebtors = async () => {
-      const storedDebtors = await AsyncStorage.getItem("debtors");
-      setDebtors(storedDebtors ? JSON.parse(storedDebtors) : []);
+      const collection = database.get<WDebtor>("debtors");
+      const allDebtors = await collection.query().fetch();
+      setDebtors(
+        allDebtors.map((d) => ({
+          id: d.id,
+          name: d.name,
+          amount: d.amount,
+          status: d.status as "open" | "paid",
+        }))
+      );
     };
     loadDebtors();
+    // Observa mudanças na tabela
+    const sub = database
+      .get<WDebtor>("debtors")
+      .query()
+      .observe()
+      .subscribe((allDebtors) => {
+        setDebtors(
+          allDebtors.map((d) => ({
+            id: d.id,
+            name: d.name,
+            amount: d.amount,
+            status: d.status as "open" | "paid",
+          }))
+        );
+      });
+    return () => sub.unsubscribe();
   }, []);
-
-  // Salvar devedores no AsyncStorage
-  const saveDebtorsToStorage = async (newDebtors: Debtor[]) => {
-    setDebtors(newDebtors);
-    await AsyncStorage.setItem("debtors", JSON.stringify(newDebtors));
-  };
 
   // Adicionar devedor
   const addDebtor = async (debtor: Debtor) => {
-    const updatedDebtors = [...debtors, debtor];
-    await saveDebtorsToStorage(updatedDebtors);
+    await database.write(async () => {
+      await database.get<WDebtor>("debtors").create((d) => {
+        d.name = debtor.name;
+        d.amount = debtor.amount;
+        d.status = debtor.status;
+      });
+    });
   };
 
   // Atualizar devedor
   const updateDebtor = async (id: string, updatedDebtor: Debtor) => {
-    const updatedDebtors = debtors.map((debtor) =>
-      debtor.id === id ? updatedDebtor : debtor
-    );
-    await saveDebtorsToStorage(updatedDebtors);
+    await database.write(async () => {
+      const debtor = await database.get<WDebtor>("debtors").find(id);
+      await debtor.update((d) => {
+        d.name = updatedDebtor.name;
+        d.amount = updatedDebtor.amount;
+        d.status = updatedDebtor.status;
+      });
+    });
   };
 
   // Remover devedor
   const removeDebtor = async (id: string) => {
-    const updatedDebtors = debtors.filter((debtor) => debtor.id !== id);
-    await saveDebtorsToStorage(updatedDebtors);
+    await database.write(async () => {
+      const debtor = await database.get<WDebtor>("debtors").find(id);
+      await debtor.markAsDeleted();
+      await debtor.destroyPermanently();
+    });
   };
 
   // Marcar devedor como pago
   const markAsPaid = async (id: string) => {
-    const updatedDebtors: Debtor[] = debtors.map((debtor) =>
-      debtor.id === id ? { ...debtor, status: "paid" } : debtor
-    );
-    await saveDebtorsToStorage(updatedDebtors);
+    await database.write(async () => {
+      const debtor = await database.get<WDebtor>("debtors").find(id);
+      await debtor.update((d) => {
+        d.status = "paid";
+      });
+    });
   };
 
   return (
