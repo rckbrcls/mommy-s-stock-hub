@@ -118,7 +118,6 @@ export default function DebtorsScreen() {
             </View>
           </View>
         </TouchableWithoutFeedback>
-
         <View style={{ flex: 1 }}>
           <FlatList
             keyboardShouldPersistTaps="handled"

@@ -110,99 +110,119 @@ export default function InventoryScreen() {
     });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.fixedSection}>
-          <Header />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <SearchBar
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-            />
+            <ThemedView style={styles.header}>
+              <ThemedText type="title">Inventário</ThemedText>
+            </ThemedView>
+            <View>
+              <SearchBar
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+              />
 
-            <View style={{ flexDirection: "row", gap: 6 }}>
-              <View style={{ flex: 1 }}>
-                <CategoryFilter
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  categories={categories}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <InventorySortOptions
-                  sortType={sortType}
-                  setSortType={setSortType}
-                />
+              <View style={{ flexDirection: "row", gap: 6 }}>
+                <View style={{ flex: 1 }}>
+                  <CategoryFilter
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    categories={categories}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <InventorySortOptions
+                    sortType={sortType}
+                    setSortType={setSortType}
+                  />
+                </View>
               </View>
             </View>
           </View>
+        </TouchableWithoutFeedback>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={filteredItems}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <InventoryItemCard
+                item={item}
+                onEdit={openEditModal}
+                onIncrement={incrementQuantity}
+                onDecrement={decrementQuantity}
+              />
+            )}
+            ListEmptyComponent={
+              <ThemedText style={styles.emptyList}>
+                Nenhum item encontrado.
+              </ThemedText>
+            }
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 16 }}
+          />
         </View>
-      </TouchableWithoutFeedback>
-      <View style={styles.listWrapper}>
-        <FlatList
-          data={filteredItems}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <InventoryItemCard
-              item={item}
-              onEdit={openEditModal}
-              onIncrement={incrementQuantity}
-              onDecrement={decrementQuantity}
-            />
-          )}
-          ListEmptyComponent={
-            <ThemedText style={styles.emptyList}>
-              Nenhum item encontrado.
-            </ThemedText>
-          }
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        <EditItemModal
+          visible={editModalVisible}
+          onClose={() => setEditModalVisible(false)}
+          itemName={editItemName}
+          setItemName={setEditItemName}
+          itemQuantity={editItemQuantity}
+          setItemQuantity={setEditItemQuantity}
+          itemCategory={editItemCategory}
+          setItemCategory={setEditItemCategory}
+          itemPrice={editItemPrice}
+          setItemPrice={setEditItemPrice}
+          onSave={handleSaveEdit}
+          onDelete={() => {
+            if (editingIndex !== null) removeItem(editingIndex);
+            setEditModalVisible(false);
+          }}
         />
       </View>
-      <EditItemModal
-        visible={editModalVisible}
-        onClose={() => setEditModalVisible(false)}
-        itemName={editItemName}
-        setItemName={setEditItemName}
-        itemQuantity={editItemQuantity}
-        setItemQuantity={setEditItemQuantity}
-        itemCategory={editItemCategory}
-        setItemCategory={setEditItemCategory}
-        itemPrice={editItemPrice}
-        setItemPrice={setEditItemPrice}
-        onSave={handleSaveEdit}
-        onDelete={() => {
-          if (editingIndex !== null) removeItem(editingIndex);
-          setEditModalVisible(false);
-        }}
-      />
     </SafeAreaView>
   );
 }
 
-// Subcomponents
-const Header = () => (
-  <ThemedView style={styles.header}>
-    <ThemedText type="title">Inventário</ThemedText>
-  </ThemedView>
-);
-
 // Styles
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
   },
-  // scrollContainer: {
-  //   padding: 20,
-  //   paddingBottom: 60,
-  //   gap: 10,
-  // },
   header: {
     flexDirection: "row",
     gap: 8,
     backgroundColor: "transparent",
+    marginBottom: 10,
+  },
+  container: {
+    flex: 1,
+    paddingTop: 24,
+    paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
   },
   searchBar: {
     backgroundColor: "transparent",
+  },
+  filterContainer: {
+    marginBottom: 10,
+  },
+  categoryButton: {
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+  },
+  categoryButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
   },
   modalOverlay: {
     flex: 1,
@@ -219,142 +239,36 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     marginBottom: 10,
-    color: MAIN_COLOR,
   },
-  modalLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  modalInput: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
+  modalOption: {
     padding: 10,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 10,
+    borderBottomWidth: 1,
+  },
+  modalOptionText: {
+    fontSize: 16,
   },
   mainButton: {
     padding: 10,
     borderRadius: 6,
     alignItems: "center",
-    marginBottom: 10,
+    marginTop: 10,
     backgroundColor: "#A3D977",
+  },
+  exitButton: {
+    backgroundColor: "#808080",
   },
   buttonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
   },
-  deleteButton: {
-    backgroundColor: "#FF364E",
-  },
-  exitButton: {
-    backgroundColor: "#808080",
-    marginTop: 20,
-  },
   listContainer: {
-    flex: 1,
-    marginTop: 10,
-    gap: 10,
-  },
-
-  listItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  listItemDetails: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-  listItemTexBold: {
-    fontWeight: "bold",
-  },
-
-  actionsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-  },
-  plusButton: {
-    backgroundColor: "#A3D977",
-    borderRadius: 200,
-    width: 35,
-    height: 35,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  minusButton: {
-    backgroundColor: CANCEL_COLOR,
-    borderRadius: 200,
-    width: 35,
-    height: 35,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  filterContainer: {
-    marginBottom: 5,
-  },
-  categoryButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  modalOption: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
-  },
-  modalOptionText: {
-    fontSize: 16,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
-    backgroundColor: "#FFFFFF",
-    overflow: "hidden",
-    marginBottom: 10, // Adicione margem para evitar sobreposição
-  },
-  picker: {
-    height: 50, // Ajuste a altura para garantir visibilidade
-    width: "100%",
-  },
-  sortContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-    gap: 10,
-  },
-  sortLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  sortButton: {
-    padding: 10,
-    borderRadius: 6,
-    backgroundColor: "#EEE",
-  },
-  sortButtonActive: {
-    backgroundColor: MAIN_COLOR,
-  },
-  sortButtonText: {
-    color: "#333",
-    fontWeight: "bold",
+    paddingBottom: 16,
   },
   emptyList: {
     textAlign: "center",
     marginTop: 20,
-    fontSize: 16,
     color: "#999",
-  },
-  fixedSection: {
-    padding: 20,
-    gap: 10,
-  },
-  listWrapper: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingBottom: 60,
+    fontSize: 16,
+    fontStyle: "italic",
   },
 });
