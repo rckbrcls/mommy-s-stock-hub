@@ -17,6 +17,12 @@ import { useDebtors } from "../../contexts/DebtorContext";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
+import { SummaryCards } from "@/components/SummaryCards";
+import { LowStockList } from "@/components/LowStockList";
+import { TopDebtorsList } from "@/components/TopDebtorsList";
+import { LowCategoryList } from "@/components/LowCategoryList";
+import { StockByCategoryChart } from "@/components/StockByCategoryChart";
+import { DebtorsPieChart } from "@/components/DebtorsPieChart";
 import { BarChart, PieChart } from "react-native-chart-kit";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -126,194 +132,26 @@ export default function HomeScreen() {
         </View>
 
         {/* Seção de resumo */}
-        <View style={styles.summaryContainer}>
-          <Card style={styles.summaryCard}>
-            <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
-            <ThemedText style={styles.summaryLabel}>Produtos</ThemedText>
-          </Card>
-          <Card style={styles.summaryCard}>
-            <ThemedText style={styles.summaryValue}>
-              {totalCategories}
-            </ThemedText>
-            <ThemedText style={styles.summaryLabel}>Categorias</ThemedText>
-          </Card>
-          <Card style={styles.summaryCard}>
-            <ThemedText style={styles.summaryValue}>
-              {lowStock.length}
-            </ThemedText>
-            <ThemedText style={styles.summaryLabel}>Em Falta</ThemedText>
-          </Card>
-        </View>
-
-        {/* Lista de produtos com baixo estoque */}
-        <Card style={styles.lowStockSection}>
-          <ThemedText style={styles.sectionTitle}>
-            Produtos com baixo estoque:
-          </ThemedText>
-          {lowStock.length > 0 ? (
-            <ThemedView style={styles.lowStockContainer}>
-              {lowStock.slice(0, 4).map(
-                (
-                  item // Limitar a 4 itens
-                ) => (
-                  <Card key={item.id} style={styles.lowStockCard}>
-                    <ThemedText style={styles.lowStockName}>
-                      {item.name}
-                    </ThemedText>
-                    <ThemedText style={styles.lowStockQuantity}>
-                      Qtd: {item.quantity}
-                    </ThemedText>
-                  </Card>
-                )
-              )}
-            </ThemedView>
-          ) : (
-            <ThemedText style={styles.emptyList}>
-              Nenhum produto em falta por enquanto.
-            </ThemedText>
-          )}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("inventory" as never)}
-          >
-            <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
-          </TouchableOpacity>
-        </Card>
-
-        {/* Resumo de devedores */}
-        <Card style={styles.lowStockSection}>
-          <ThemedText style={styles.sectionTitle}>
-            Maiores Devedores:
-          </ThemedText>
-          {topDebtors.length > 0 ? (
-            <ThemedView style={styles.lowStockContainer}>
-              {topDebtors.slice(0, 4).map(
-                (
-                  debtor // Limitar a 4 itens
-                ) => (
-                  <Card key={debtor.id} style={styles.lowStockCard}>
-                    <ThemedText style={styles.lowStockName}>
-                      {debtor.name}
-                    </ThemedText>
-                    <ThemedText style={styles.lowStockQuantity}>
-                      Valor: R$ {debtor?.amount?.toFixed(2)}
-                    </ThemedText>
-                  </Card>
-                )
-              )}
-            </ThemedView>
-          ) : (
-            <ThemedText style={styles.emptyList}>
-              Nenhum devedor pendente no momento.
-            </ThemedText>
-          )}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("debtors" as never)}
-          >
-            <ThemedText style={styles.buttonText}>Ver Devedores</ThemedText>
-          </TouchableOpacity>
-        </Card>
-
-        {/* Resumo de categorias mais em falta */}
-        <Card style={styles.lowStockSection}>
-          <ThemedText style={styles.sectionTitle}>
-            Categorias Mais em Falta:
-          </ThemedText>
-          {totalCategories > 0 ? (
-            <ThemedView style={styles.lowStockContainer}>
-              {Object.entries(
-                items.reduce((acc, item) => {
-                  const category = item.category || "Sem Categoria";
-                  acc[category] = (acc[category] || 0) + item.quantity;
-                  return acc;
-                }, {} as Record<string, number>)
-              )
-                .sort((a, b) => a[1] - b[1]) // Ordenar pelas categorias com menos itens
-                .slice(0, 4) // Limitar a 4 categorias
-                .map(([category, quantity], index) => (
-                  <Card key={index} style={styles.lowStockCard}>
-                    <ThemedText style={styles.lowStockName}>
-                      {category}
-                    </ThemedText>
-                    <ThemedText style={styles.lowStockQuantity}>
-                      Qtd: {quantity}
-                    </ThemedText>
-                  </Card>
-                ))}
-            </ThemedView>
-          ) : (
-            <ThemedText style={styles.emptyList}>
-              Nenhuma categoria cadastrada no momento.
-            </ThemedText>
-          )}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("inventory" as never)} // Botão para ir ao estoque
-          >
-            <ThemedText style={styles.buttonText}>Ver Estoque</ThemedText>
-          </TouchableOpacity>
-        </Card>
-
-        {/* Gráfico de barras: Estoque por categoria */}
-        <Card style={styles.chartContainer}>
-          <ThemedText style={styles.sectionTitle}>
-            Estoque por Categoria
-          </ThemedText>
-          {stockByCategory.datasets[0].data.length > 0 ? (
-            <BarChart
-              data={stockByCategory}
-              width={screenWidth - 64}
-              height={220}
-              yAxisLabel="Qtd: "
-              yAxisSuffix=""
-              chartConfig={{
-                decimalPlaces: 0,
-                backgroundColor: "transparent",
-                backgroundGradientFrom: backgroundColor,
-                backgroundGradientTo: backgroundColor,
-                color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
-                labelColor: (opacity = 1) => color,
-                style: { borderRadius: 16 },
-                propsForDots: {
-                  r: "6",
-                  strokeWidth: "2",
-                  stroke: "#ffa726",
-                },
-              }}
-              style={styles.chart}
-            />
-          ) : (
-            <ThemedText style={styles.emptyList}>
-              Nenhum dado disponível para o gráfico.
-            </ThemedText>
-          )}
-        </Card>
-
-        {/* Gráfico de pizza: Devedores */}
-        <Card style={styles.chartContainer}>
-          <ThemedText style={styles.sectionTitle}>
-            Distribuição dos Devedores
-          </ThemedText>
-          {debtorsData.length > 0 ? (
-            <PieChart
-              data={debtorsData}
-              width={screenWidth - 32}
-              height={220}
-              chartConfig={{
-                color: (opacity = 1) => `rgba(245, 166, 137, ${opacity})`,
-              }}
-              accessor={"amount"}
-              backgroundColor={"transparent"}
-              paddingLeft={"15"}
-              absolute
-            />
-          ) : (
-            <ThemedText style={styles.emptyList}>
-              Nenhum dado disponível para o gráfico.
-            </ThemedText>
-          )}
-        </Card>
+        <SummaryCards
+          totalProducts={totalProducts}
+          totalCategories={totalCategories}
+          lowStockCount={lowStock.length}
+        />
+        <LowStockList lowStock={lowStock} />
+        <TopDebtorsList topDebtors={topDebtors} />
+        <LowCategoryList
+          categories={items.reduce((acc, item) => {
+            const category = item.category || "Sem Categoria";
+            acc[category] = (acc[category] || 0) + item.quantity;
+            return acc;
+          }, {} as Record<string, number>)}
+        />
+        <StockByCategoryChart
+          stockByCategory={stockByCategory}
+          backgroundColor={backgroundColor}
+          color={color}
+        />
+        <DebtorsPieChart debtorsData={debtorsData} />
       </ScrollView>
     </SafeAreaView>
   );
