@@ -14,9 +14,7 @@ import {
 } from "react-native";
 import { useInventory } from "../../contexts/InventoryContext";
 import { useDebtors } from "../../contexts/DebtorContext";
-import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { Card } from "@/components/Card";
 import { SummaryCards } from "@/components/SummaryCards";
 import { LowStockList } from "@/components/LowStockList";
 import { TopDebtorsList } from "@/components/TopDebtorsList";
