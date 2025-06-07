@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { database } from "../database";
+import InventoryItemModel from "../database/InventoryItem";
+import { Q } from "@nozbe/watermelondb";
 
 interface InventoryItem {
   id: string;
@@ -27,57 +29,103 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [items, setItems] = useState<InventoryItem[]>([]);
 
-  // Carregar itens do AsyncStorage ao montar o contexto
+  // Carregar itens do WatermelonDB ao montar o contexto
   useEffect(() => {
     const loadItems = async () => {
-      const storedItems = await AsyncStorage.getItem("inventory");
-      setItems(storedItems ? JSON.parse(storedItems) : []);
+      const collection = database.get<InventoryItemModel>("inventory_items");
+      const allItems = await collection.query().fetch();
+      setItems(
+        allItems.map((i) => ({
+          id: i.id,
+          name: i.name,
+          quantity: i.quantity,
+          category: i.category,
+          price: i.price,
+        }))
+      );
     };
     loadItems();
+    // Observa mudanças na tabela
+    const sub = database
+      .get<InventoryItemModel>("inventory_items")
+      .query()
+      .observe()
+      .subscribe((allItems) => {
+        setItems(
+          allItems.map((i) => ({
+            id: i.id,
+            name: i.name,
+            quantity: i.quantity,
+            category: i.category,
+            price: i.price,
+          }))
+        );
+      });
+    return () => sub.unsubscribe();
   }, []);
-
-  // Salvar itens no AsyncStorage
-  const saveItemsToStorage = async (newItems: InventoryItem[]) => {
-    setItems(newItems);
-    await AsyncStorage.setItem("inventory", JSON.stringify(newItems));
-  };
 
   // Adicionar item
   const addItem = async (item: InventoryItem) => {
-    const updatedItems = [...items, item];
-    await saveItemsToStorage(updatedItems);
+    await database.write(async () => {
+      await database.get<InventoryItemModel>("inventory_items").create((i) => {
+        i.name = item.name;
+        i.quantity = item.quantity;
+        if (item.category) i.category = item.category;
+        if (item.price !== undefined) i.price = item.price;
+      });
+    });
   };
 
   // Atualizar item
   const updateItem = async (id: string, updatedItem: InventoryItem) => {
-    const updatedItems = items.map((item) =>
-      item.id === id ? updatedItem : item
-    );
-    await saveItemsToStorage(updatedItems);
+    await database.write(async () => {
+      const item = await database
+        .get<InventoryItemModel>("inventory_items")
+        .find(id);
+      await item.update((i) => {
+        i.name = updatedItem.name;
+        i.quantity = updatedItem.quantity;
+        i.category = updatedItem.category;
+        i.price = updatedItem.price;
+      });
+    });
   };
 
   // Remover item
   const removeItem = async (id: string) => {
-    const updatedItems = items.filter((item) => item.id !== id);
-    await saveItemsToStorage(updatedItems);
+    await database.write(async () => {
+      const item = await database
+        .get<InventoryItemModel>("inventory_items")
+        .find(id);
+      await item.markAsDeleted();
+      await item.destroyPermanently();
+    });
   };
 
   // Incrementar quantidade
   const incrementQuantity = async (id: string) => {
-    const updatedItems = items.map((item) =>
-      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-    );
-    await saveItemsToStorage(updatedItems);
+    await database.write(async () => {
+      const item = await database
+        .get<InventoryItemModel>("inventory_items")
+        .find(id);
+      await item.update((i) => {
+        i.quantity = i.quantity + 1;
+      });
+    });
   };
 
   // Decrementar quantidade
   const decrementQuantity = async (id: string) => {
-    const updatedItems = items.map((item) =>
-      item.id === id && item.quantity > 0
-        ? { ...item, quantity: item.quantity - 1 }
-        : item
-    );
-    await saveItemsToStorage(updatedItems);
+    await database.write(async () => {
+      const item = await database
+        .get<InventoryItemModel>("inventory_items")
+        .find(id);
+      if (item.quantity > 0) {
+        await item.update((i) => {
+          i.quantity = i.quantity - 1;
+        });
+      }
+    });
   };
 
   return (

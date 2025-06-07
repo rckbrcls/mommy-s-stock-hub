@@ -11,5 +11,14 @@ export const mySchema = appSchema({
         { name: "status", type: "string" },
       ],
     }),
+    tableSchema({
+      name: "inventory_items",
+      columns: [
+        { name: "name", type: "string" },
+        { name: "quantity", type: "number" },
+        { name: "category", type: "string", isOptional: true },
+        { name: "price", type: "number", isOptional: true },
+      ],
+    }),
   ],
 });
