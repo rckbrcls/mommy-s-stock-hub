@@ -12,6 +12,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedInput } from "@/components/ThemedInput";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { v4 as uuidv4 } from "uuid";
+import { formatCurrencyInput, parseCurrency } from "@/hooks/useCurrencyHelpers";
 
 interface AddDebtorFormProps {
   addDebtor: (debtor: any) => Promise<void>;
@@ -30,7 +31,7 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
     const newDebtor = {
       id: uuidv4(),
       name,
-      amount: parseFloat(amount.replace("R$", "").replace(",", ".")) || 0,
+      amount: parseCurrency(amount),
       status: "open" as "open",
     };
     await addDebtor(newDebtor);
@@ -40,13 +41,7 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
   };
 
   const handleAmountChange = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, "");
-    if (numericValue) {
-      const formattedValue = (parseFloat(numericValue) / 100).toFixed(2);
-      setAmount(`R$ ${formattedValue.replace(".", ",")}`);
-    } else {
-      setAmount("");
-    }
+    setAmount(formatCurrencyInput(value));
   };
 
   return (

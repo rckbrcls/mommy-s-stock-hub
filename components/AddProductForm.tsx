@@ -15,6 +15,8 @@ import { Card } from "@/components/Card";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedInput } from "@/components/ThemedInput";
 import { v4 as uuidv4 } from "uuid";
+import { useCategorySuggestions } from "@/hooks/useCategorySuggestions";
+import { formatCurrencyInput, parseCurrency } from "@/hooks/useCurrencyHelpers";
 
 interface AddProductFormProps {
   addItem: (item: any) => Promise<void>;
@@ -26,32 +28,18 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
   items,
 }) => {
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState<number | null>(null);
   const [price, setPrice] = useState("");
-  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
-  const allCategories = Array.from(
-    new Set(items.map((item) => item.category || "Sem Categoria"))
-  );
-
-  const handleCategoryChange = (value: string) => {
-    setCategory(value);
-    if (value.trim()) {
-      const filtered = allCategories.filter((cat) =>
-        cat.toLowerCase().startsWith(value.toLowerCase())
-      );
-      setFilteredCategories(filtered);
-    } else {
-      setFilteredCategories([]);
-    }
-  };
-
-  const handleSelectCategory = (selectedCategory: string) => {
-    setCategory(selectedCategory);
-    setFilteredCategories([]);
-  };
+  const {
+    category,
+    setCategory,
+    filteredCategories,
+    handleCategoryChange,
+    handleSelectCategory,
+    allCategories,
+  } = useCategorySuggestions(items);
 
   const handleSaveProduct = async () => {
     if (!name.trim() || quantity === null) {
@@ -70,7 +58,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
       name,
       category,
       quantity,
-      price: parseFloat(price.replace("R$", "").replace(",", ".")) || 0,
+      price: parseCurrency(price),
     };
     await addItem(newProduct);
     Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
@@ -138,17 +126,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
           <ThemedInput
             placeholderTextColor={textColor}
             value={price}
-            onChangeText={(value) => {
-              const numericValue = value.replace(/[^0-9]/g, "");
-              if (numericValue) {
-                const formattedValue = (parseFloat(numericValue) / 100).toFixed(
-                  2
-                );
-                setPrice(`R$ ${formattedValue.replace(".", ",")}`);
-              } else {
-                setPrice("");
-              }
-            }}
+            onChangeText={(value) => setPrice(formatCurrencyInput(value))}
             placeholder="Ex: R$ 5,99"
             keyboardType="numeric"
           />

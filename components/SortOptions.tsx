@@ -10,6 +10,7 @@ import {
 import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useSortOptions } from "@/hooks/useSortOptions";
 
 interface SortOptionsProps {
   sortType: "amountAsc" | "amountDesc" | "";
@@ -17,19 +18,22 @@ interface SortOptionsProps {
 }
 
 export const SortOptions: React.FC<SortOptionsProps> = ({
-  sortType,
-  setSortType,
+  sortType: propSortType,
+  setSortType: propSetSortType,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const { sortType, modalVisible, openModal, closeModal, selectSort } =
+    useSortOptions<"amountAsc" | "amountDesc">(propSortType);
 
-  const handleSelectSort = (type: "amountAsc" | "amountDesc" | "") => {
-    setSortType(type);
-    setModalVisible(false);
-  };
+  React.useEffect(() => {
+    if (sortType !== propSortType) {
+      propSetSortType(sortType);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortType]);
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
+      <TouchableOpacity onPress={openModal}>
         <Card style={styles.cardButton}>
           <ThemedText style={styles.categoryButtonText}>
             {sortType === "amountAsc"
@@ -44,7 +48,7 @@ export const SortOptions: React.FC<SortOptionsProps> = ({
         visible={modalVisible}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={closeModal}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.modalOverlay}>
@@ -52,7 +56,7 @@ export const SortOptions: React.FC<SortOptionsProps> = ({
               <ThemedText style={styles.modalTitle}>Ordenar por:</ThemedText>
               <TouchableOpacity
                 style={styles.modalOption}
-                onPress={() => handleSelectSort("amountAsc")}
+                onPress={() => selectSort("amountAsc")}
               >
                 <ThemedText style={styles.modalOptionText}>
                   Menos Devendo
@@ -60,7 +64,7 @@ export const SortOptions: React.FC<SortOptionsProps> = ({
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalOption}
-                onPress={() => handleSelectSort("amountDesc")}
+                onPress={() => selectSort("amountDesc")}
               >
                 <ThemedText style={styles.modalOptionText}>
                   Mais Devendo
@@ -68,7 +72,7 @@ export const SortOptions: React.FC<SortOptionsProps> = ({
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.mainButton, styles.exitButton]}
-                onPress={() => setModalVisible(false)}
+                onPress={closeModal}
               >
                 <ThemedText style={styles.buttonText}>Fechar</ThemedText>
               </TouchableOpacity>

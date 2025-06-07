@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useSortOptions } from "@/hooks/useSortOptions";
 
 interface InventorySortOptionsProps {
   sortType: "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | "";
@@ -12,21 +13,25 @@ interface InventorySortOptionsProps {
 }
 
 export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
-  sortType,
-  setSortType,
+  sortType: propSortType,
+  setSortType: propSetSortType,
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const { sortType, modalVisible, openModal, closeModal, selectSort } =
+    useSortOptions<"priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc">(
+      propSortType
+    );
 
-  const handleSelectSort = (
-    type: "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | ""
-  ) => {
-    setSortType(type);
-    setModalVisible(false);
-  };
+  // Sincroniza o estado local com o prop
+  React.useEffect(() => {
+    if (sortType !== propSortType) {
+      propSetSortType(sortType);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortType]);
 
   return (
     <View style={styles.filterContainer}>
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
+      <TouchableOpacity onPress={openModal}>
         <Card style={styles.cardButton}>
           <ThemedText style={styles.categoryButtonText}>
             {sortType === "priceAsc"
@@ -45,14 +50,14 @@ export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
         visible={modalVisible}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={closeModal}
       >
         <View style={styles.modalOverlay}>
           <ThemedView style={styles.modalContainer}>
             <ThemedText style={styles.modalTitle}>Ordenar por:</ThemedText>
             <TouchableOpacity
               style={styles.modalOption}
-              onPress={() => handleSelectSort("priceAsc")}
+              onPress={() => selectSort("priceAsc")}
             >
               <ThemedText style={styles.modalOptionText}>
                 Menor Preço
@@ -60,7 +65,7 @@ export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
-              onPress={() => handleSelectSort("priceDesc")}
+              onPress={() => selectSort("priceDesc")}
             >
               <ThemedText style={styles.modalOptionText}>
                 Maior Preço
@@ -68,7 +73,7 @@ export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
-              onPress={() => handleSelectSort("quantityAsc")}
+              onPress={() => selectSort("quantityAsc")}
             >
               <ThemedText style={styles.modalOptionText}>
                 Menor Quantidade
@@ -76,7 +81,7 @@ export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalOption}
-              onPress={() => handleSelectSort("quantityDesc")}
+              onPress={() => selectSort("quantityDesc")}
             >
               <ThemedText style={styles.modalOptionText}>
                 Maior Quantidade
@@ -84,7 +89,7 @@ export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.mainButton, styles.exitButton]}
-              onPress={() => setModalVisible(false)}
+              onPress={closeModal}
             >
               <ThemedText style={styles.buttonText}>Fechar</ThemedText>
             </TouchableOpacity>
