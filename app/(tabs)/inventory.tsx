@@ -3,31 +3,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   StyleSheet,
   View,
-  Modal,
-  TouchableOpacity,
-  Text,
-  Pressable,
   Keyboard,
   TouchableWithoutFeedback,
-  TextInput,
   FlatList,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useInventory } from "@/contexts/InventoryContext";
-import { Card } from "@/components/Card";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { Ionicons } from "@expo/vector-icons";
-import { ThemedInput } from "@/components/ThemedInput";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { InventorySortOptions } from "@/components/InventorySortOptions";
 import { EditItemModal } from "@/components/EditItemModal";
 import { InventoryItemCard } from "@/components/InventoryItemCard";
 import { SearchBar } from "@/components/SearchBar";
-
-// Constants
-const MAIN_COLOR = "#F5A689";
-const CANCEL_COLOR = "#FF364E";
 
 // Main Component
 export default function InventoryScreen() {
