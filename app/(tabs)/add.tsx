@@ -3,27 +3,14 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableWithoutFeedback, // Importar o componente
+  SafeAreaView, // Importar o componente
 } from "react-native";
 import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 import "react-native-get-random-values";
-import { v4 as uuidv4 } from "uuid";
 import { ThemedText } from "@/components/ThemedText";
-import { Card } from "@/components/Card";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { ThemedInput } from "@/components/ThemedInput";
 import { AddProductForm } from "@/components/AddProductForm";
 import { AddDebtorForm } from "@/components/AddDebtorForm";
 
