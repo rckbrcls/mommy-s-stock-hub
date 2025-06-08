@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { database } from "../database";
-import WDebtor from "../database/Debtor";
+
+import WDebtor from "../models/Debtor";
+import { database } from "@/database";
 
 interface Debtor {
   id: string;
