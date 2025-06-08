@@ -5,6 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from "expo-router";
 import { StyleSheet } from "react-native";
+import { useLowStockNotification } from "../hooks/useLowStockNotification";
 
 interface Item {
   id: string;
@@ -18,6 +19,7 @@ interface LowStockListProps {
 
 export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
   const navigation = useNavigation();
+  useLowStockNotification(lowStock);
   return (
     <Card style={styles.lowStockSection}>
       <ThemedText style={styles.sectionTitle}>
