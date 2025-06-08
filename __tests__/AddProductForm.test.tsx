@@ -67,4 +67,61 @@ describe("AddProductForm", () => {
       })
     );
   });
+  it("should add product with price 0 if price is invalid or empty", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Sabonete"), "Sabonete");
+    fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "5");
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "abc"); // preço inválido
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Prateleira 2"),
+      "Prateleira 2"
+    );
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(addItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "Sabonete",
+        category: "Higiene",
+        quantity: 5,
+        price: 0,
+        location: "Prateleira 2",
+      })
+    );
+  });
+
+  it("should clear fields after successful add", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Sabonete"), "Sabonete");
+    fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "5");
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "7,99");
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Prateleira 2"),
+      "Prateleira 2"
+    );
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(getByPlaceholderText("Ex: Sabonete").props.value).toBe("");
+    expect(getByPlaceholderText("Ex: Higiene").props.value).toBe("");
+    expect(getByPlaceholderText("Ex: 10").props.value).toBe("");
+    expect(getByPlaceholderText("Ex: R$ 5,99").props.value).toBe("");
+    expect(getByPlaceholderText("Ex: Prateleira 2").props.value).toBe("");
+  });
 });
