@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
-import { DebtorsPieChart } from "@/features/debtors/components/DebtorsPieChart";
+import { DebtorsChart } from "@/features/debtors/components/DebtorsChart";
 import { TopDebtorsList } from "@/features/debtors/components/TopDebtorsList";
 import { LowCategoryList } from "@/features/inventory/components/LowCategoryList";
 import { LowStockList } from "@/features/inventory/components/LowStockList";
@@ -141,7 +141,7 @@ export default function HomeScreen() {
           backgroundColor={backgroundColor}
           color={color}
         />
-        <DebtorsPieChart debtorsData={debtorsData} />
+        <DebtorsChart debtorsData={debtorsData} />
       </ScrollView>
     </SafeAreaView>
   );

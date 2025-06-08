@@ -7,13 +7,11 @@ import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 
 const screenWidth = Dimensions.get("window").width;
 
-interface DebtorsPieChartProps {
+interface DebtorsChartProps {
   debtorsData: any[];
 }
 
-export const DebtorsPieChart: React.FC<DebtorsPieChartProps> = ({
-  debtorsData,
-}) => {
+export const DebtorsChart: React.FC<DebtorsChartProps> = ({ debtorsData }) => {
   const backgroundColor = useThemeColor(
     { light: undefined, dark: undefined },
     "background"
