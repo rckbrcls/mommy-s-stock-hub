@@ -27,4 +27,10 @@ describe("DebtorsScreen", () => {
     const { getByText } = render(<DebtorsScreen />);
     expect(getByText(/Nenhum devedor encontrado/i)).toBeTruthy();
   });
+
+  it("should have visible title and search input", () => {
+    const { getByText, getByPlaceholderText } = render(<DebtorsScreen />);
+    expect(getByText("Devedores")).toBeTruthy();
+    expect(getByPlaceholderText("Pesquisar devedores...")).toBeTruthy();
+  });
 });

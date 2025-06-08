@@ -124,4 +124,39 @@ describe("AddProductForm", () => {
     expect(getByPlaceholderText("Ex: R$ 5,99").props.value).toBe("");
     expect(getByPlaceholderText("Ex: Prateleira 2").props.value).toBe("");
   });
+  it("should have visible label and placeholder for each input field", () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByText, getByPlaceholderText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    // Nome do Produto
+    expect(getByText("Nome do Produto")).toBeTruthy();
+    expect(getByPlaceholderText("Ex: Sabonete")).toBeTruthy();
+    // Categoria
+    expect(getByText("Categoria")).toBeTruthy();
+    expect(getByPlaceholderText("Ex: Higiene")).toBeTruthy();
+    // Quantidade
+    expect(getByText("Quantidade")).toBeTruthy();
+    expect(getByPlaceholderText("Ex: 10")).toBeTruthy();
+    // Preço
+    expect(getByText("Preço (opcional)")).toBeTruthy();
+    expect(getByPlaceholderText("Ex: R$ 5,99")).toBeTruthy();
+    // Localização
+    expect(getByText("Localização (opcional)")).toBeTruthy();
+    expect(getByPlaceholderText("Ex: Prateleira 2")).toBeTruthy();
+  });
+
+  it("should have accessible button with clear label", () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    expect(getByText("Salvar Produto")).toBeTruthy();
+  });
 });

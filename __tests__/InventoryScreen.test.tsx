@@ -26,4 +26,10 @@ describe("InventoryScreen", () => {
     const { getByText } = render(<InventoryScreen />);
     expect(getByText("Nenhum item encontrado.")).toBeTruthy();
   });
+
+  it("should have visible title and search input", () => {
+    const { getByText, getByPlaceholderText } = render(<InventoryScreen />);
+    expect(getByText("Inventário")).toBeTruthy();
+    expect(getByPlaceholderText("Pesquisar por nome do item...")).toBeTruthy();
+  });
 });
