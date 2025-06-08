@@ -1,6 +1,5 @@
 # TO-DOS
 
-TODO: criar graficos para mostrar os dados
 TODO: adicionar data de inicio de divida e prazo final para pagamento
 TODO: avisar se o devedor nao pagar no prazo com notificacao
 TODO: deixar app mais bonito
