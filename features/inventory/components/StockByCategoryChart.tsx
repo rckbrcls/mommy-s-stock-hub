@@ -24,7 +24,14 @@ export const StockByCategoryChart: React.FC<StockByCategoryChartProps> = ({
     <ThemedText style={styles.sectionTitle}>Estoque por Categoria</ThemedText>
     {stockByCategory.datasets[0].data.length > 0 ? (
       <BarChart
-        data={stockByCategory}
+        data={{
+          labels: stockByCategory.labels.slice(0, 6),
+          datasets: [
+            {
+              data: stockByCategory.datasets[0].data.slice(0, 6),
+            },
+          ],
+        }}
         width={screenWidth - 64}
         height={220}
         yAxisLabel="Qtd: "
