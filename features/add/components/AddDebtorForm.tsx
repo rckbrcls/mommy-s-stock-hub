@@ -16,7 +16,8 @@ import {
   formatCurrencyInput,
   parseCurrency,
 } from "@/features/inventory/hooks/useCurrencyHelpers";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+
+import { DateInput } from "@/components/DateInput";
 
 interface AddDebtorFormProps {
   addDebtor: (debtor: any) => Promise<void>;
@@ -90,38 +91,22 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
         </View>
         <View>
           <ThemedText style={styles.label}>Data de Início</ThemedText>
-          <TouchableOpacity onPress={() => setStartDatePickerVisible(true)}>
-            <ThemedInput
-              placeholderTextColor={textColor}
-              value={startDate}
-              placeholder="AAAA-MM-DD"
-              editable={false}
-              pointerEvents="none"
-            />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isStartDatePickerVisible}
-            mode="date"
+          <DateInput
+            value={startDate}
+            onChange={setStartDate}
+            pickerVisible={isStartDatePickerVisible}
+            setPickerVisible={setStartDatePickerVisible}
             onConfirm={handleConfirmStartDate}
-            onCancel={() => setStartDatePickerVisible(false)}
           />
         </View>
         <View>
           <ThemedText style={styles.label}>Prazo para Pagamento</ThemedText>
-          <TouchableOpacity onPress={() => setDueDatePickerVisible(true)}>
-            <ThemedInput
-              placeholderTextColor={textColor}
-              value={dueDate}
-              placeholder="AAAA-MM-DD"
-              editable={false}
-              pointerEvents="none"
-            />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isDueDatePickerVisible}
-            mode="date"
+          <DateInput
+            value={dueDate}
+            onChange={setDueDate}
+            pickerVisible={isDueDatePickerVisible}
+            setPickerVisible={setDueDatePickerVisible}
             onConfirm={handleConfirmDueDate}
-            onCancel={() => setDueDatePickerVisible(false)}
           />
         </View>
         <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>
