@@ -33,6 +33,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState<number | null>(null);
   const [price, setPrice] = useState("");
+  const [location, setLocation] = useState("");
   const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
   const {
@@ -62,6 +63,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
       category,
       quantity,
       price: parseCurrency(price),
+      location: location || undefined,
     };
     await addItem(newProduct);
     Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
@@ -69,6 +71,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
     setCategory("");
     setQuantity(null);
     setPrice("");
+    setLocation("");
   };
 
   return (
@@ -132,6 +135,15 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
             onChangeText={(value) => setPrice(formatCurrencyInput(value))}
             placeholder="Ex: R$ 5,99"
             keyboardType="numeric"
+          />
+        </View>
+        <View>
+          <ThemedText style={styles.label}>Localização (opcional)</ThemedText>
+          <ThemedInput
+            placeholderTextColor={textColor}
+            value={location}
+            onChangeText={setLocation}
+            placeholder="Ex: Prateleira 2"
           />
         </View>
         <TouchableOpacity onPress={handleSaveProduct} style={styles.saveButton}>

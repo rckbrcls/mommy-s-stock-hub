@@ -11,7 +11,7 @@ import {
 import "react-native-get-random-values";
 import { ThemedText } from "@/components/ThemedText";
 import { AddProductForm } from "@/features/add/components/AddProductForm";
-import { AddDebtorForm } from "@/features/debtors/components/AddDebtorForm";
+import { AddDebtorForm } from "@/features/add/components/AddDebtorForm";
 import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
 import { useInventory } from "@/features/inventory/contexts/InventoryContext";
 
