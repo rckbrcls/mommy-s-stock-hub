@@ -61,7 +61,6 @@ export const DebtorCard: React.FC<DebtorCardProps> = ({
 
 const styles = StyleSheet.create({
   debtorCard: {
-    marginBottom: 12,
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "flex-start",

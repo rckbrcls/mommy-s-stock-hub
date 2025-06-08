@@ -12,8 +12,6 @@ import {
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
-import { Card } from "@/components/Card";
-import { Ionicons } from "@expo/vector-icons";
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { ThemedView } from "@/components/ThemedView";
 import { SortOptions } from "@/features/inventory/components/SortOptions";
@@ -104,6 +102,7 @@ export default function DebtorsScreen() {
             style={{ flex: 1 }}
             data={filteredDebtors}
             keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 16 }}
             ListEmptyComponent={
               <ThemedText style={styles.emptyList}>
