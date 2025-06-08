@@ -107,41 +107,47 @@ export default function InventoryScreen() {
     });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View>
-            <ThemedView style={styles.header}>
-              <ThemedText type="title">Inventário</ThemedText>
-            </ThemedView>
+    <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={[styles.container, { paddingBottom: 0 }]}>
+          <ThemedView style={styles.header}>
+            <ThemedText type="title">Inventário</ThemedText>
+          </ThemedView>
 
-            <SearchBarInventory
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-            />
+          <SearchBarInventory
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
 
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <View style={{ flex: 1 }}>
-                <CategoryFilter
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  categories={categories}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <InventorySortOptions
-                  sortType={sortType}
-                  setSortType={setSortType}
-                />
-              </View>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ flex: 1 }}>
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                categories={categories}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <InventorySortOptions
+                sortType={sortType}
+                setSortType={setSortType}
+              />
             </View>
           </View>
-        </TouchableWithoutFeedback>
 
-        <View style={{ flex: 1 }}>
           <FlatList
+            style={{ flex: 1 }}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
             data={filteredItems}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+            contentContainerStyle={{ paddingBottom: 32 }}
+            ListEmptyComponent={
+              <ThemedText style={styles.emptyList}>
+                Nenhum item encontrado.
+              </ThemedText>
+            }
             renderItem={({ item }) => (
               <InventoryItemCard
                 item={item}
@@ -150,39 +156,33 @@ export default function InventoryScreen() {
                 onDecrement={decrementQuantity}
               />
             )}
-            ListEmptyComponent={
-              <ThemedText style={styles.emptyList}>
-                Nenhum item encontrado.
-              </ThemedText>
-            }
-            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            contentContainerStyle={{ flexGrow: 1, paddingBottom: 16 }}
+          />
+
+          <EditItemModal
+            visible={editModalVisible}
+            onClose={() => setEditModalVisible(false)}
+            itemName={editItemName}
+            setItemName={setEditItemName}
+            itemQuantity={editItemQuantity}
+            setItemQuantity={setEditItemQuantity}
+            itemCategory={editItemCategory}
+            setItemCategory={setEditItemCategory}
+            itemPrice={editItemPrice}
+            setItemPrice={setEditItemPrice}
+            itemLocation={editItemLocation}
+            setItemLocation={setEditItemLocation}
+            itemCreatedAt={editItemCustomCreatedAt}
+            setItemCreatedAt={setEditItemCustomCreatedAt}
+            itemLastRemovedAt={editItemLastRemovedAt}
+            setItemLastRemovedAt={setEditItemLastRemovedAt}
+            onSave={handleSaveEdit}
+            onDelete={() => {
+              if (editingIndex !== null) removeItem(editingIndex);
+              setEditModalVisible(false);
+            }}
           />
         </View>
-        <EditItemModal
-          visible={editModalVisible}
-          onClose={() => setEditModalVisible(false)}
-          itemName={editItemName}
-          setItemName={setEditItemName}
-          itemQuantity={editItemQuantity}
-          setItemQuantity={setEditItemQuantity}
-          itemCategory={editItemCategory}
-          setItemCategory={setEditItemCategory}
-          itemPrice={editItemPrice}
-          setItemPrice={setEditItemPrice}
-          itemLocation={editItemLocation}
-          setItemLocation={setEditItemLocation}
-          itemCreatedAt={editItemCustomCreatedAt}
-          setItemCreatedAt={setEditItemCustomCreatedAt}
-          itemLastRemovedAt={editItemLastRemovedAt}
-          setItemLastRemovedAt={setEditItemLastRemovedAt}
-          onSave={handleSaveEdit}
-          onDelete={() => {
-            if (editingIndex !== null) removeItem(editingIndex);
-            setEditModalVisible(false);
-          }}
-        />
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
