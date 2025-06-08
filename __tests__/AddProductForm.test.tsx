@@ -254,7 +254,10 @@ describe("AddProductForm", () => {
     fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
     fireEvent.changeText(getByPlaceholderText("Ex: 10"), "abc"); // quantidade inválida
     fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "abc"); // preço inválido
-    fireEvent.changeText(getByPlaceholderText("Ex: Prateleira 2"), "Prateleira 2");
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Prateleira 2"),
+      "Prateleira 2"
+    );
     await act(async () => {
       fireEvent.press(getByText("Salvar Produto"));
       await new Promise((r) => setTimeout(r, 0));

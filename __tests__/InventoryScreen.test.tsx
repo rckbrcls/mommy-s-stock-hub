@@ -44,8 +44,13 @@ describe("InventoryScreen", () => {
   it("should not allow SQL injection patterns in search bar", () => {
     const { getByPlaceholderText } = render(<InventoryScreen />);
     const searchInput = getByPlaceholderText("Pesquisar por nome do item...");
-    fireEvent.changeText(searchInput, "Sabonete'); DROP TABLE inventory_items;--");
-    expect(searchInput.props.value).toBe("Sabonete'); DROP TABLE inventory_items;--");
+    fireEvent.changeText(
+      searchInput,
+      "Sabonete'); DROP TABLE inventory_items;--"
+    );
+    expect(searchInput.props.value).toBe(
+      "Sabonete'); DROP TABLE inventory_items;--"
+    );
   });
 
   it("should not accept only spaces in search bar", () => {
