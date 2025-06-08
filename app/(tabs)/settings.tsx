@@ -17,6 +17,7 @@ import {
   importDatabaseFromExcel,
 } from "@/features/settings/utils";
 import { useTextSize } from "@/features/settings/contexts/TextSizeContext";
+import { ThemedView } from "@/components/ThemedView";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
@@ -100,38 +101,43 @@ export default function SettingsScreen() {
             Acessibilidade
           </ThemedText>
           <View style={styles.textSizeRow}>
-            <TouchableOpacity
-              style={[
-                styles.textSizeButton,
-                textSize === "small" && styles.textSizeButtonActive,
-              ]}
-              onPress={() => handleTextSizeChange("small")}
-            >
-              <ThemedText style={[styles.textSizeButtonText]} type="subtitle">
-                A-
-              </ThemedText>
+            <TouchableOpacity onPress={() => handleTextSizeChange("small")}>
+              <ThemedView
+                style={[
+                  styles.textSizeButton,
+                  textSize === "small" && styles.textSizeButtonActive,
+                ]}
+              >
+                <ThemedText style={[styles.textSizeButtonText]} type="subtitle">
+                  A-
+                </ThemedText>
+              </ThemedView>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.textSizeButton,
-                textSize === "medium" && styles.textSizeButtonActive,
-              ]}
-              onPress={() => handleTextSizeChange("medium")}
-            >
-              <ThemedText style={[styles.textSizeButtonText]} type="subtitle">
-                A
-              </ThemedText>
+
+            <TouchableOpacity onPress={() => handleTextSizeChange("medium")}>
+              <ThemedView
+                style={[
+                  styles.textSizeButton,
+                  textSize === "medium" && styles.textSizeButtonActive,
+                ]}
+              >
+                <ThemedText style={[styles.textSizeButtonText]} type="subtitle">
+                  A
+                </ThemedText>
+              </ThemedView>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.textSizeButton,
-                textSize === "large" && styles.textSizeButtonActive,
-              ]}
-              onPress={() => handleTextSizeChange("large")}
-            >
-              <ThemedText style={[styles.textSizeButtonText]} type="subtitle">
-                A+
-              </ThemedText>
+
+            <TouchableOpacity onPress={() => handleTextSizeChange("large")}>
+              <ThemedView
+                style={[
+                  styles.textSizeButton,
+                  textSize === "large" && styles.textSizeButtonActive,
+                ]}
+              >
+                <ThemedText style={[styles.textSizeButtonText]} type="subtitle">
+                  A+
+                </ThemedText>
+              </ThemedView>
             </TouchableOpacity>
           </View>
         </View>
@@ -194,7 +200,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   textSizeButton: {
-    backgroundColor: "#eee",
     paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 6,
@@ -206,6 +211,5 @@ const styles = StyleSheet.create({
   textSizeButtonText: {
     fontWeight: "bold",
     fontSize: 18,
-    color: "#333",
   },
 });
