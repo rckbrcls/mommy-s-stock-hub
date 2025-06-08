@@ -1,3 +1,4 @@
+// Função de importação de banco a partir de Excel
 import * as XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";

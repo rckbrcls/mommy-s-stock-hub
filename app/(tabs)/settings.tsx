@@ -12,8 +12,10 @@ import {
 } from "react-native";
 import { useTheme } from "@/features/settings/contexts/ThemeContext";
 import { ThemedText } from "@/components/ThemedText";
-import { exportDatabaseToExcel } from "@/features/settings/exportDatabaseToExcel";
-import { importDatabaseFromExcel } from "@/features/settings/importDatabaseFromExcel";
+import {
+  exportDatabaseToExcel,
+  importDatabaseFromExcel,
+} from "@/features/settings/utils";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
