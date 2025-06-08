@@ -10,6 +10,9 @@ interface InventoryItemCardProps {
     quantity: number;
     category?: string;
     price?: number;
+    location?: string;
+    lastRemovedAt?: string;
+    createdAt?: string;
   };
   onEdit: (id: string) => void;
   onIncrement: (id: string) => void;
@@ -45,6 +48,30 @@ export const InventoryItemCard: React.FC<InventoryItemCardProps> = ({
             Preço:{" "}
             <ThemedText style={styles.listItemTexBold}>
               R$ {item.price.toFixed(2)}
+            </ThemedText>
+          </ThemedText>
+        )}
+        {item.location && (
+          <ThemedText>
+            Localização:{" "}
+            <ThemedText style={styles.listItemTexBold}>
+              {item.location}
+            </ThemedText>
+          </ThemedText>
+        )}
+        {item.lastRemovedAt && (
+          <ThemedText>
+            Última retirada:{" "}
+            <ThemedText style={styles.listItemTexBold}>
+              {item.lastRemovedAt.substring(0, 16).replace("T", " ")}
+            </ThemedText>
+          </ThemedText>
+        )}
+        {item.createdAt && (
+          <ThemedText>
+            Criado em:{" "}
+            <ThemedText style={styles.listItemTexBold}>
+              {item.createdAt.substring(0, 16).replace("T", " ")}
             </ThemedText>
           </ThemedText>
         )}

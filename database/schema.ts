@@ -21,6 +21,9 @@ export const mySchema = appSchema({
         { name: "quantity", type: "number" },
         { name: "category", type: "string", isOptional: true },
         { name: "price", type: "number", isOptional: true },
+        { name: "last_removed_at", type: "string", isOptional: true },
+        { name: "custom_created_at", type: "string", isOptional: true }, // campo customizado para data/hora de criação
+        { name: "location", type: "string", isOptional: true },
       ],
     }),
   ],

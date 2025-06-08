@@ -39,6 +39,9 @@ export default function InventoryScreen() {
   const [sortType, setSortType] = useState<
     "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | ""
   >(""); // State for sorting
+  const [editItemLocation, setEditItemLocation] = useState("");
+  const [editItemCustomCreatedAt, setEditItemCustomCreatedAt] = useState("");
+  const [editItemLastRemovedAt, setEditItemLastRemovedAt] = useState("");
 
   // Extract unique categories
   const categories = Array.from(
@@ -53,11 +56,14 @@ export default function InventoryScreen() {
   const openEditModal = (id: string) => {
     const item = items.find((item) => item.id === id);
     if (item) {
-      setEditingIndex(id); // Agora armazenamos o id
+      setEditingIndex(id);
       setEditItemName(item.name);
       setEditItemQuantity(item.quantity.toString());
       setEditItemCategory(item.category || "");
       setEditItemPrice(item.price?.toString() || "");
+      setEditItemLocation(item.location || "");
+      setEditItemCustomCreatedAt(item.customCreatedAt || "");
+      setEditItemLastRemovedAt(item.lastRemovedAt || "");
       setEditModalVisible(true);
     }
   };
@@ -65,11 +71,14 @@ export default function InventoryScreen() {
   const handleSaveEdit = async () => {
     if (editingIndex !== null) {
       const updatedItem = {
-        id: editingIndex, // Usar o id armazenado
+        id: editingIndex,
         name: editItemName,
         quantity: parseInt(editItemQuantity) || 0,
         category: editItemCategory,
         price: parseFloat(editItemPrice) || 0,
+        location: editItemLocation,
+        customCreatedAt: editItemCustomCreatedAt,
+        lastRemovedAt: editItemLastRemovedAt,
       };
       await updateItem(editingIndex, updatedItem);
       setEditModalVisible(false);
@@ -161,6 +170,12 @@ export default function InventoryScreen() {
           setItemCategory={setEditItemCategory}
           itemPrice={editItemPrice}
           setItemPrice={setEditItemPrice}
+          itemLocation={editItemLocation}
+          setItemLocation={setEditItemLocation}
+          itemCreatedAt={editItemCustomCreatedAt}
+          setItemCreatedAt={setEditItemCustomCreatedAt}
+          itemLastRemovedAt={editItemLastRemovedAt}
+          setItemLastRemovedAt={setEditItemLastRemovedAt}
           onSave={handleSaveEdit}
           onDelete={() => {
             if (editingIndex !== null) removeItem(editingIndex);

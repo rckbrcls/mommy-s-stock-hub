@@ -23,6 +23,12 @@ interface EditItemModalProps {
   setItemPrice: (text: string) => void;
   onSave: () => void;
   onDelete: () => void;
+  itemLocation: string;
+  setItemLocation: (text: string) => void;
+  itemCreatedAt: string;
+  setItemCreatedAt: (text: string) => void;
+  itemLastRemovedAt: string;
+  setItemLastRemovedAt: (text: string) => void;
 }
 
 export const EditItemModal: React.FC<EditItemModalProps> = ({
@@ -38,6 +44,12 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
   setItemPrice,
   onSave,
   onDelete,
+  itemLocation,
+  setItemLocation,
+  itemCreatedAt,
+  setItemCreatedAt,
+  itemLastRemovedAt,
+  setItemLastRemovedAt,
 }) => (
   <Modal
     animationType="slide"
@@ -77,6 +89,27 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
             value={itemPrice}
             onChangeText={setItemPrice}
             keyboardType="decimal-pad"
+            style={styles.modalInput}
+          />
+          <ThemedText style={styles.modalLabel}>Localização</ThemedText>
+          <ThemedInput
+            placeholder="Localização"
+            value={itemLocation}
+            onChangeText={setItemLocation}
+            style={styles.modalInput}
+          />
+          <ThemedText style={styles.modalLabel}>Criado em</ThemedText>
+          <ThemedInput
+            placeholder="AAAA-MM-DDTHH:mm"
+            value={itemCreatedAt}
+            onChangeText={setItemCreatedAt}
+            style={styles.modalInput}
+          />
+          <ThemedText style={styles.modalLabel}>Última retirada</ThemedText>
+          <ThemedInput
+            placeholder="AAAA-MM-DDTHH:mm"
+            value={itemLastRemovedAt}
+            onChangeText={setItemLastRemovedAt}
             style={styles.modalInput}
           />
           <TouchableOpacity style={styles.mainButton} onPress={onSave}>

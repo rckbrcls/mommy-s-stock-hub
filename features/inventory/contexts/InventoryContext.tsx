@@ -8,6 +8,9 @@ interface InventoryItem {
   quantity: number;
   category?: string;
   price?: number;
+  lastRemovedAt?: string;
+  customCreatedAt?: string;
+  location?: string;
 }
 
 interface InventoryContextProps {
@@ -42,6 +45,9 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
             quantity: i.quantity,
             category: i.category,
             price: i.price,
+            lastRemovedAt: i.lastRemovedAt,
+            customCreatedAt: i.customCreatedAt,
+            location: i.location,
           }))
         );
       });
@@ -56,6 +62,10 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         i.quantity = item.quantity;
         if (item.category) i.category = item.category;
         if (item.price !== undefined) i.price = item.price;
+        if (item.lastRemovedAt) i.lastRemovedAt = item.lastRemovedAt;
+        if (item.location) i.location = item.location;
+        if (item.customCreatedAt) i.customCreatedAt = item.customCreatedAt;
+        else i.customCreatedAt = new Date().toISOString();
       });
     });
     setVersion((v) => v + 1);
@@ -72,6 +82,9 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         i.quantity = updatedItem.quantity;
         i.category = updatedItem.category;
         i.price = updatedItem.price;
+        i.lastRemovedAt = updatedItem.lastRemovedAt || i.lastRemovedAt;
+        i.location = updatedItem.location || i.location;
+        i.customCreatedAt = updatedItem.customCreatedAt || i.customCreatedAt;
       });
     });
     setVersion((v) => v + 1);
@@ -111,6 +124,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
       if (item.quantity > 0) {
         await item.update((i) => {
           i.quantity = i.quantity - 1;
+          i.lastRemovedAt = new Date().toISOString();
         });
       }
     });
