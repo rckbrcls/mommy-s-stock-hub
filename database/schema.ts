@@ -9,6 +9,9 @@ export const mySchema = appSchema({
         { name: "name", type: "string" },
         { name: "amount", type: "number" },
         { name: "status", type: "string" },
+        { name: "start_date", type: "string", isOptional: true },
+        { name: "due_date", type: "string", isOptional: true },
+        { name: "paid_date", type: "string", isOptional: true },
       ],
     }),
     tableSchema({

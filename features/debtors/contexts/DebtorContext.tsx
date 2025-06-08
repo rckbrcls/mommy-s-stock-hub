@@ -8,6 +8,9 @@ interface Debtor {
   name: string;
   amount: number;
   status: "open" | "paid";
+  startDate?: string; // data de início da dívida (ISO string)
+  dueDate?: string; // data escolhida para pagar (ISO string)
+  paidDate?: string; // quando realmente pagou (ISO string)
 }
 
 interface DebtorContextProps {
@@ -38,6 +41,9 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
             name: d.name,
             amount: d.amount,
             status: d.status as "open" | "paid",
+            startDate: d.startDate,
+            dueDate: d.dueDate,
+            paidDate: d.paidDate,
           }))
         );
       });
@@ -51,6 +57,9 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
         d.name = debtor.name;
         d.amount = debtor.amount;
         d.status = debtor.status;
+        d.startDate = debtor.startDate || new Date().toISOString();
+        d.dueDate = debtor.dueDate || "";
+        d.paidDate = debtor.paidDate || "";
       });
     });
     setVersion((v) => v + 1);
@@ -64,6 +73,9 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
         d.name = updatedDebtor.name;
         d.amount = updatedDebtor.amount;
         d.status = updatedDebtor.status;
+        d.startDate = updatedDebtor.startDate || d.startDate;
+        d.dueDate = updatedDebtor.dueDate || d.dueDate;
+        d.paidDate = updatedDebtor.paidDate || d.paidDate;
       });
     });
     setVersion((v) => v + 1);
@@ -85,6 +97,7 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
       const debtor = await database.get<WDebtor>("debtors").find(id);
       await debtor.update((d) => {
         d.status = "paid";
+        d.paidDate = new Date().toISOString();
       });
     });
     setVersion((v) => v + 1);

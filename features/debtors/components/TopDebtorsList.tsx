@@ -10,6 +10,10 @@ interface Debtor {
   id: string;
   name: string;
   amount: number;
+  startDate?: string;
+  dueDate?: string;
+  paidDate?: string;
+  status?: string;
 }
 
 interface TopDebtorsListProps {
@@ -31,6 +35,19 @@ export const TopDebtorsList: React.FC<TopDebtorsListProps> = ({
               <ThemedText style={styles.lowStockQuantity}>
                 Valor: R$ {debtor.amount.toFixed(2)}
               </ThemedText>
+              <ThemedText style={styles.lowStockQuantity}>
+                Início:{" "}
+                {debtor.startDate ? debtor.startDate.substring(0, 10) : "-"}
+              </ThemedText>
+              <ThemedText style={styles.lowStockQuantity}>
+                Prazo: {debtor.dueDate ? debtor.dueDate.substring(0, 10) : "-"}
+              </ThemedText>
+              {debtor.status === "paid" && (
+                <ThemedText style={styles.lowStockQuantity}>
+                  Pago em:{" "}
+                  {debtor.paidDate ? debtor.paidDate.substring(0, 10) : "-"}
+                </ThemedText>
+              )}
             </Card>
           ))}
         </ThemedView>

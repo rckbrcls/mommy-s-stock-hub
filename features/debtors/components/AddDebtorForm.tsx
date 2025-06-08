@@ -24,6 +24,8 @@ interface AddDebtorFormProps {
 export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
   const handleSaveDebtor = async () => {
@@ -36,11 +38,16 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
       name,
       amount: parseCurrency(amount),
       status: "open" as "open",
+      startDate: startDate || new Date().toISOString(),
+      dueDate,
+      paidDate: "",
     };
     await addDebtor(newDebtor);
     Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
     setName("");
     setAmount("");
+    setStartDate("");
+    setDueDate("");
   };
 
   const handleAmountChange = (value: string) => {
@@ -67,6 +74,24 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
             onChangeText={handleAmountChange}
             placeholder="Ex: R$ 100,00"
             keyboardType="numeric"
+          />
+        </View>
+        <View>
+          <ThemedText style={styles.label}>Data de Início</ThemedText>
+          <ThemedInput
+            placeholderTextColor={textColor}
+            value={startDate}
+            onChangeText={setStartDate}
+            placeholder="AAAA-MM-DD"
+          />
+        </View>
+        <View>
+          <ThemedText style={styles.label}>Prazo para Pagamento</ThemedText>
+          <ThemedInput
+            placeholderTextColor={textColor}
+            value={dueDate}
+            onChangeText={setDueDate}
+            placeholder="AAAA-MM-DD"
           />
         </View>
         <TouchableOpacity onPress={handleSaveDebtor} style={styles.saveButton}>

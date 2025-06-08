@@ -9,6 +9,9 @@ interface DebtorCardProps {
     name: string;
     amount: number;
     status: "open" | "paid";
+    startDate?: string;
+    dueDate?: string;
+    paidDate?: string;
   };
   onMarkAsPaid: (id: string) => void;
   onDelete: (id: string) => void;
@@ -25,14 +28,17 @@ export const DebtorCard: React.FC<DebtorCardProps> = ({
       <ThemedText style={styles.debtorAmount}>
         Valor: R$ {debtor.amount.toFixed(2)}
       </ThemedText>
-      <ThemedText
-        style={[
-          styles.debtorStatus,
-          debtor.status === "open" ? styles.statusOpen : styles.statusPaid,
-        ]}
-      >
-        {debtor.status === "open" ? "Em Aberto" : "Pago"}
+      <ThemedText style={styles.debtorStatus}>
+        Início: {debtor.startDate ? debtor.startDate.substring(0, 10) : "-"}
       </ThemedText>
+      <ThemedText style={styles.debtorStatus}>
+        Prazo: {debtor.dueDate ? debtor.dueDate.substring(0, 10) : "-"}
+      </ThemedText>
+      {debtor.status === "paid" && (
+        <ThemedText style={styles.debtorStatus}>
+          Pago em: {debtor.paidDate ? debtor.paidDate.substring(0, 10) : "-"}
+        </ThemedText>
+      )}
     </View>
     <View style={styles.actions}>
       {debtor.status === "open" && (
