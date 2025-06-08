@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/features/settings/contexts/ThemeContext";
 import { ThemedText } from "@/components/ThemedText";
 
 export default function SettingsScreen() {
