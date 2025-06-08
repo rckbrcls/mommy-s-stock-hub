@@ -14,7 +14,7 @@ jest.mock("@/features/settings/contexts/TextSizeContext", () =>
 import React from "react";
 import { AddProductForm } from "@/features/add/components/AddProductForm";
 import { InventoryProvider } from "../__mocks__/InventoryContextMock";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, act } from "@testing-library/react-native";
 
 describe("AddProductForm", () => {
   beforeAll(() => {
@@ -35,6 +35,36 @@ describe("AddProductForm", () => {
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
       "Preencha todos os campos obrigatórios."
+    );
+  });
+  it("should call addItem with correct data when all fields are filled and Salvar Produto is pressed", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Sabonete"), "Sabonete");
+    fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "5");
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "7,99");
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Prateleira 2"),
+      "Prateleira 2"
+    );
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0)); // aguarda promessas internas
+    });
+    expect(addItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "Sabonete",
+        category: "Higiene",
+        quantity: 5,
+        price: 7.99,
+        location: "Prateleira 2",
+      })
     );
   });
 });
