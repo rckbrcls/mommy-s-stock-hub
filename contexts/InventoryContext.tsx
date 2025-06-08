@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { database } from "../database";
 import InventoryItemModel from "../database/InventoryItem";
-import { Q } from "@nozbe/watermelondb";
 
 interface InventoryItem {
   id: string;

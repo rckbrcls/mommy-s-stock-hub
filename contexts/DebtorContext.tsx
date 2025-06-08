@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { database } from "../database";
 import WDebtor from "../database/Debtor";
-import { Q } from "@nozbe/watermelondb";
 
 interface Debtor {
   id: string;
