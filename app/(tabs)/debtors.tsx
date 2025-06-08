@@ -21,9 +21,9 @@ import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedView } from "@/components/ThemedView";
-import { SortOptions } from "@/components/SortOptions";
-import { StatusFilter } from "@/components/StatusFilter";
-import { DebtorCard } from "@/components/DebtorCard";
+import { SortOptions } from "@/features/inventory/components/SortOptions";
+import { StatusFilter } from "@/features/debtors/components/StatusFilter";
+import { DebtorCard } from "@/features/debtors/components/DebtorCard";
 
 export default function DebtorsScreen() {
   const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores

@@ -15,19 +15,15 @@ import {
 import { useInventory } from "../../contexts/InventoryContext";
 import { useDebtors } from "../../contexts/DebtorContext";
 import { ThemedText } from "@/components/ThemedText";
-import { SummaryCards } from "@/components/SummaryCards";
-import { LowStockList } from "@/components/LowStockList";
-import { TopDebtorsList } from "@/components/TopDebtorsList";
-import { LowCategoryList } from "@/components/LowCategoryList";
-import { StockByCategoryChart } from "@/components/StockByCategoryChart";
-import { DebtorsPieChart } from "@/components/DebtorsPieChart";
-import { BarChart, PieChart } from "react-native-chart-kit";
 import { useThemeColor } from "@/hooks/useThemeColor";
-
-const screenWidth = Dimensions.get("window").width;
+import { DebtorsPieChart } from "@/features/debtors/components/DebtorsPieChart";
+import { TopDebtorsList } from "@/features/debtors/components/TopDebtorsList";
+import { LowCategoryList } from "@/features/inventory/components/LowCategoryList";
+import { LowStockList } from "@/features/inventory/components/LowStockList";
+import { StockByCategoryChart } from "@/features/inventory/components/StockByCategoryChart";
+import { SummaryCards } from "@/features/inventory/components/SummaryCards";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
   const { items } = useInventory();
   const { debtors } = useDebtors();
 

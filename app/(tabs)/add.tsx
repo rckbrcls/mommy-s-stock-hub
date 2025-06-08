@@ -11,8 +11,8 @@ import { useInventory } from "@/contexts/InventoryContext";
 import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
 import "react-native-get-random-values";
 import { ThemedText } from "@/components/ThemedText";
-import { AddProductForm } from "@/components/AddProductForm";
-import { AddDebtorForm } from "@/components/AddDebtorForm";
+import { AddProductForm } from "@/features/add/components/AddProductForm";
+import { AddDebtorForm } from "@/features/debtors/components/AddDebtorForm";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");
