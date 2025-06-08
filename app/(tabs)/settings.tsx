@@ -13,6 +13,7 @@ import {
 import { useTheme } from "@/features/settings/contexts/ThemeContext";
 import { ThemedText } from "@/components/ThemedText";
 import { exportDatabaseToExcel } from "@/features/settings/exportDatabaseToExcel";
+import { importDatabaseFromExcel } from "@/features/settings/importDatabaseFromExcel";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
@@ -58,6 +59,14 @@ export default function SettingsScreen() {
           >
             <ThemedText style={styles.exportButtonText}>
               Exportar Base de Dados (Excel)
+            </ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.exportButton, { backgroundColor: "#A3D977" }]}
+            onPress={importDatabaseFromExcel}
+          >
+            <ThemedText style={styles.exportButtonText}>
+              Importar Base de Dados (Excel)
             </ThemedText>
           </TouchableOpacity>
         </View>

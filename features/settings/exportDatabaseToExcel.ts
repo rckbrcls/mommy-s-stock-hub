@@ -14,9 +14,9 @@ export async function exportDatabaseToExcel() {
     name: (d as Debtor).name,
     amount: (d as Debtor).amount,
     status: (d as Debtor).status,
-    startDate: (d as Debtor).startDate,
-    dueDate: (d as Debtor).dueDate,
-    paidDate: (d as Debtor).paidDate,
+    start_date: (d as Debtor).startDate,
+    due_date: (d as Debtor).dueDate,
+    paid_date: (d as Debtor).paidDate,
   }));
 
   // Export Inventory Items
@@ -29,8 +29,8 @@ export async function exportDatabaseToExcel() {
     quantity: (i as InventoryItemModel).quantity,
     category: (i as InventoryItemModel).category,
     price: (i as InventoryItemModel).price,
-    lastRemovedAt: (i as InventoryItemModel).lastRemovedAt,
-    customCreatedAt: (i as InventoryItemModel).customCreatedAt,
+    last_removed_at: (i as InventoryItemModel).lastRemovedAt,
+    custom_created_at: (i as InventoryItemModel).customCreatedAt,
     location: (i as InventoryItemModel).location,
   }));
 
