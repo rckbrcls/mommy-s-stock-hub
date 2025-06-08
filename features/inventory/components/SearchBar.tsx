@@ -3,7 +3,7 @@ import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 
 interface SearchBarProps {
   searchQuery: string;

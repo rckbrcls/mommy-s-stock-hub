@@ -10,7 +10,7 @@ import {
 import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useSortOptions } from "@/hooks/useSortOptions";
+import { useSortOptions } from "@/features/inventory/hooks/useSortOptions";
 
 interface SortOptionsProps {
   sortType: "amountAsc" | "amountDesc" | "";

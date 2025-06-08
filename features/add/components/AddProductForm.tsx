@@ -12,11 +12,14 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { ThemedInput } from "@/components/ThemedInput";
 import { v4 as uuidv4 } from "uuid";
-import { useCategorySuggestions } from "@/hooks/useCategorySuggestions";
-import { formatCurrencyInput, parseCurrency } from "@/hooks/useCurrencyHelpers";
+import { useCategorySuggestions } from "@/features/add/hooks/useCategorySuggestions";
+import {
+  formatCurrencyInput,
+  parseCurrency,
+} from "@/features/inventory/hooks/useCurrencyHelpers";
 
 interface AddProductFormProps {
   addItem: (item: any) => Promise<void>;

@@ -19,7 +19,7 @@ import { useDebtors } from "@/contexts/DebtorContext";
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { ThemedView } from "@/components/ThemedView";
 import { SortOptions } from "@/features/inventory/components/SortOptions";
 import { StatusFilter } from "@/features/debtors/components/StatusFilter";

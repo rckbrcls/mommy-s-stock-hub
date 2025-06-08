@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useSortOptions } from "@/hooks/useSortOptions";
+import { useSortOptions } from "@/features/inventory/hooks/useSortOptions";
 
 interface InventorySortOptionsProps {
   sortType: "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | "";

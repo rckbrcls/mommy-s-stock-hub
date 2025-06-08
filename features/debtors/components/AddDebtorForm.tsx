@@ -10,9 +10,12 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedInput } from "@/components/ThemedInput";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { v4 as uuidv4 } from "uuid";
-import { formatCurrencyInput, parseCurrency } from "@/hooks/useCurrencyHelpers";
+import {
+  formatCurrencyInput,
+  parseCurrency,
+} from "@/features/inventory/hooks/useCurrencyHelpers";
 
 interface AddDebtorFormProps {
   addDebtor: (debtor: any) => Promise<void>;
