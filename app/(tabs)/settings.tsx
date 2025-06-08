@@ -54,7 +54,7 @@ export default function SettingsScreen() {
 
         {/* Seção de Exportação */}
         <View style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>Exportação</ThemedText>
+          <ThemedText style={styles.sectionTitle}>Backup</ThemedText>
           <TouchableOpacity
             style={styles.exportButton}
             onPress={exportDatabaseToExcel}
