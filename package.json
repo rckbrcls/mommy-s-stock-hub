@@ -12,7 +12,13 @@
     "lint": "expo lint"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(uuid|@react-native|react-native|@react-native-async-storage|@expo|expo(-.*)?|react-native-modal-datetime-picker|@react-native-community/datetimepicker)/)"
+    ]
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
@@ -26,12 +32,14 @@
     "expo": "~52.0.43",
     "expo-blur": "~14.0.3",
     "expo-constants": "~17.0.8",
+    "expo-document-picker": "~13.0.3",
     "expo-file-system": "~18.0.12",
     "expo-font": "~13.0.4",
     "expo-haptics": "~14.0.1",
     "expo-linking": "~7.0.5",
     "expo-notifications": "~0.29.14",
     "expo-router": "~4.0.20",
+    "expo-sharing": "~13.0.1",
     "expo-splash-screen": "~0.29.22",
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",
@@ -51,13 +59,13 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "uuid": "^11.1.0",
-    "xlsx": "^0.18.5",
-    "expo-sharing": "~13.0.1",
-    "expo-document-picker": "~13.0.3"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
     "@types/react-native": "^0.73.0",
