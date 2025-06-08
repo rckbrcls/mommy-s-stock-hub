@@ -32,22 +32,32 @@ export const TopDebtorsList: React.FC<TopDebtorsListProps> = ({
           {topDebtors.slice(0, 4).map((debtor) => (
             <Card key={debtor.id} style={styles.lowStockCard}>
               <ThemedText style={styles.lowStockName}>{debtor.name}</ThemedText>
-              <ThemedText style={styles.lowStockQuantity}>
-                Valor: R$ {debtor.amount.toFixed(2)}
-              </ThemedText>
-              <ThemedText style={styles.lowStockQuantity}>
-                Início:{" "}
-                {debtor.startDate ? debtor.startDate.substring(0, 10) : "-"}
-              </ThemedText>
-              <ThemedText style={styles.lowStockQuantity}>
-                Prazo: {debtor.dueDate ? debtor.dueDate.substring(0, 10) : "-"}
-              </ThemedText>
-              {debtor.status === "paid" && (
-                <ThemedText style={styles.lowStockQuantity}>
-                  Pago em:{" "}
-                  {debtor.paidDate ? debtor.paidDate.substring(0, 10) : "-"}
-                </ThemedText>
-              )}
+              <View style={styles.lowStockContainer}>
+                <Card style={styles.lowStockInfoCard}>
+                  <ThemedText style={styles.lowStockInfoTitle}>
+                    Valor:
+                  </ThemedText>
+                  <ThemedText style={styles.lowStockInfoDescription}>
+                    {debtor.amount.toFixed(2)}
+                  </ThemedText>
+                </Card>
+                <Card style={styles.lowStockInfoCard}>
+                  <ThemedText style={styles.lowStockInfoTitle}>
+                    Início:
+                  </ThemedText>
+                  <ThemedText style={styles.lowStockInfoDescription}>
+                    {debtor.startDate ? debtor.startDate.substring(0, 10) : "-"}
+                  </ThemedText>
+                </Card>
+                <Card style={styles.lowStockInfoCard}>
+                  <ThemedText style={styles.lowStockInfoTitle}>
+                    Prazo:
+                  </ThemedText>
+                  <ThemedText style={styles.lowStockInfoDescription}>
+                    {debtor.dueDate ? debtor.dueDate.substring(0, 10) : "-"}
+                  </ThemedText>
+                </Card>
+              </View>
             </Card>
           ))}
         </ThemedView>
@@ -83,10 +93,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   lowStockCard: {
-    flexBasis: "48%",
+    flexBasis: "100%",
     padding: 16,
     marginBottom: 12,
+    alignItems: "flex-start",
+  },
+  lowStockInfoCard: {
+    flexBasis: "100%",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   lowStockName: {
     fontSize: 16,
@@ -94,7 +113,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: "center",
   },
-  lowStockQuantity: {
+  lowStockInfoTitle: {
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  lowStockInfoDescription: {
     fontSize: 14,
     textAlign: "center",
   },
