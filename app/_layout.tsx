@@ -10,9 +10,12 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { ThemeProvider, useTheme } from "@/contexts/ThemeContext"; // Apenas o ThemeProvider
-import { InventoryProvider } from "@/contexts/InventoryContext";
-import { DebtorProvider } from "@/contexts/DebtorContext";
+import {
+  ThemeProvider,
+  useTheme,
+} from "@/features/settings/contexts/ThemeContext"; // Apenas o ThemeProvider
+import { InventoryProvider } from "@/features/inventory/contexts/InventoryContext";
+import { DebtorProvider } from "@/features/debtors/contexts/DebtorContext";
 
 SplashScreen.preventAutoHideAsync();
 

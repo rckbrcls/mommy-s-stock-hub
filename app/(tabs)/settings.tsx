@@ -8,18 +8,21 @@ import {
   Switch,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/features/settings/contexts/ThemeContext";
 import { ThemedText } from "@/components/ThemedText";
+import {
+  exportDatabaseToExcel,
+  importDatabaseFromExcel,
+} from "@/features/settings/utils";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
-  const [isCloudSyncEnabled, setIsCloudSyncEnabled] = useState(false);
 
   const handleToggleNotifications = () =>
     setIsNotificationsEnabled((prev) => !prev);
-  const handleToggleCloudSync = () => setIsCloudSyncEnabled((prev) => !prev);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -47,6 +50,27 @@ export default function SettingsScreen() {
               onValueChange={handleToggleNotifications}
             />
           </View>
+        </View>
+
+        {/* Seção de Exportação */}
+        <View style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>Backup</ThemedText>
+          <TouchableOpacity
+            style={styles.exportButton}
+            onPress={exportDatabaseToExcel}
+          >
+            <ThemedText style={styles.exportButtonText}>
+              Exportar Base de Dados (Excel)
+            </ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.exportButton, { backgroundColor: "#A3D977" }]}
+            onPress={importDatabaseFromExcel}
+          >
+            <ThemedText style={styles.exportButtonText}>
+              Importar Base de Dados (Excel)
+            </ThemedText>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -85,6 +109,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   itemLabel: {
+    fontSize: 16,
+  },
+  exportButton: {
+    backgroundColor: "#F5A689",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  exportButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
 });

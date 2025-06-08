@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { ThemedView } from "./ThemedView";
 import { StyleSheet, ViewProps } from "react-native";
 
