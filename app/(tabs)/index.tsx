@@ -61,7 +61,7 @@ export default function HomeScreen() {
   }, [items]);
 
   const lowStock = useMemo(
-    () => items.filter((item) => item.quantity < 5),
+    () => items.filter((item) => item.quantity <= 15),
     [items]
   );
 
