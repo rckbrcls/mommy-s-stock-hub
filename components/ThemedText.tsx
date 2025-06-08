@@ -1,6 +1,7 @@
 import { Text, type TextProps, StyleSheet } from "react-native";
 
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
+import { useTextSize } from "@/features/settings/contexts/TextSizeContext";
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -16,17 +17,69 @@ export function ThemedText({
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+  const { fontScale } = useTextSize();
 
   return (
     <Text
       style={[
         { color },
-        type === "default" ? styles.default : undefined,
-        type === "title" ? styles.title : undefined,
-        type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
-        type === "subtitle" ? styles.subtitle : undefined,
-        type === "link" ? styles.link : undefined,
-        style,
+        type === "default"
+          ? {
+              ...styles.default,
+              fontSize: styles.default.fontSize * fontScale,
+              lineHeight: styles.default.lineHeight * fontScale,
+            }
+          : undefined,
+        type === "title"
+          ? {
+              ...styles.title,
+              fontSize: styles.title.fontSize * fontScale,
+              lineHeight: styles.title.lineHeight * fontScale,
+            }
+          : undefined,
+        type === "defaultSemiBold"
+          ? {
+              ...styles.defaultSemiBold,
+              fontSize: styles.defaultSemiBold.fontSize * fontScale,
+              lineHeight: styles.defaultSemiBold.lineHeight * fontScale,
+            }
+          : undefined,
+        type === "subtitle"
+          ? {
+              ...styles.subtitle,
+              fontSize: styles.subtitle.fontSize * fontScale,
+              lineHeight: styles.subtitle.lineHeight * fontScale,
+            }
+          : undefined,
+        type === "link"
+          ? {
+              ...styles.link,
+              fontSize: styles.link.fontSize * fontScale,
+              lineHeight: styles.link.lineHeight * fontScale,
+            }
+          : undefined,
+        // Remove fontSize and lineHeight from incoming style to avoid double scaling
+        ...(Array.isArray(style)
+          ? style.map((s) =>
+              s && typeof s === "object"
+                ? Object.fromEntries(
+                    Object.entries(s).filter(
+                      ([k]) => k !== "fontSize" && k !== "lineHeight"
+                    )
+                  )
+                : s
+            )
+          : style && typeof style === "object"
+          ? [
+              Object.fromEntries(
+                Object.entries(style).filter(
+                  ([k]) => k !== "fontSize" && k !== "lineHeight"
+                )
+              ),
+            ]
+          : style
+          ? [style]
+          : []),
       ]}
       {...rest}
     />
@@ -51,6 +104,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 20,
     fontWeight: "bold",
+    lineHeight: 28,
   },
   link: {
     lineHeight: 30,
