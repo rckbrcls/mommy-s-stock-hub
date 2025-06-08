@@ -1965,11 +1965,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - simdjson (1.0.0)
+  - simdjson (3.9.4)
   - SocketRocket (0.7.1)
-  - WatermelonDB (0.25.5):
+  - WatermelonDB (0.28.0):
     - React
-    - React-jsi
+    - simdjson
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2361,9 +2361,9 @@ SPEC CHECKSUMS:
   RNReanimated: 2e5069649cbab2c946652d3b97589b2ae0526220
   RNScreens: 362f4c861dd155f898908d5035d97b07a3f1a9d1
   RNSVG: b889dc9c1948eeea0576a16cc405c91c37a12c19
-  simdjson: c96317b3a50dff3468a42f586ab7ed22c6ab2fd9
+  simdjson: 7bb9e33d87737cec966e7b427773c67baa4458fe
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  WatermelonDB: f975618fb9858a3210f3a2645510e2d515b5ba39
+  WatermelonDB: 75e467adbaf2cb2809780fb3eda7ce4964e11778
   Yoga: feb4910aba9742cfedc059e2b2902e22ffe9954a
 
 PODFILE CHECKSUM: d8ea988d9b5f577d296bcd5e55bc138233953262
