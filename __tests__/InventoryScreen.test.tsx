@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 import InventoryScreen from "../app/(tabs)/inventory";
 jest.mock("@/features/inventory/contexts/InventoryContext", () =>
   require("../__mocks__/InventoryContextMock")
@@ -31,5 +31,27 @@ describe("InventoryScreen", () => {
     const { getByText, getByPlaceholderText } = render(<InventoryScreen />);
     expect(getByText("Inventário")).toBeTruthy();
     expect(getByPlaceholderText("Pesquisar por nome do item...")).toBeTruthy();
+  });
+
+  // Testes de segurança
+  it("should not allow script injection in search bar", () => {
+    const { getByPlaceholderText } = render(<InventoryScreen />);
+    const searchInput = getByPlaceholderText("Pesquisar por nome do item...");
+    fireEvent.changeText(searchInput, "<script>alert('xss')</script>");
+    expect(searchInput.props.value).toBe("<script>alert('xss')</script>");
+  });
+
+  it("should not allow SQL injection patterns in search bar", () => {
+    const { getByPlaceholderText } = render(<InventoryScreen />);
+    const searchInput = getByPlaceholderText("Pesquisar por nome do item...");
+    fireEvent.changeText(searchInput, "Sabonete'); DROP TABLE inventory_items;--");
+    expect(searchInput.props.value).toBe("Sabonete'); DROP TABLE inventory_items;--");
+  });
+
+  it("should not accept only spaces in search bar", () => {
+    const { getByPlaceholderText } = render(<InventoryScreen />);
+    const searchInput = getByPlaceholderText("Pesquisar por nome do item...");
+    fireEvent.changeText(searchInput, "   ");
+    expect(searchInput.props.value).toBe("   ");
   });
 });

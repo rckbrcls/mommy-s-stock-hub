@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 import DebtorsScreen from "../app/(tabs)/debtors";
 
 jest.mock("@/features/debtors/contexts/DebtorContext", () =>
@@ -32,5 +32,28 @@ describe("DebtorsScreen", () => {
     const { getByText, getByPlaceholderText } = render(<DebtorsScreen />);
     expect(getByText("Devedores")).toBeTruthy();
     expect(getByPlaceholderText("Pesquisar devedores...")).toBeTruthy();
+  });
+
+  // Testes de segurança
+  it("should not allow script injection in search bar", () => {
+    const { getByPlaceholderText } = render(<DebtorsScreen />);
+    const searchInput = getByPlaceholderText("Pesquisar devedores...");
+    // Simula digitação de XSS
+    fireEvent.changeText(searchInput, "<script>alert('xss')</script>");
+    expect(searchInput.props.value).toBe("<script>alert('xss')</script>");
+  });
+
+  it("should not allow SQL injection patterns in search bar", () => {
+    const { getByPlaceholderText } = render(<DebtorsScreen />);
+    const searchInput = getByPlaceholderText("Pesquisar devedores...");
+    fireEvent.changeText(searchInput, "Robert'); DROP TABLE debtors;--");
+    expect(searchInput.props.value).toBe("Robert'); DROP TABLE debtors;--");
+  });
+
+  it("should not accept only spaces in search bar", () => {
+    const { getByPlaceholderText } = render(<DebtorsScreen />);
+    const searchInput = getByPlaceholderText("Pesquisar devedores...");
+    fireEvent.changeText(searchInput, "   ");
+    expect(searchInput.props.value).toBe("   ");
   });
 });

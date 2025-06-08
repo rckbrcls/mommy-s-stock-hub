@@ -159,4 +159,111 @@ describe("AddProductForm", () => {
     );
     expect(getByText("Salvar Produto")).toBeTruthy();
   });
+
+  // Testes de segurança
+  it("should not allow script injection in product name", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Sabonete"),
+      "<script>alert('xss')</script>"
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "5");
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "7,99");
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Prateleira 2"),
+      "Prateleira 2"
+    );
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(addItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "<script>alert('xss')</script>",
+      })
+    );
+  });
+
+  it("should not allow SQL injection patterns in product name", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Sabonete"),
+      "Sabonete'); DROP TABLE inventory_items;--"
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "5");
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "7,99");
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Prateleira 2"),
+      "Prateleira 2"
+    );
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(addItem).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "Sabonete'); DROP TABLE inventory_items;--",
+      })
+    );
+  });
+
+  it("should not accept only spaces or empty strings in required fields", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Sabonete"), "   ");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "   ");
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(addItem).not.toHaveBeenCalled();
+    expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
+      "Erro",
+      "Preencha todos os campos obrigatórios."
+    );
+  });
+
+  it("should not accept invalid price or quantity", async () => {
+    const addItem = jest.fn();
+    const items: any[] = [];
+    const { getByPlaceholderText, getByText } = render(
+      <InventoryProvider>
+        <AddProductForm addItem={addItem} items={items} />
+      </InventoryProvider>
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: Sabonete"), "Produto Teste");
+    fireEvent.changeText(getByPlaceholderText("Ex: Higiene"), "Higiene");
+    fireEvent.changeText(getByPlaceholderText("Ex: 10"), "abc"); // quantidade inválida
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 5,99"), "abc"); // preço inválido
+    fireEvent.changeText(getByPlaceholderText("Ex: Prateleira 2"), "Prateleira 2");
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Produto"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    // Não deve adicionar produto
+    expect(addItem).not.toHaveBeenCalled();
+    expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
+      "Erro",
+      "Preencha todos os campos obrigatórios."
+    );
+  });
 });
