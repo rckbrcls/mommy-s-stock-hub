@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   SafeAreaView, // Importar o componente
 } from "react-native";
-import { useInventory } from "@/contexts/InventoryContext";
-import { useDebtors } from "@/contexts/DebtorContext"; // Importando o contexto de devedores
+// Importando o contexto de devedores
 import "react-native-get-random-values";
 import { ThemedText } from "@/components/ThemedText";
 import { AddProductForm } from "@/features/add/components/AddProductForm";
 import { AddDebtorForm } from "@/features/debtors/components/AddDebtorForm";
+import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
+import { useInventory } from "@/features/inventory/contexts/InventoryContext";
 
 export default function AddTabScreen() {
   const [activeTab, setActiveTab] = useState<"product" | "debtor">("product");

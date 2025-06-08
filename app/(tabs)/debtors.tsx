@@ -3,19 +3,15 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
   Alert,
   SafeAreaView,
   TextInput,
-  Modal,
   Keyboard,
   TouchableWithoutFeedback,
-  Platform,
 } from "react-native";
-import { useDebtors } from "@/contexts/DebtorContext";
+
 import { ThemedText } from "@/components/ThemedText";
 import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +20,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { SortOptions } from "@/features/inventory/components/SortOptions";
 import { StatusFilter } from "@/features/debtors/components/StatusFilter";
 import { DebtorCard } from "@/features/debtors/components/DebtorCard";
+import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
 
 export default function DebtorsScreen() {
   const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores

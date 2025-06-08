@@ -9,12 +9,13 @@ import {
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useInventory } from "@/contexts/InventoryContext";
+
 import { CategoryFilter } from "@/features/add/components/CategoryFilter";
 import { InventorySortOptions } from "@/features/inventory/components/InventorySortOptions";
 import { EditItemModal } from "@/features/inventory/components/EditItemModal";
 import { InventoryItemCard } from "@/features/inventory/components/InventoryItemCard";
 import { SearchBar } from "@/features/inventory/components/SearchBar";
+import { useInventory } from "@/features/inventory/contexts/InventoryContext";
 
 // Main Component
 export default function InventoryScreen() {

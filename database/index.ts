@@ -1,8 +1,8 @@
 import { Database } from "@nozbe/watermelondb";
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 import { mySchema } from "./schema";
-import Debtor from "./Debtor";
-import InventoryItemModel from "./InventoryItem";
+import Debtor from "../features/debtors/models/Debtor";
+import InventoryItemModel from "../features/inventory/models/InventoryItem";
 
 const adapter = new SQLiteAdapter({
   schema: mySchema,

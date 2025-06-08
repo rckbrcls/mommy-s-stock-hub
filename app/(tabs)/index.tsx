@@ -1,19 +1,13 @@
 // MommyStockHub/screens/HomeScreen.tsx
 
-import { useNavigation } from "expo-router";
 import React, { useMemo } from "react";
 import {
   View,
-  Text,
-  TouchableOpacity,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   Image,
-  Dimensions,
 } from "react-native";
-import { useInventory } from "../../contexts/InventoryContext";
-import { useDebtors } from "../../contexts/DebtorContext";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { DebtorsPieChart } from "@/features/debtors/components/DebtorsPieChart";
@@ -22,6 +16,8 @@ import { LowCategoryList } from "@/features/inventory/components/LowCategoryList
 import { LowStockList } from "@/features/inventory/components/LowStockList";
 import { StockByCategoryChart } from "@/features/inventory/components/StockByCategoryChart";
 import { SummaryCards } from "@/features/inventory/components/SummaryCards";
+import { useInventory } from "@/features/inventory/contexts/InventoryContext";
+import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
 
 export default function HomeScreen() {
   const { items } = useInventory();
