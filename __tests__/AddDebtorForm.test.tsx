@@ -13,7 +13,7 @@ jest.mock("@/features/settings/contexts/TextSizeContext", () =>
 
 import { AddDebtorForm } from "@/features/add/components/AddDebtorForm";
 import { DebtorProvider } from "../__mocks__/DebtorContextMock";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, act } from "@testing-library/react-native";
 
 describe("AddDebtorForm", () => {
   beforeAll(() => {
@@ -34,5 +34,73 @@ describe("AddDebtorForm", () => {
       "Erro",
       "Preencha todos os campos obrigatórios."
     );
+  });
+
+  it("should call addDebtor with correct data when all fields are filled and Salvar Devedor is pressed", async () => {
+    const addDebtor = jest.fn();
+    const { getByPlaceholderText, getByText } = render(
+      <DebtorProvider>
+        <AddDebtorForm addDebtor={addDebtor} />
+      </DebtorProvider>
+    );
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Cliente A"),
+      "Cliente Teste"
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 100,00"), "150,00");
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Devedor"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(addDebtor).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "Cliente Teste",
+        amount: 150,
+        status: "open",
+      })
+    );
+  });
+
+  it("should show error and not call addDebtor if amount is invalid or empty", async () => {
+    const addDebtor = jest.fn();
+    const { getByPlaceholderText, getByText } = render(
+      <DebtorProvider>
+        <AddDebtorForm addDebtor={addDebtor} />
+      </DebtorProvider>
+    );
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Cliente A"),
+      "Cliente Teste"
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 100,00"), "abc");
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Devedor"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(addDebtor).not.toHaveBeenCalled();
+    expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
+      "Erro",
+      "Preencha todos os campos obrigatórios."
+    );
+  });
+
+  it("should clear fields after successful add", async () => {
+    const addDebtor = jest.fn();
+    const { getByPlaceholderText, getByText } = render(
+      <DebtorProvider>
+        <AddDebtorForm addDebtor={addDebtor} />
+      </DebtorProvider>
+    );
+    fireEvent.changeText(
+      getByPlaceholderText("Ex: Cliente A"),
+      "Cliente Teste"
+    );
+    fireEvent.changeText(getByPlaceholderText("Ex: R$ 100,00"), "150,00");
+    await act(async () => {
+      fireEvent.press(getByText("Salvar Devedor"));
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    expect(getByPlaceholderText("Ex: Cliente A").props.value).toBe("");
+    expect(getByPlaceholderText("Ex: R$ 100,00").props.value).toBe("");
   });
 });

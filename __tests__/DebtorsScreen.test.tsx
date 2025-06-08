@@ -17,4 +17,14 @@ describe("DebtorsScreen", () => {
     const { getByPlaceholderText } = render(<DebtorsScreen />);
     expect(getByPlaceholderText("Pesquisar devedores...")).toBeTruthy();
   });
+
+  it("should render debtors list", () => {
+    const { getByText } = render(<DebtorsScreen />);
+    expect(getByText(/Devedores/i)).toBeTruthy();
+  });
+
+  it("should show empty message when no debtors", () => {
+    const { getByText } = render(<DebtorsScreen />);
+    expect(getByText(/Nenhum devedor encontrado/i)).toBeTruthy();
+  });
 });
