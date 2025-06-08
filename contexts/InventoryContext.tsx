@@ -28,26 +28,11 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [items, setItems] = useState<InventoryItem[]>([]);
+  const [version, setVersion] = useState(0); // força atualização
 
-  // Carregar itens do WatermelonDB ao montar o contexto
   useEffect(() => {
-    const loadItems = async () => {
-      const collection = database.get<InventoryItemModel>("inventory_items");
-      const allItems = await collection.query().fetch();
-      setItems(
-        allItems.map((i) => ({
-          id: i.id,
-          name: i.name,
-          quantity: i.quantity,
-          category: i.category,
-          price: i.price,
-        }))
-      );
-    };
-    loadItems();
-    // Observa mudanças na tabela
-    const sub = database
-      .get<InventoryItemModel>("inventory_items")
+    const collection = database.get<InventoryItemModel>("inventory_items");
+    const sub = collection
       .query()
       .observe()
       .subscribe((allItems) => {
@@ -62,7 +47,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         );
       });
     return () => sub.unsubscribe();
-  }, []);
+  }, [version]);
 
   // Adicionar item
   const addItem = async (item: InventoryItem) => {
@@ -74,6 +59,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         if (item.price !== undefined) i.price = item.price;
       });
     });
+    setVersion((v) => v + 1);
   };
 
   // Atualizar item
@@ -89,6 +75,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         i.price = updatedItem.price;
       });
     });
+    setVersion((v) => v + 1);
   };
 
   // Remover item
@@ -100,6 +87,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
       await item.markAsDeleted();
       await item.destroyPermanently();
     });
+    setVersion((v) => v + 1);
   };
 
   // Incrementar quantidade
@@ -112,6 +100,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         i.quantity = i.quantity + 1;
       });
     });
+    setVersion((v) => v + 1);
   };
 
   // Decrementar quantidade
@@ -126,12 +115,13 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
         });
       }
     });
+    setVersion((v) => v + 1);
   };
 
   return (
     <InventoryContext.Provider
       value={{
-        items,
+        items: [...items], // sempre novo array
         addItem,
         updateItem,
         removeItem,

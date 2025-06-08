@@ -24,25 +24,11 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [debtors, setDebtors] = useState<Debtor[]>([]);
+  const [version, setVersion] = useState(0); // força atualização
 
-  // Carregar devedores do WatermelonDB ao montar o contexto
   useEffect(() => {
-    const loadDebtors = async () => {
-      const collection = database.get<WDebtor>("debtors");
-      const allDebtors = await collection.query().fetch();
-      setDebtors(
-        allDebtors.map((d) => ({
-          id: d.id,
-          name: d.name,
-          amount: d.amount,
-          status: d.status as "open" | "paid",
-        }))
-      );
-    };
-    loadDebtors();
-    // Observa mudanças na tabela
-    const sub = database
-      .get<WDebtor>("debtors")
+    const collection = database.get<WDebtor>("debtors");
+    const sub = collection
       .query()
       .observe()
       .subscribe((allDebtors) => {
@@ -56,7 +42,7 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
         );
       });
     return () => sub.unsubscribe();
-  }, []);
+  }, [version]);
 
   // Adicionar devedor
   const addDebtor = async (debtor: Debtor) => {
@@ -67,6 +53,7 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
         d.status = debtor.status;
       });
     });
+    setVersion((v) => v + 1);
   };
 
   // Atualizar devedor
@@ -79,6 +66,7 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
         d.status = updatedDebtor.status;
       });
     });
+    setVersion((v) => v + 1);
   };
 
   // Remover devedor
@@ -88,6 +76,7 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
       await debtor.markAsDeleted();
       await debtor.destroyPermanently();
     });
+    setVersion((v) => v + 1);
   };
 
   // Marcar devedor como pago
@@ -98,12 +87,13 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
         d.status = "paid";
       });
     });
+    setVersion((v) => v + 1);
   };
 
   return (
     <DebtorContext.Provider
       value={{
-        debtors,
+        debtors: [...debtors], // sempre novo array
         addDebtor,
         updateDebtor,
         removeDebtor,
