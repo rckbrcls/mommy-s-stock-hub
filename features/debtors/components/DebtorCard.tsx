@@ -62,9 +62,11 @@ export const DebtorCard: React.FC<DebtorCardProps> = ({
 const styles = StyleSheet.create({
   debtorCard: {
     marginBottom: 12,
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
+    gap: 12,
+    padding: 16,
   },
   debtorInfo: { flex: 1 },
   debtorName: { fontSize: 16, fontWeight: "600" },
@@ -72,12 +74,17 @@ const styles = StyleSheet.create({
   debtorStatus: { fontSize: 14, fontWeight: "bold" },
   statusOpen: { color: "#FF6347" },
   statusPaid: { color: "#32CD32" },
-  actions: { flexDirection: "row" },
+  actions: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+  },
   actionButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
-    marginLeft: 8,
+    alignItems: "center",
+    width: "48%",
   },
   markPaidButton: { backgroundColor: "#A3D977" },
   deleteButton: { backgroundColor: "#FF6347" },
