@@ -7,7 +7,6 @@ import {
   FlatList,
   Alert,
   SafeAreaView,
-  TextInput,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -21,6 +20,7 @@ import { SortOptions } from "@/features/inventory/components/SortOptions";
 import { StatusFilter } from "@/features/debtors/components/StatusFilter";
 import { DebtorCard } from "@/features/debtors/components/DebtorCard";
 import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
+import { SearchBarDebtors } from "@/features/debtors/components/SearchBarDebtors";
 
 export default function DebtorsScreen() {
   const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores
@@ -77,29 +77,10 @@ export default function DebtorsScreen() {
             </ThemedView>
 
             {/* Barra de Pesquisa */}
-            <Card
-              style={{
-                marginBottom: 10,
-                padding: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Ionicons
-                name="search"
-                size={20}
-                color={textColor}
-                style={{ marginRight: 8 }}
-              />
-              <TextInput
-                style={[styles.searchBar, { color: textColor }]}
-                placeholderTextColor={textColor}
-                placeholder="Pesquisar devedores..."
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
-            </Card>
+            <SearchBarDebtors
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
 
             {/* Filtro de Status e Opções de Ordenação */}
             <View style={{ flexDirection: "row", gap: 10 }}>
@@ -115,6 +96,7 @@ export default function DebtorsScreen() {
             </View>
           </View>
         </TouchableWithoutFeedback>
+
         <View style={{ flex: 1 }}>
           <FlatList
             keyboardShouldPersistTaps="handled"

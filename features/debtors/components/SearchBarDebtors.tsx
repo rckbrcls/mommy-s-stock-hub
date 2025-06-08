@@ -2,15 +2,14 @@ import React from "react";
 import { Card } from "@/components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput, StyleSheet } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 
-interface SearchBarProps {
+interface SearchBarDebtorsProps {
   searchQuery: string;
   setSearchQuery: (text: string) => void;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({
+export const SearchBarDebtors: React.FC<SearchBarDebtorsProps> = ({
   searchQuery,
   setSearchQuery,
 }) => {
@@ -25,7 +24,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       />
       <TextInput
         style={[styles.input, { color: textColor }]}
-        placeholder="Pesquisar por nome do item..."
+        placeholder="Pesquisar devedores..."
         placeholderTextColor={textColor}
         value={searchQuery}
         onChangeText={setSearchQuery}

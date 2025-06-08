@@ -101,7 +101,7 @@ export const InventorySortOptions: React.FC<InventorySortOptionsProps> = ({
 };
 
 const styles = StyleSheet.create({
-  filterContainer: { marginBottom: 5 },
+  filterContainer: { marginBottom: 10 },
   cardButton: {
     padding: 6,
     width: "100%",

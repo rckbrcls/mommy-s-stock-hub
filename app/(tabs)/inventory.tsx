@@ -14,7 +14,7 @@ import { CategoryFilter } from "@/features/add/components/CategoryFilter";
 import { InventorySortOptions } from "@/features/inventory/components/InventorySortOptions";
 import { EditItemModal } from "@/features/inventory/components/EditItemModal";
 import { InventoryItemCard } from "@/features/inventory/components/InventoryItemCard";
-import { SearchBar } from "@/features/inventory/components/SearchBar";
+import { SearchBarInventory } from "@/features/inventory/components/SearchBarInventory";
 import { useInventory } from "@/features/inventory/contexts/InventoryContext";
 
 // Main Component
@@ -114,30 +114,30 @@ export default function InventoryScreen() {
             <ThemedView style={styles.header}>
               <ThemedText type="title">Inventário</ThemedText>
             </ThemedView>
-            <View>
-              <SearchBar
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
 
-              <View style={{ flexDirection: "row", gap: 6 }}>
-                <View style={{ flex: 1 }}>
-                  <CategoryFilter
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    categories={categories}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <InventorySortOptions
-                    sortType={sortType}
-                    setSortType={setSortType}
-                  />
-                </View>
+            <SearchBarInventory
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
+
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <View style={{ flex: 1 }}>
+                <CategoryFilter
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  categories={categories}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <InventorySortOptions
+                  sortType={sortType}
+                  setSortType={setSortType}
+                />
               </View>
             </View>
           </View>
         </TouchableWithoutFeedback>
+
         <View style={{ flex: 1 }}>
           <FlatList
             data={filteredItems}
