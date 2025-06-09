@@ -35,7 +35,7 @@ export const ThemedInput = ({
           padding: 10,
           borderWidth: 1,
           borderStyle: "solid",
-          width: "100%",
+          maxWidth: "100%",
           color: textColor,
           background: backgroundColor,
           borderColor: borderColor,

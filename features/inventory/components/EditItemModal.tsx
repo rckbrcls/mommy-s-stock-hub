@@ -10,6 +10,7 @@ import {
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedInput } from "@/components/ThemedInput";
+import { DateInput } from "@/components/DateInput";
 
 interface EditItemModalProps {
   visible: boolean;
@@ -65,73 +66,70 @@ export const EditItemModal: React.FC<EditItemModalProps> = ({
             contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
           >
-            <ThemedText style={styles.modalTitle}>Editar Item</ThemedText>
-            <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
-            <ThemedInput
-              placeholder="Nome do item"
-              value={itemName}
-              onChangeText={setItemName}
-              style={styles.modalInput}
-            />
-            <ThemedText style={styles.modalLabel}>Quantidade</ThemedText>
-            <ThemedInput
-              placeholder="Quantidade"
-              value={itemQuantity}
-              onChangeText={setItemQuantity}
-              keyboardType="numeric"
-              style={styles.modalInput}
-            />
-            <ThemedText style={styles.modalLabel}>Categoria</ThemedText>
-            <ThemedInput
-              placeholder="Categoria"
-              value={itemCategory}
-              onChangeText={setItemCategory}
-              style={styles.modalInput}
-            />
-            <ThemedText style={styles.modalLabel}>Preço</ThemedText>
-            <ThemedInput
-              placeholder="Preço"
-              value={itemPrice}
-              onChangeText={setItemPrice}
-              keyboardType="decimal-pad"
-              style={styles.modalInput}
-            />
-            <ThemedText style={styles.modalLabel}>Localização</ThemedText>
-            <ThemedInput
-              placeholder="Localização"
-              value={itemLocation}
-              onChangeText={setItemLocation}
-              style={styles.modalInput}
-            />
-            <ThemedText style={styles.modalLabel}>Criado em</ThemedText>
-            <ThemedInput
-              placeholder="AAAA-MM-DDTHH:mm"
-              value={itemCreatedAt}
-              onChangeText={setItemCreatedAt}
-              style={styles.modalInput}
-            />
-            <ThemedText style={styles.modalLabel}>Última retirada</ThemedText>
-            <ThemedInput
-              placeholder="AAAA-MM-DDTHH:mm"
-              value={itemLastRemovedAt}
-              onChangeText={setItemLastRemovedAt}
-              style={styles.modalInput}
-            />
-            <TouchableOpacity style={styles.mainButton} onPress={onSave}>
-              <ThemedText style={styles.buttonText}>Salvar</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.mainButton, styles.deleteButton]}
-              onPress={onDelete}
-            >
-              <ThemedText style={styles.buttonText}>Excluir</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.mainButton, styles.exitButton]}
-              onPress={onClose}
-            >
-              <ThemedText style={styles.buttonText}>Sair</ThemedText>
-            </TouchableOpacity>
+            <View>
+              <ThemedText style={styles.modalTitle}>Editar Item</ThemedText>
+              <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
+              <ThemedInput
+                placeholder="Nome do item"
+                value={itemName}
+                onChangeText={setItemName}
+              />
+              <ThemedText style={styles.modalLabel}>Quantidade</ThemedText>
+              <ThemedInput
+                placeholder="Quantidade"
+                value={itemQuantity}
+                onChangeText={setItemQuantity}
+                keyboardType="numeric"
+              />
+              <ThemedText style={styles.modalLabel}>Categoria</ThemedText>
+              <ThemedInput
+                placeholder="Categoria"
+                value={itemCategory}
+                onChangeText={setItemCategory}
+              />
+              <ThemedText style={styles.modalLabel}>Preço</ThemedText>
+              <ThemedInput
+                placeholder="Preço"
+                value={itemPrice}
+                onChangeText={setItemPrice}
+                keyboardType="decimal-pad"
+              />
+              <ThemedText style={styles.modalLabel}>Localização</ThemedText>
+              <ThemedInput
+                placeholder="Localização"
+                value={itemLocation}
+                onChangeText={setItemLocation}
+              />
+              <ThemedText style={styles.modalLabel}>Criado em</ThemedText>
+              <DateInput
+                placeholder="AAAA-MM-DDTHH:mm"
+                value={itemCreatedAt}
+                onChange={setItemCreatedAt}
+              />
+              <ThemedText style={styles.modalLabel}>Última retirada</ThemedText>
+              <DateInput
+                placeholder="AAAA-MM-DDTHH:mm"
+                value={itemLastRemovedAt}
+                onChange={setItemLastRemovedAt}
+              />
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <TouchableOpacity style={styles.mainButton} onPress={onSave}>
+                <ThemedText style={styles.buttonText}>Salvar</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.mainButton, styles.deleteButton]}
+                onPress={onDelete}
+              >
+                <ThemedText style={styles.buttonText}>Excluir</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.mainButton, styles.exitButton]}
+                onPress={onClose}
+              >
+                <ThemedText style={styles.buttonText}>Sair</ThemedText>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </ThemedView>
       </View>
@@ -165,14 +163,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     marginBottom: 4,
-  },
-  modalInput: {
-    borderWidth: 1,
-    borderColor: "#DDD",
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 10,
   },
   mainButton: {
     padding: 10,

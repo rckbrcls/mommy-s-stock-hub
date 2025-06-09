@@ -30,7 +30,7 @@ export const DateInput: React.FC<DateInputProps> = ({
           padding: 10,
           borderWidth: 1,
           borderStyle: "solid",
-          width: "100%",
+          maxWidth: "100%",
           color: textColor,
           background: useThemeColor(
             { light: "#fff", dark: "#222" },
