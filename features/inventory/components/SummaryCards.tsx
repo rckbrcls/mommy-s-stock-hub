@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
   summaryContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 24,
   },
   summaryCard: {
     flex: 1,

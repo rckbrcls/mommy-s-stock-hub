@@ -51,7 +51,6 @@ export const LowCategoryList: React.FC<LowCategoryListProps> = ({
 
 const styles = StyleSheet.create({
   lowStockSection: {
-    marginBottom: 24,
     paddingVertical: 24,
   },
   sectionTitle: {

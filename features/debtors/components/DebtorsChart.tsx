@@ -64,7 +64,6 @@ export const DebtorsChart: React.FC<DebtorsChartProps> = ({ debtorsData }) => {
 
 const styles = StyleSheet.create({
   chartContainer: {
-    marginBottom: 24,
     padding: 16,
     borderRadius: 8,
     shadowColor: "#000",

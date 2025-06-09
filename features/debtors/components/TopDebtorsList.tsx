@@ -78,7 +78,6 @@ export const TopDebtorsList: React.FC<TopDebtorsListProps> = ({
 
 const styles = StyleSheet.create({
   lowStockSection: {
-    marginBottom: 24,
     paddingVertical: 24,
   },
   sectionTitle: {

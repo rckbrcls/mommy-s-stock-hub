@@ -18,6 +18,7 @@ import { StockByCategoryChart } from "@/features/inventory/components/StockByCat
 import { SummaryCards } from "@/features/inventory/components/SummaryCards";
 import { useInventory } from "@/features/inventory/contexts/InventoryContext";
 import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
+import { Card } from "@/components/Card";
 
 export default function HomeScreen() {
   const { items } = useInventory();
@@ -102,12 +103,11 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View
+        <Card
           style={{
             alignItems: "center",
             display: "flex",
             flexDirection: "row",
-            paddingBottom: 20,
           }}
         >
           <Image
@@ -115,11 +115,12 @@ export default function HomeScreen() {
             style={{ width: 100, height: 100 }}
           />
           <ThemedText
+            type="subtitle"
             style={[styles.title, { flexShrink: 1, textAlign: "left" }]}
           >
             Bem-vindo(a) ao Mommy Stock Hub!
           </ThemedText>
-        </View>
+        </Card>
 
         {/* Seção de resumo */}
         <SummaryCards
@@ -153,11 +154,11 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 16,
+    padding: 16,
+    gap: 16,
     paddingBottom: 60,
   },
   title: {
-    fontSize: 20,
     fontWeight: "bold",
     textAlign: "left",
   },

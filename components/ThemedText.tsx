@@ -58,7 +58,6 @@ export function ThemedText({
               lineHeight: styles.link.lineHeight * fontScale,
             }
           : undefined,
-        // Remove fontSize and lineHeight from incoming style to avoid double scaling
         ...(Array.isArray(style)
           ? style.map((s) =>
               s && typeof s === "object"

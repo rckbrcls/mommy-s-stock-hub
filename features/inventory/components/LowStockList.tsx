@@ -19,7 +19,7 @@ interface LowStockListProps {
 
 export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
   const navigation = useNavigation();
-  const { triggerNotification } = useLowStockNotification(lowStock, false);
+
   return (
     <Card style={styles.lowStockSection}>
       <ThemedText style={styles.sectionTitle}>
@@ -53,7 +53,6 @@ export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
 
 const styles = StyleSheet.create({
   lowStockSection: {
-    marginBottom: 24,
     paddingVertical: 24,
   },
   sectionTitle: {
