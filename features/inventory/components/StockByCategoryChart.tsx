@@ -36,7 +36,7 @@ export const StockByCategoryChart: React.FC<StockByCategoryChartProps> = ({
         }}
         width={screenWidth - 64}
         height={220}
-        yAxisLabel="Qtd: "
+        yAxisLabel=""
         yAxisSuffix=""
         chartConfig={{
           decimalPlaces: 0,
