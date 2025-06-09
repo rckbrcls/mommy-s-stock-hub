@@ -34,7 +34,8 @@ describe("AddProductForm", () => {
     fireEvent.press(getByText("Salvar Produto"));
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
-      "Preencha todos os campos obrigatórios."
+      "Preencha todos os campos obrigatórios.",
+      expect.anything()
     );
   });
   it("should call addItem with correct data when all fields are filled and Salvar Produto is pressed", async () => {
@@ -238,7 +239,8 @@ describe("AddProductForm", () => {
     expect(addItem).not.toHaveBeenCalled();
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
-      "Preencha todos os campos obrigatórios."
+      "Preencha todos os campos obrigatórios.",
+      expect.anything()
     );
   });
 
@@ -266,7 +268,8 @@ describe("AddProductForm", () => {
     expect(addItem).not.toHaveBeenCalled();
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
-      "Preencha todos os campos obrigatórios."
+      "Preencha todos os campos obrigatórios.",
+      expect.anything()
     );
   });
 });

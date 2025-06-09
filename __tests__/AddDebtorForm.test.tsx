@@ -32,7 +32,8 @@ describe("AddDebtorForm", () => {
     fireEvent.press(getByText("Salvar Devedor"));
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
-      "Preencha todos os campos obrigatórios."
+      "Preencha todos os campos obrigatórios.",
+      expect.anything()
     );
   });
 
@@ -80,7 +81,8 @@ describe("AddDebtorForm", () => {
     expect(addDebtor).not.toHaveBeenCalled();
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
-      "Preencha todos os campos obrigatórios."
+      "Preencha todos os campos obrigatórios.",
+      expect.anything()
     );
   });
 
@@ -200,7 +202,8 @@ describe("AddDebtorForm", () => {
     expect(addDebtor).not.toHaveBeenCalled();
     expect(require("react-native").Alert.alert).toHaveBeenCalledWith(
       "Erro",
-      "Preencha todos os campos obrigatórios."
+      "Preencha todos os campos obrigatórios.",
+      expect.anything()
     );
   });
 

@@ -11,6 +11,14 @@ jest.mock("@/features/settings/contexts/ThemeContext", () =>
 jest.mock("@/features/settings/contexts/TextSizeContext", () =>
   require("../__mocks__/TextSizeContextMock")
 );
+jest.mock("@/features/settings/contexts/NotificationContext", () => ({
+  NotificationProvider: (props: { children: React.ReactNode }) =>
+    props.children,
+  useNotificationSettings: () => ({
+    enabled: false,
+    setEnabled: () => {},
+  }),
+}));
 
 describe("DebtorsScreen", () => {
   it("renders debtors list and search bar", () => {
