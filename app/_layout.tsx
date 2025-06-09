@@ -17,6 +17,7 @@ import {
 import { InventoryProvider } from "@/features/inventory/contexts/InventoryContext";
 import { DebtorProvider } from "@/features/debtors/contexts/DebtorContext";
 import { TextSizeProvider } from "@/features/settings/contexts/TextSizeContext";
+import { NotificationProvider } from "@/features/settings/contexts/NotificationContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,7 +39,9 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <TextSizeProvider>
-        <ThemedApp />
+        <NotificationProvider>
+          <ThemedApp />
+        </NotificationProvider>
       </TextSizeProvider>
     </ThemeProvider>
   );

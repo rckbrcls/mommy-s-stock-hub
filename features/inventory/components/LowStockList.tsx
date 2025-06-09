@@ -19,7 +19,7 @@ interface LowStockListProps {
 
 export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
   const navigation = useNavigation();
-  useLowStockNotification(lowStock);
+  const { triggerNotification } = useLowStockNotification(lowStock, false);
   return (
     <Card style={styles.lowStockSection}>
       <ThemedText style={styles.sectionTitle}>

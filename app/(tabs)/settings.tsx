@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useTheme } from "@/features/settings/contexts/ThemeContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -18,14 +19,42 @@ import {
 } from "@/features/settings/utils";
 import { useTextSize } from "@/features/settings/contexts/TextSizeContext";
 import { ThemedView } from "@/components/ThemedView";
+import { useNotificationSettings } from "@/features/settings/contexts/NotificationContext";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+  const {
+    notificationsEnabled,
+    setNotificationsEnabled,
+    askNotificationPermission,
+  } = useNotificationSettings();
   const { textSize, setTextSize } = useTextSize();
 
-  const handleToggleNotifications = () =>
-    setIsNotificationsEnabled((prev) => !prev);
+  const handleToggleNotifications = async () => {
+    if (!notificationsEnabled) {
+      // User is enabling notifications
+      const granted = await askNotificationPermission();
+      if (granted) {
+        setNotificationsEnabled(true);
+      } else {
+        setNotificationsEnabled(false);
+      }
+    } else {
+      // User is disabling notifications
+      Alert.alert(
+        "Desativar notificações?",
+        "Você não receberá mais alertas de estoque baixo ou devedores atrasados. Deseja continuar?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Desativar",
+            style: "destructive",
+            onPress: () => setNotificationsEnabled(false),
+          },
+        ]
+      );
+    }
+  };
 
   const handleTextSizeChange = (size: "small" | "medium" | "large") =>
     setTextSize(size);
@@ -60,7 +89,7 @@ export default function SettingsScreen() {
               Ativar Notificações
             </ThemedText>
             <Switch
-              value={isNotificationsEnabled}
+              value={notificationsEnabled}
               onValueChange={handleToggleNotifications}
             />
           </View>
