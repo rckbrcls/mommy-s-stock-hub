@@ -225,10 +225,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   textSizeButton: {
+    minWidth: "30%",
     paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 6,
     marginHorizontal: 4,
+    alignItems: "center",
+    justifyContent: "center",
   },
   textSizeButtonActive: {
     backgroundColor: "#F5A689",
