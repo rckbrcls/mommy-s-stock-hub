@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Database } from "@nozbe/watermelondb";
 
 import WDebtor from "../models/Debtor";
 import { database } from "@/database";
+
+// Força o tipo do database para Database, ignorando o mock nos testes
+const db = database as Database;
 
 interface Debtor {
   id: string;
@@ -30,13 +34,13 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
   const [version, setVersion] = useState(0); // força atualização
 
   useEffect(() => {
-    const collection = database.get<WDebtor>("debtors");
+    const collection = db.get<WDebtor>("debtors");
     const sub = collection
       .query()
       .observe()
-      .subscribe((allDebtors) => {
+      .subscribe((allDebtors: WDebtor[]) => {
         setDebtors(
-          allDebtors.map((d) => ({
+          allDebtors.map((d: WDebtor) => ({
             id: d.id,
             name: d.name,
             amount: d.amount,
@@ -52,8 +56,8 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Adicionar devedor
   const addDebtor = async (debtor: Debtor) => {
-    await database.write(async () => {
-      await database.get<WDebtor>("debtors").create((d) => {
+    await db.write(async () => {
+      await db.get<WDebtor>("debtors").create((d: WDebtor) => {
         d.name = debtor.name;
         d.amount = debtor.amount;
         d.status = debtor.status;
@@ -67,9 +71,9 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Atualizar devedor
   const updateDebtor = async (id: string, updatedDebtor: Debtor) => {
-    await database.write(async () => {
-      const debtor = await database.get<WDebtor>("debtors").find(id);
-      await debtor.update((d) => {
+    await db.write(async () => {
+      const debtor = await db.get<WDebtor>("debtors").find(id);
+      await debtor.update((d: WDebtor) => {
         d.name = updatedDebtor.name;
         d.amount = updatedDebtor.amount;
         d.status = updatedDebtor.status;
@@ -83,8 +87,8 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Remover devedor
   const removeDebtor = async (id: string) => {
-    await database.write(async () => {
-      const debtor = await database.get<WDebtor>("debtors").find(id);
+    await db.write(async () => {
+      const debtor = await db.get<WDebtor>("debtors").find(id);
       await debtor.markAsDeleted();
       await debtor.destroyPermanently();
     });
@@ -93,9 +97,9 @@ export const DebtorProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Marcar devedor como pago
   const markAsPaid = async (id: string) => {
-    await database.write(async () => {
-      const debtor = await database.get<WDebtor>("debtors").find(id);
-      await debtor.update((d) => {
+    await db.write(async () => {
+      const debtor = await db.get<WDebtor>("debtors").find(id);
+      await debtor.update((d: WDebtor) => {
         d.status = "paid";
         d.paidDate = new Date().toISOString();
       });

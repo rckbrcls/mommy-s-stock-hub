@@ -1,3 +1,4 @@
+import { Database } from "@nozbe/watermelondb";
 import { database } from "@/database";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import InventoryItemModel from "../models/InventoryItem";
@@ -26,6 +27,8 @@ const InventoryContext = createContext<InventoryContextProps | undefined>(
   undefined
 );
 
+const db = database as Database;
+
 export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -33,13 +36,13 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   const [version, setVersion] = useState(0); // força atualização
 
   useEffect(() => {
-    const collection = database.get<InventoryItemModel>("inventory_items");
+    const collection = db.get<InventoryItemModel>("inventory_items");
     const sub = collection
       .query()
       .observe()
-      .subscribe((allItems) => {
+      .subscribe((allItems: InventoryItemModel[]) => {
         setItems(
-          allItems.map((i) => ({
+          allItems.map((i: InventoryItemModel) => ({
             id: i.id,
             name: i.name,
             quantity: i.quantity,
@@ -56,28 +59,28 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Adicionar item
   const addItem = async (item: InventoryItem) => {
-    await database.write(async () => {
-      await database.get<InventoryItemModel>("inventory_items").create((i) => {
-        i.name = item.name;
-        i.quantity = item.quantity;
-        if (item.category) i.category = item.category;
-        if (item.price !== undefined) i.price = item.price;
-        if (item.lastRemovedAt) i.lastRemovedAt = item.lastRemovedAt;
-        if (item.location) i.location = item.location;
-        if (item.customCreatedAt) i.customCreatedAt = item.customCreatedAt;
-        else i.customCreatedAt = new Date().toISOString();
-      });
+    await db.write(async () => {
+      await db
+        .get<InventoryItemModel>("inventory_items")
+        .create((i: InventoryItemModel) => {
+          i.name = item.name;
+          i.quantity = item.quantity;
+          if (item.category) i.category = item.category;
+          if (item.price !== undefined) i.price = item.price;
+          if (item.lastRemovedAt) i.lastRemovedAt = item.lastRemovedAt;
+          if (item.location) i.location = item.location;
+          if (item.customCreatedAt) i.customCreatedAt = item.customCreatedAt;
+          else i.customCreatedAt = new Date().toISOString();
+        });
     });
     setVersion((v) => v + 1);
   };
 
   // Atualizar item
   const updateItem = async (id: string, updatedItem: InventoryItem) => {
-    await database.write(async () => {
-      const item = await database
-        .get<InventoryItemModel>("inventory_items")
-        .find(id);
-      await item.update((i) => {
+    await db.write(async () => {
+      const item = await db.get<InventoryItemModel>("inventory_items").find(id);
+      await item.update((i: InventoryItemModel) => {
         i.name = updatedItem.name;
         i.quantity = updatedItem.quantity;
         i.category = updatedItem.category;
@@ -92,10 +95,8 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Remover item
   const removeItem = async (id: string) => {
-    await database.write(async () => {
-      const item = await database
-        .get<InventoryItemModel>("inventory_items")
-        .find(id);
+    await db.write(async () => {
+      const item = await db.get<InventoryItemModel>("inventory_items").find(id);
       await item.markAsDeleted();
       await item.destroyPermanently();
     });
@@ -104,11 +105,9 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Incrementar quantidade
   const incrementQuantity = async (id: string) => {
-    await database.write(async () => {
-      const item = await database
-        .get<InventoryItemModel>("inventory_items")
-        .find(id);
-      await item.update((i) => {
+    await db.write(async () => {
+      const item = await db.get<InventoryItemModel>("inventory_items").find(id);
+      await item.update((i: InventoryItemModel) => {
         i.quantity = i.quantity + 1;
       });
     });
@@ -117,12 +116,10 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Decrementar quantidade
   const decrementQuantity = async (id: string) => {
-    await database.write(async () => {
-      const item = await database
-        .get<InventoryItemModel>("inventory_items")
-        .find(id);
+    await db.write(async () => {
+      const item = await db.get<InventoryItemModel>("inventory_items").find(id);
       if (item.quantity > 0) {
-        await item.update((i) => {
+        await item.update((i: InventoryItemModel) => {
           i.quantity = i.quantity - 1;
           i.lastRemovedAt = new Date().toISOString();
         });

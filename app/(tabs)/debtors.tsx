@@ -26,7 +26,6 @@ export default function DebtorsScreen() {
   const [searchQuery, setSearchQuery] = useState(""); // Estado para a barra de pesquisa
   const [sortType, setSortType] = useState<"amountAsc" | "amountDesc" | "">(""); // Ordenação
   const [statusFilter, setStatusFilter] = useState<"open" | "paid" | "">(""); // Filtro de status
-  const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
   // Filtrar devedores com base no nome, status e ordenação
   const filteredDebtors = debtors
