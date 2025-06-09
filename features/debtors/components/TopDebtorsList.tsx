@@ -4,7 +4,7 @@ import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from "expo-router";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image } from "react-native";
 
 interface Debtor {
   id: string;
@@ -64,9 +64,10 @@ export const TopDebtorsList: React.FC<TopDebtorsListProps> = ({
           ))}
         </ThemedView>
       ) : (
-        <ThemedText style={styles.emptyList}>
-          Nenhum devedor pendente no momento.
-        </ThemedText>
+        <Image
+          source={require("../../../assets/images/no-debtors.png")}
+          style={{ width: 210, height: 150, alignSelf: "center" }}
+        />
       )}
       <TouchableOpacity
         style={styles.button}

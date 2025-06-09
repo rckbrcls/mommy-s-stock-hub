@@ -35,7 +35,7 @@ export const DebtorsChart: React.FC<DebtorsChartProps> = ({ debtorsData }) => {
           }}
           width={screenWidth - 64}
           height={220}
-          yAxisLabel="Qtd: "
+          yAxisLabel=""
           yAxisSuffix=""
           chartConfig={{
             decimalPlaces: 0,

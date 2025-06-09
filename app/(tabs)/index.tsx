@@ -1,13 +1,7 @@
 // MommyStockHub/screens/HomeScreen.tsx
 
 import React, { useMemo } from "react";
-import {
-  View,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  Image,
-} from "react-native";
+import { SafeAreaView, StyleSheet, ScrollView, Image } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { DebtorsChart } from "@/features/debtors/components/DebtorsChart";

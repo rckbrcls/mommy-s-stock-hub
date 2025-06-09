@@ -4,8 +4,7 @@ import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from "expo-router";
-import { StyleSheet } from "react-native";
-import { useLowStockNotification } from "../hooks/useLowStockNotification";
+import { StyleSheet, Image } from "react-native";
 
 interface Item {
   id: string;
@@ -37,9 +36,10 @@ export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
           ))}
         </ThemedView>
       ) : (
-        <ThemedText style={styles.emptyList}>
-          Nenhum produto em falta por enquanto.
-        </ThemedText>
+        <Image
+          source={require("../../../assets/images/full-stock.png")}
+          style={{ width: 210, height: 150, alignSelf: "center" }}
+        />
       )}
       <TouchableOpacity
         style={styles.button}
