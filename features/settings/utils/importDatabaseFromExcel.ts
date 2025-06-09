@@ -2,36 +2,69 @@
 import * as XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
+import { Database } from "@nozbe/watermelondb";
+
 import { database } from "@/database";
 import Debtor from "@/features/debtors/models/Debtor";
 import InventoryItemModel from "@/features/inventory/models/InventoryItem";
-import { Alert } from "react-native";
+import { showAlert } from "@/components/ConfirmDialog";
 import { router } from "expo-router";
+
+const db = database as Database;
 
 export async function importDatabaseFromExcel() {
   console.log("[IMPORT] Iniciando importação de Excel");
   try {
-    // Pick file
-    const result = await DocumentPicker.getDocumentAsync({
-      type: [
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/vnd.ms-excel",
-      ],
-      copyToCacheDirectory: true,
-    });
-    console.log("[IMPORT] Resultado do picker:", result);
-    if (result.canceled || !result.assets || result.assets.length === 0) {
-      console.log("[IMPORT] Picker cancelado ou sem assets");
-      return;
-    }
-    const fileUri = result.assets[0].uri;
-    console.log("[IMPORT] fileUri:", fileUri);
+    let b64: string | undefined;
 
-    // Read file as base64
-    const b64 = await FileSystem.readAsStringAsync(fileUri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-    console.log("[IMPORT] Arquivo lido como base64, tamanho:", b64.length);
+    if (typeof window !== "undefined") {
+      // WEB: input file + FileReader
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".xlsx,.xls";
+      input.style.display = "none";
+      document.body.appendChild(input);
+
+      const filePromise = new Promise<File | null>((resolve) => {
+        input.onchange = () => {
+          resolve(input.files && input.files[0] ? input.files[0] : null);
+        };
+      });
+
+      input.click();
+      const file = await filePromise;
+      document.body.removeChild(input);
+      if (!file) return;
+
+      b64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          const base64 = result.split(",")[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    } else {
+      // MOBILE: Expo DocumentPicker + FileSystem
+      const result = await DocumentPicker.getDocumentAsync({
+        type: [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.ms-excel",
+        ],
+        copyToCacheDirectory: true,
+      });
+      if (result.canceled || !result.assets || result.assets.length === 0) {
+        return;
+      }
+      const fileUri = result.assets[0].uri;
+      b64 = await FileSystem.readAsStringAsync(fileUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+    }
+    if (!b64) return;
+
     // Corrigido: usar base64 direto, sem Buffer
     const workbook = XLSX.read(b64, { type: "base64" });
     console.log("[IMPORT] Workbook lido, abas:", workbook.SheetNames);
@@ -43,8 +76,8 @@ export async function importDatabaseFromExcel() {
       const debtors: any[] = XLSX.utils.sheet_to_json(wsDebtors);
       console.log("[IMPORT] Devedores extraídos:", debtors);
       for (const d of debtors) {
-        await database.write(async () => {
-          await database.get<Debtor>("debtors").create((debtor) => {
+        await db.write(async () => {
+          await db.get<Debtor>("debtors").create((debtor: Debtor) => {
             debtor.name = d.name || "";
             debtor.amount = Number(d.amount) || 0;
             debtor.status = d.status || "open";
@@ -64,10 +97,10 @@ export async function importDatabaseFromExcel() {
       const items: any[] = XLSX.utils.sheet_to_json(wsInventory);
       console.log("[IMPORT] Itens extraídos:", items);
       for (const i of items) {
-        await database.write(async () => {
-          await database
+        await db.write(async () => {
+          await db
             .get<InventoryItemModel>("inventory_items")
-            .create((item) => {
+            .create((item: InventoryItemModel) => {
               item.name = i.name || "";
               item.quantity = Number(i.quantity) || 0;
               item.category = i.category || "";
@@ -83,24 +116,22 @@ export async function importDatabaseFromExcel() {
     }
     // Reload a tela para refletir os dados importados
     setTimeout(() => {
-      Alert.alert(
-        "Importação concluída",
-        "Os dados foram importados com sucesso.",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              setTimeout(() => {
-                router.replace("/(tabs)/settings");
-                router.replace("/(tabs)");
-              }, 100);
-            },
-          },
-        ]
-      );
+      showAlert({
+        title: "Importação concluída",
+        message: "Os dados foram importados com sucesso.",
+        onClose: () => {
+          setTimeout(() => {
+            router.replace("/(tabs)/settings");
+            router.replace("/(tabs)");
+          }, 100);
+        },
+      });
     }, 100);
   } catch (error: any) {
     console.error("[IMPORT] Erro na importação:", error);
-    Alert.alert("Erro na importação", error?.message || JSON.stringify(error));
+    showAlert({
+      title: "Erro na importação",
+      message: error?.message || JSON.stringify(error),
+    });
   }
 }

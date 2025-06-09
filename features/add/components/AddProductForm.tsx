@@ -7,7 +7,6 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  Alert,
   StyleSheet,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
@@ -20,6 +19,7 @@ import {
   formatCurrencyInput,
   parseCurrency,
 } from "@/features/inventory/hooks/useCurrencyHelpers";
+import { showAlert } from "@/components/ConfirmDialog";
 
 interface AddProductFormProps {
   addItem: (item: any) => Promise<void>;
@@ -47,14 +47,20 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
   const handleSaveProduct = async () => {
     if (!name.trim() || quantity === null) {
-      Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+      showAlert({
+        title: "Erro",
+        message: "Preencha todos os campos obrigatórios.",
+      });
       return;
     }
     const productExists = items.some(
       (item) => item.name.toLowerCase() === name.trim().toLowerCase()
     );
     if (productExists) {
-      Alert.alert("Erro", `O produto "${name}" já existe no inventário.`);
+      showAlert({
+        title: "Erro",
+        message: `O produto "${name}" já existe no inventário.`,
+      });
       return;
     }
     const newProduct = {
@@ -66,7 +72,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
       location: location || undefined,
     };
     await addItem(newProduct);
-    Alert.alert("Sucesso", `Produto "${name}" adicionado!`);
+    showAlert({ title: "Sucesso", message: `Produto "${name}" adicionado!` });
     setName("");
     setCategory("");
     setQuantity(null);

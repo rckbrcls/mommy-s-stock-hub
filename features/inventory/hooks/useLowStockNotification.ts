@@ -1,7 +1,7 @@
 import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 import { useNotificationSettings } from "@/features/settings/contexts/NotificationContext";
-import { Alert } from "react-native";
+import { showAlert } from "@/components/ConfirmDialog";
 
 interface Item {
   id: string;
@@ -18,6 +18,7 @@ export function useLowStockNotification(
 
   useEffect(() => {
     if (!notificationsEnabled) return;
+    if (typeof window !== "undefined") return; // Não executa no web
     if (lowStockItems.length > 0 && !manualTrigger) {
       scheduleLowStockNotification(lowStockItems, askNotificationPermission);
     }
@@ -26,22 +27,24 @@ export function useLowStockNotification(
   // For manual trigger (e.g., user wants to be notified again)
   const triggerNotification = async () => {
     if (!notificationsEnabled) {
-      Alert.alert(
-        "Notificações desativadas",
-        "Ative as notificações nas configurações para receber alertas."
-      );
+      showAlert({
+        title: "Notificações desativadas",
+        message:
+          "Ative as notificações nas configurações para receber alertas.",
+      });
       return;
     }
+    if (typeof window !== "undefined") return; // Não executa no web
     const granted = await askNotificationPermission();
     if (granted) {
       await scheduleLowStockNotification(
         lowStockItems,
         askNotificationPermission
       );
-      Alert.alert(
-        "Notificação enviada",
-        "Você será alertado sobre o estoque baixo."
-      );
+      showAlert({
+        title: "Notificação enviada",
+        message: "Você será alertado sobre o estoque baixo.",
+      });
     }
   };
 
@@ -52,6 +55,7 @@ async function scheduleLowStockNotification(
   items: Item[],
   askNotificationPermission: () => Promise<boolean>
 ) {
+  if (typeof window !== "undefined") return; // Não executa no web
   const granted = await askNotificationPermission();
   if (!granted) return;
   const names = items.map((i: Item) => i.name).join(", ");

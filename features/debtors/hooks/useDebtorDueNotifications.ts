@@ -22,6 +22,7 @@ export function useDebtorDueNotifications(debtors: Debtor[]) {
 
   useEffect(() => {
     if (!notificationsEnabled) return;
+    if (typeof window !== "undefined") return; // Não executa no web
     const checkAndNotify = async () => {
       const today = getTodayISO();
       for (const debtor of debtors) {

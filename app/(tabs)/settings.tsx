@@ -9,7 +9,6 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import { useTheme } from "@/features/settings/contexts/ThemeContext";
 import { ThemedText } from "@/components/ThemedText";
@@ -20,6 +19,7 @@ import {
 import { useTextSize } from "@/features/settings/contexts/TextSizeContext";
 import { ThemedView } from "@/components/ThemedView";
 import { useNotificationSettings } from "@/features/settings/contexts/NotificationContext";
+import { confirmDialog } from "@/components/ConfirmDialog";
 
 export default function SettingsScreen() {
   const { isDarkTheme, toggleTheme } = useTheme();
@@ -41,18 +41,14 @@ export default function SettingsScreen() {
       }
     } else {
       // User is disabling notifications
-      Alert.alert(
-        "Desativar notificações?",
-        "Você não receberá mais alertas de estoque baixo ou devedores atrasados. Deseja continuar?",
-        [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "Desativar",
-            style: "destructive",
-            onPress: () => setNotificationsEnabled(false),
-          },
-        ]
-      );
+      confirmDialog({
+        title: "Desativar notificações?",
+        message:
+          "Você não receberá mais alertas de estoque baixo ou devedores atrasados. Deseja continuar?",
+        confirmText: "Desativar",
+        confirmStyle: "destructive",
+        onConfirm: () => setNotificationsEnabled(false),
+      });
     }
   };
 

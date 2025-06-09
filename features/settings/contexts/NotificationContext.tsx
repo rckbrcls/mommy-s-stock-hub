@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
-import { Alert } from "react-native";
+import { showAlert } from "@/components/ConfirmDialog";
 
 interface NotificationContextType {
   notificationsEnabled: boolean;
@@ -44,16 +44,17 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const askNotificationPermission = async () => {
+    if (typeof window !== "undefined") return false; // Não executa no web
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== "granted") {
       const { status: newStatus } =
         await Notifications.requestPermissionsAsync();
       if (newStatus !== "granted") {
-        Alert.alert(
-          "Permissão necessária",
-          "Para receber notificações, permita nas configurações do sistema.",
-          [{ text: "OK" }]
-        );
+        showAlert({
+          title: "Permissão necessária",
+          message:
+            "Para receber notificações, permita nas configurações do sistema.",
+        });
         return false;
       }
       return true;

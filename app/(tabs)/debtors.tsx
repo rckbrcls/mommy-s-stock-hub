@@ -5,7 +5,6 @@ import {
   View,
   StyleSheet,
   FlatList,
-  Alert,
   SafeAreaView,
   Keyboard,
   TouchableWithoutFeedback,
@@ -20,6 +19,7 @@ import { DebtorCard } from "@/features/debtors/components/DebtorCard";
 import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
 import { SearchBarDebtors } from "@/features/debtors/components/SearchBarDebtors";
 import { useDebtorDueNotifications } from "@/features/debtors/hooks/useDebtorDueNotifications";
+import { confirmDialog } from "@/components/ConfirmDialog";
 
 export default function DebtorsScreen() {
   const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores
@@ -49,20 +49,13 @@ export default function DebtorsScreen() {
 
   // Excluir devedor
   const handleDelete = async (debtorId: string) => {
-    Alert.alert(
-      "Excluir Devedor",
-      "Tem certeza que deseja excluir este devedor?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: async () => {
-            await removeDebtor(debtorId);
-          },
-        },
-      ]
-    );
+    confirmDialog({
+      title: "Excluir Devedor",
+      message: "Tem certeza que deseja excluir este devedor?",
+      onConfirm: async () => {
+        await removeDebtor(debtorId);
+      },
+    });
   };
 
   useDebtorDueNotifications(debtors);

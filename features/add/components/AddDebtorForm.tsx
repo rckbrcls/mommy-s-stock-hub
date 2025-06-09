@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Alert,
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
@@ -18,6 +17,7 @@ import {
 } from "@/features/inventory/hooks/useCurrencyHelpers";
 
 import { DateInput } from "@/components/DateInput";
+import { showAlert } from "@/components/ConfirmDialog";
 
 interface AddDebtorFormProps {
   addDebtor: (debtor: any) => Promise<void>;
@@ -34,7 +34,10 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
 
   const handleSaveDebtor = async () => {
     if (!name.trim() || !amount.trim()) {
-      Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+      showAlert({
+        title: "Erro",
+        message: "Preencha todos os campos obrigatórios.",
+      });
       return;
     }
     const newDebtor = {
@@ -47,7 +50,7 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
       paidDate: "",
     };
     await addDebtor(newDebtor);
-    Alert.alert("Sucesso", `Devedor "${name}" adicionado!`);
+    showAlert({ title: "Sucesso", message: `Devedor "${name}" adicionado!` });
     setName("");
     setAmount("");
     setStartDate("");
