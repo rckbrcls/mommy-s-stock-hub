@@ -19,6 +19,7 @@ import { StatusFilter } from "@/features/debtors/components/StatusFilter";
 import { DebtorCard } from "@/features/debtors/components/DebtorCard";
 import { useDebtors } from "@/features/debtors/contexts/DebtorContext";
 import { SearchBarDebtors } from "@/features/debtors/components/SearchBarDebtors";
+import { useDebtorDueNotifications } from "@/features/debtors/hooks/useDebtorDueNotifications";
 
 export default function DebtorsScreen() {
   const { debtors, removeDebtor, markAsPaid } = useDebtors(); // Usando o contexto de devedores
@@ -64,6 +65,8 @@ export default function DebtorsScreen() {
       ]
     );
   };
+
+  useDebtorDueNotifications(debtors);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
