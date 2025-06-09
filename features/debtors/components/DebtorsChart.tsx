@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { BarChart } from "react-native-chart-kit";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Image } from "react-native";
 import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 
 const screenWidth = Dimensions.get("window").width;
@@ -54,9 +54,10 @@ export const DebtorsChart: React.FC<DebtorsChartProps> = ({ debtorsData }) => {
           style={styles.chart}
         />
       ) : (
-        <ThemedText style={styles.emptyList}>
-          Nenhum dado disponível para o gráfico.
-        </ThemedText>
+        <Image
+          source={require("../../../assets/images/no-data.png")}
+          style={{ width: 100, height: 150, alignSelf: "center" }}
+        />
       )}
     </Card>
   );

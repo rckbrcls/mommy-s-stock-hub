@@ -4,7 +4,7 @@ import { Card } from "@/components/Card";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from "expo-router";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image } from "react-native";
 
 interface LowCategoryListProps {
   categories: { [category: string]: number };
@@ -35,9 +35,10 @@ export const LowCategoryList: React.FC<LowCategoryListProps> = ({
           ))}
         </ThemedView>
       ) : (
-        <ThemedText style={styles.emptyList}>
-          Nenhuma categoria cadastrada no momento.
-        </ThemedText>
+        <Image
+          source={require("../../../assets/images/no-data.png")}
+          style={{ width: 100, height: 150, alignSelf: "center" }}
+        />
       )}
       <TouchableOpacity
         style={styles.button}
