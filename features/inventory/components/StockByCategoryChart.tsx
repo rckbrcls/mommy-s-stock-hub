@@ -20,8 +20,10 @@ export const StockByCategoryChart: React.FC<StockByCategoryChartProps> = ({
   backgroundColor,
   color,
 }) => (
-  <Card style={styles.chartContainer}>
-    <ThemedText style={styles.sectionTitle}>Estoque por Categoria</ThemedText>
+  <Card>
+    <ThemedText type="subtitle" style={styles.sectionTitle}>
+      Estoque por Categoria
+    </ThemedText>
     {stockByCategory.datasets[0].data.length > 0 ? (
       <BarChart
         data={{
@@ -61,17 +63,7 @@ export const StockByCategoryChart: React.FC<StockByCategoryChartProps> = ({
 );
 
 const styles = StyleSheet.create({
-  chartContainer: {
-    padding: 16,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 24,
     marginTop: 4,

@@ -21,8 +21,8 @@ export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
   const navigation = useNavigation();
 
   return (
-    <Card style={styles.lowStockSection}>
-      <ThemedText style={styles.sectionTitle}>
+    <Card>
+      <ThemedText type="subtitle" style={styles.sectionTitle}>
         Produtos com baixo estoque:
       </ThemedText>
       {lowStock.length > 0 ? (
@@ -52,11 +52,7 @@ export const LowStockList: React.FC<LowStockListProps> = ({ lowStock }) => {
 };
 
 const styles = StyleSheet.create({
-  lowStockSection: {
-    paddingVertical: 24,
-  },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 24,
     marginTop: 4,

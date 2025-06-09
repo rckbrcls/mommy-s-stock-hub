@@ -17,31 +17,34 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
 }) => (
   <View style={styles.summaryContainer}>
     <Card style={styles.summaryCard}>
-      <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
       <ThemedText style={styles.summaryLabel}>Produtos</ThemedText>
+      <ThemedText style={styles.summaryValue}>{totalProducts}</ThemedText>
     </Card>
     <Card style={styles.summaryCard}>
-      <ThemedText style={styles.summaryValue}>{totalCategories}</ThemedText>
       <ThemedText style={styles.summaryLabel}>Categorias</ThemedText>
+      <ThemedText style={styles.summaryValue}>{totalCategories}</ThemedText>
     </Card>
     <Card style={styles.summaryCard}>
-      <ThemedText style={styles.summaryValue}>{lowStockCount}</ThemedText>
       <ThemedText style={styles.summaryLabel}>Em Falta</ThemedText>
+      <ThemedText style={styles.summaryValue}>{lowStockCount}</ThemedText>
     </Card>
   </View>
 );
 
 const styles = StyleSheet.create({
   summaryContainer: {
-    flexDirection: "row",
+    display: "flex",
+    gap: 4,
     justifyContent: "space-between",
   },
   summaryCard: {
     flex: 1,
-    padding: 16,
-    marginHorizontal: 4,
-    borderRadius: 8,
-    alignItems: "center",
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   summaryValue: {
     fontSize: 20,

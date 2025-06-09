@@ -19,8 +19,8 @@ export const LowCategoryList: React.FC<LowCategoryListProps> = ({
     .slice(0, 4);
 
   return (
-    <Card style={styles.lowStockSection}>
-      <ThemedText style={styles.sectionTitle}>
+    <Card>
+      <ThemedText type="subtitle" style={styles.sectionTitle}>
         Categorias Mais em Falta:
       </ThemedText>
       {sortedCategories.length > 0 ? (
@@ -50,11 +50,7 @@ export const LowCategoryList: React.FC<LowCategoryListProps> = ({
 };
 
 const styles = StyleSheet.create({
-  lowStockSection: {
-    paddingVertical: 24,
-  },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 24,
     marginTop: 4,

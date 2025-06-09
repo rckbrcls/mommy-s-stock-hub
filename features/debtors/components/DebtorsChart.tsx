@@ -19,8 +19,8 @@ export const DebtorsChart: React.FC<DebtorsChartProps> = ({ debtorsData }) => {
   const color = useThemeColor({ light: undefined, dark: undefined }, "text");
 
   return (
-    <Card style={styles.chartContainer}>
-      <ThemedText style={styles.sectionTitle}>
+    <Card>
+      <ThemedText type="subtitle" style={styles.sectionTitle}>
         Distribuição dos Devedores
       </ThemedText>
       {debtorsData.length > 0 ? (
@@ -63,17 +63,7 @@ export const DebtorsChart: React.FC<DebtorsChartProps> = ({ debtorsData }) => {
 };
 
 const styles = StyleSheet.create({
-  chartContainer: {
-    padding: 16,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 24,
     marginTop: 4,

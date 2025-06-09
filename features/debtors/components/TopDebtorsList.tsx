@@ -25,8 +25,10 @@ export const TopDebtorsList: React.FC<TopDebtorsListProps> = ({
 }) => {
   const navigation = useNavigation();
   return (
-    <Card style={styles.lowStockSection}>
-      <ThemedText style={styles.sectionTitle}>Maiores Devedores:</ThemedText>
+    <Card>
+      <ThemedText type="subtitle" style={styles.sectionTitle}>
+        Maiores Devedores:
+      </ThemedText>
       {topDebtors.length > 0 ? (
         <ThemedView style={styles.lowStockContainer}>
           {topDebtors.slice(0, 4).map((debtor) => (
@@ -77,11 +79,7 @@ export const TopDebtorsList: React.FC<TopDebtorsListProps> = ({
 };
 
 const styles = StyleSheet.create({
-  lowStockSection: {
-    paddingVertical: 24,
-  },
   sectionTitle: {
-    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 24,
     marginTop: 4,
