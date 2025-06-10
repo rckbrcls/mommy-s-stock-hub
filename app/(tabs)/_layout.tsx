@@ -27,7 +27,7 @@ export default function TabLayout() {
         options={{
           title: "Inventário",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="archivebox" color={color} />
+            <IconSymbol size={28} name="cube" color={color} />
           ),
         }}
       />

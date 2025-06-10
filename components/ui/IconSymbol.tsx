@@ -17,6 +17,7 @@ const MAPPING = {
   "add-circle": "add-circle",
   gear: "settings",
   person: "person",
+  cube: "inventory", // Novo ícone para Inventário
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],
