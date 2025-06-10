@@ -53,7 +53,13 @@ export async function exportDatabaseToExcel() {
     const wbout = XLSX.write(wb, { type: "base64", bookType: "xlsx" });
     const fileName = "mommy-stock-hub-export.xlsx";
 
-    if (typeof window !== "undefined") {
+    // Detect if running in a browser (web) or React Native (mobile)
+    const isWeb =
+      typeof window !== "undefined" &&
+      typeof document !== "undefined" &&
+      !(navigator && navigator.product && navigator.product === "ReactNative");
+
+    if (isWeb) {
       // WEB: Download via Blob
       const binary = atob(wbout);
       const array = new Uint8Array(binary.length);

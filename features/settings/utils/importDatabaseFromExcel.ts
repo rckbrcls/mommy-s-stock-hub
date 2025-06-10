@@ -17,7 +17,13 @@ export async function importDatabaseFromExcel() {
   try {
     let b64: string | undefined;
 
-    if (typeof window !== "undefined") {
+    // Detect if running in a browser (web) or React Native (mobile)
+    const isWeb =
+      typeof window !== "undefined" &&
+      typeof document !== "undefined" &&
+      !(navigator && navigator.product && navigator.product === "ReactNative");
+
+    if (isWeb) {
       // WEB: input file + FileReader
       const input = document.createElement("input");
       input.type = "file";
