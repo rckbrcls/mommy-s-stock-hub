@@ -36,7 +36,7 @@ export default function TabLayout() {
         options={{
           title: "Adicionar",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="add-circle" color={color} />
+            <IconSymbol size={28} name="plus" color={color} />
           ),
         }}
       />
@@ -45,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: "Devedores",
           tabBarIcon: ({ color }: { color: string }) => (
-            <IconSymbol size={28} name="person" color={color} />
+            <IconSymbol size={28} name={"wallet" as any} color={color} />
           ),
         }}
       />

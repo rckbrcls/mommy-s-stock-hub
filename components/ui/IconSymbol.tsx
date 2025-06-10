@@ -5,19 +5,17 @@ import { SymbolWeight } from "expo-symbols";
 import React from "react";
 import { OpaqueColorValue, StyleProp, ViewStyle } from "react-native";
 
-// Add your SFSymbol to MaterialIcons mappings here.
 const MAPPING = {
-  // See MaterialIcons here: https://icons.expo.fyi
-  // See SF Symbols in the SF Symbols app on Mac.
   "house.fill": "home",
   "paperplane.fill": "send",
   "chevron.left.forwardslash.chevron.right": "code",
   "chevron.right": "chevron-right",
   archivebox: "archive",
-  "add-circle": "add-circle",
+  plus: "add",
   gear: "settings",
   person: "person",
-  cube: "inventory", // Novo ícone para Inventário
+  cube: "inventory",
+  wallet: "account-balance-wallet",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],
