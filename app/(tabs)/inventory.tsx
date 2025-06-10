@@ -6,6 +6,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   FlatList,
+  Image,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -144,9 +145,10 @@ export default function InventoryScreen() {
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             contentContainerStyle={{ paddingBottom: 32 }}
             ListEmptyComponent={
-              <ThemedText style={styles.emptyList}>
-                Nenhum item encontrado.
-              </ThemedText>
+              <Image
+                source={require("../../assets/images/no-data.png")}
+                style={{ width: 100, height: 150, alignSelf: "center" }}
+              />
             }
             renderItem={({ item }) => (
               <InventoryItemCard

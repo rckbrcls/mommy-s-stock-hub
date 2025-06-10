@@ -8,10 +8,10 @@ import {
   SafeAreaView,
   Keyboard,
   TouchableWithoutFeedback,
+  Image,
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
-import { useThemeColor } from "@/features/settings/hooks/useThemeColor";
 import { ThemedView } from "@/components/ThemedView";
 import { SortOptions } from "@/features/inventory/components/SortOptions";
 import { StatusFilter } from "@/features/debtors/components/StatusFilter";
@@ -100,9 +100,10 @@ export default function DebtorsScreen() {
             ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 16 }}
             ListEmptyComponent={
-              <ThemedText style={styles.emptyList}>
-                Nenhum devedor encontrado.
-              </ThemedText>
+              <Image
+                source={require("../../assets/images/no-data.png")}
+                style={{ width: 100, height: 150, alignSelf: "center" }}
+              />
             }
             renderItem={({ item }) => (
               <DebtorCard
