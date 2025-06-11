@@ -105,17 +105,17 @@ export const EditItemPage: React.FC<Omit<EditItemModalProps, "visible">> = ({
           <View>
             <ThemedText style={styles.modalLabel}>Criado em</ThemedText>
             <DateInput
-              placeholder="AAAA-MM-DDTHH:mm"
-              value={itemCreatedAt}
-              onChange={setItemCreatedAt}
+              placeholder="AAAA-MM-DD HH:mm"
+              value={itemCreatedAt ? formatDateTime(itemCreatedAt) : ""}
+              onChange={(date) => setItemCreatedAt(date)}
             />
           </View>
           <View>
             <ThemedText style={styles.modalLabel}>Última retirada</ThemedText>
             <DateInput
-              placeholder="AAAA-MM-DDTHH:mm"
-              value={itemLastRemovedAt}
-              onChange={setItemLastRemovedAt}
+              placeholder="AAAA-MM-DD HH:mm"
+              value={itemLastRemovedAt ? formatDateTime(itemLastRemovedAt) : ""}
+              onChange={(date) => setItemLastRemovedAt(date)}
             />
           </View>
         </View>
@@ -124,16 +124,16 @@ export const EditItemPage: React.FC<Omit<EditItemModalProps, "visible">> = ({
             <ThemedText style={styles.buttonText}>Salvar</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.mainButton, styles.deleteButton]}
-            onPress={onDelete}
-          >
-            <ThemedText style={styles.buttonText}>Excluir</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity
             style={[styles.mainButton, styles.exitButton]}
             onPress={onClose}
           >
             <ThemedText style={styles.buttonText}>Sair</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.mainButton, styles.deleteButton]}
+            onPress={onDelete}
+          >
+            <ThemedText style={styles.buttonText}>Excluir</ThemedText>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -180,13 +180,24 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   deleteButton: {
+    marginTop: 24,
     backgroundColor: "#FF364E",
   },
   exitButton: {
     backgroundColor: "#808080",
-    marginTop: 20,
   },
 });
+
+// Utilitário para formatar data e hora de forma bonita
+function formatDateTime(dateString: string) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
 
 // Adicione ao final do arquivo para manter compatibilidade e facilitar importação
 export default EditItemPage;
