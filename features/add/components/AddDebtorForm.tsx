@@ -28,8 +28,6 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
   const [amount, setAmount] = useState("");
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [isStartDatePickerVisible, setStartDatePickerVisible] = useState(false);
-  const [isDueDatePickerVisible, setDueDatePickerVisible] = useState(false);
   const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
 
   const handleSaveDebtor = async () => {
@@ -63,11 +61,9 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
 
   const handleConfirmStartDate = (date: Date) => {
     setStartDate(date.toISOString().substring(0, 10));
-    setStartDatePickerVisible(false);
   };
   const handleConfirmDueDate = (date: Date) => {
     setDueDate(date.toISOString().substring(0, 10));
-    setDueDatePickerVisible(false);
   };
 
   return (
@@ -97,8 +93,6 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
           <DateInput
             value={startDate}
             onChange={setStartDate}
-            pickerVisible={isStartDatePickerVisible}
-            setPickerVisible={setStartDatePickerVisible}
             onConfirm={handleConfirmStartDate}
           />
         </View>
@@ -107,8 +101,6 @@ export const AddDebtorForm: React.FC<AddDebtorFormProps> = ({ addDebtor }) => {
           <DateInput
             value={dueDate}
             onChange={setDueDate}
-            pickerVisible={isDueDatePickerVisible}
-            setPickerVisible={setDueDatePickerVisible}
             onConfirm={handleConfirmDueDate}
           />
         </View>

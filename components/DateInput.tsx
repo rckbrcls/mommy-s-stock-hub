@@ -9,8 +9,6 @@ interface DateInputProps {
   onChange: (value: string) => void;
   placeholder?: string;
   label?: string;
-  pickerVisible?: boolean;
-  setPickerVisible?: (visible: boolean) => void;
   onConfirm?: (date: Date) => void;
 }
 
@@ -18,11 +16,11 @@ export const DateInput: React.FC<DateInputProps> = ({
   value,
   onChange,
   placeholder = "AAAA-MM-DD",
-  pickerVisible,
-  setPickerVisible,
+  label,
   onConfirm,
 }) => {
   const textColor = useThemeColor({ light: "#222", dark: "#999" }, "text");
+  const [pickerVisible, setPickerVisible] = React.useState(false);
   if (Platform.OS === "web") {
     return (
       <input
@@ -55,9 +53,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   }
   return (
     <>
-      <TouchableOpacity
-        onPress={() => setPickerVisible && setPickerVisible(true)}
-      >
+      <TouchableOpacity onPress={() => setPickerVisible(true)}>
         <ThemedInput
           placeholderTextColor={textColor}
           value={value}
@@ -66,14 +62,17 @@ export const DateInput: React.FC<DateInputProps> = ({
           pointerEvents="none"
         />
       </TouchableOpacity>
-      {pickerVisible !== undefined && setPickerVisible && onConfirm && (
-        <DateTimePickerModal
-          isVisible={pickerVisible}
-          mode="date"
-          onConfirm={onConfirm}
-          onCancel={() => setPickerVisible(false)}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={pickerVisible}
+        mode="date"
+        onConfirm={(date) => {
+          onConfirm
+            ? onConfirm(date)
+            : onChange(date.toISOString().slice(0, 16));
+          setPickerVisible(false);
+        }}
+        onCancel={() => setPickerVisible(false)}
+      />
     </>
   );
 };
