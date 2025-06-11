@@ -13,10 +13,10 @@ import { ThemedView } from "@/components/ThemedView";
 
 import { CategoryFilter } from "@/features/add/components/CategoryFilter";
 import { InventorySortOptions } from "@/features/inventory/components/InventorySortOptions";
-import { EditItemModal } from "@/features/inventory/components/EditItemModal";
 import { InventoryItemCard } from "@/features/inventory/components/InventoryItemCard";
 import { SearchBarInventory } from "@/features/inventory/components/SearchBarInventory";
 import { useInventory } from "@/features/inventory/contexts/InventoryContext";
+import { useRouter } from "expo-router";
 
 // Main Component
 export default function InventoryScreen() {
@@ -27,22 +27,14 @@ export default function InventoryScreen() {
     incrementQuantity,
     decrementQuantity,
   } = useInventory();
+  const router = useRouter();
 
   // State
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<string | null>(null);
-  const [editItemName, setEditItemName] = useState("");
-  const [editItemQuantity, setEditItemQuantity] = useState("1");
-  const [editItemCategory, setEditItemCategory] = useState("");
-  const [editItemPrice, setEditItemPrice] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [selectedCategory, setSelectedCategory] = useState(""); // Valor inicial vazio
   const [sortType, setSortType] = useState<
     "priceAsc" | "priceDesc" | "quantityAsc" | "quantityDesc" | ""
   >(""); // State for sorting
-  const [editItemLocation, setEditItemLocation] = useState("");
-  const [editItemCustomCreatedAt, setEditItemCustomCreatedAt] = useState("");
-  const [editItemLastRemovedAt, setEditItemLastRemovedAt] = useState("");
 
   // Extract unique categories
   const categories = Array.from(
@@ -54,36 +46,9 @@ export default function InventoryScreen() {
   );
 
   // Handlers
+  // Remove todos os setEdit* e setEditingIndex do openEditModal, pois agora a tela de edição cuida do estado
   const openEditModal = (id: string) => {
-    const item = items.find((item) => item.id === id);
-    if (item) {
-      setEditingIndex(id);
-      setEditItemName(item.name);
-      setEditItemQuantity(item.quantity.toString());
-      setEditItemCategory(item.category || "");
-      setEditItemPrice(item.price?.toString() || "");
-      setEditItemLocation(item.location || "");
-      setEditItemCustomCreatedAt(item.customCreatedAt || "");
-      setEditItemLastRemovedAt(item.lastRemovedAt || "");
-      setEditModalVisible(true);
-    }
-  };
-
-  const handleSaveEdit = async () => {
-    if (editingIndex !== null) {
-      const updatedItem = {
-        id: editingIndex,
-        name: editItemName,
-        quantity: parseInt(editItemQuantity) || 0,
-        category: editItemCategory,
-        price: parseFloat(editItemPrice) || 0,
-        location: editItemLocation,
-        customCreatedAt: editItemCustomCreatedAt,
-        lastRemovedAt: editItemLastRemovedAt,
-      };
-      await updateItem(editingIndex, updatedItem);
-      setEditModalVisible(false);
-    }
+    router.push({ pathname: "/edit-item", params: { id } });
   };
 
   // Filtered and sorted items
@@ -158,30 +123,6 @@ export default function InventoryScreen() {
                 onDecrement={decrementQuantity}
               />
             )}
-          />
-
-          <EditItemModal
-            visible={editModalVisible}
-            onClose={() => setEditModalVisible(false)}
-            itemName={editItemName}
-            setItemName={setEditItemName}
-            itemQuantity={editItemQuantity}
-            setItemQuantity={setEditItemQuantity}
-            itemCategory={editItemCategory}
-            setItemCategory={setEditItemCategory}
-            itemPrice={editItemPrice}
-            setItemPrice={setEditItemPrice}
-            itemLocation={editItemLocation}
-            setItemLocation={setEditItemLocation}
-            itemCreatedAt={editItemCustomCreatedAt}
-            setItemCreatedAt={setEditItemCustomCreatedAt}
-            itemLastRemovedAt={editItemLastRemovedAt}
-            setItemLastRemovedAt={setEditItemLastRemovedAt}
-            onSave={handleSaveEdit}
-            onDelete={() => {
-              if (editingIndex !== null) removeItem(editingIndex);
-              setEditModalVisible(false);
-            }}
           />
         </View>
       </TouchableWithoutFeedback>

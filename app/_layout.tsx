@@ -56,6 +56,10 @@ function ThemedApp() {
         <DebtorProvider>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="edit-item"
+              options={{ presentation: "modal", headerShown: false }}
+            />
             <Stack.Screen name="+not-found" />
           </Stack>
           <StatusBar style="auto" />
