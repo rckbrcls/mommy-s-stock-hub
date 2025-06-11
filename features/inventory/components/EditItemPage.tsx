@@ -59,7 +59,9 @@ export const EditItemPage: React.FC<Omit<EditItemModalProps, "visible">> = ({
         showsVerticalScrollIndicator={false}
       >
         <View style={{ gap: 12 }}>
-          <ThemedText style={styles.modalTitle}>Editar Item</ThemedText>
+          <ThemedText type="title" style={{ marginBottom: 20 }}>
+            Editar Item
+          </ThemedText>
           <View>
             <ThemedText style={styles.modalLabel}>Nome do Item</ThemedText>
             <ThemedInput
@@ -157,12 +159,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
   },
-  modalTitle: {
-    fontWeight: "bold",
-    fontSize: 18,
-    marginBottom: 10,
-    color: "#F5A689",
-  },
+
   modalLabel: {
     fontSize: 14,
     fontWeight: "bold",

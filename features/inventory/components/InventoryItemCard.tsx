@@ -28,7 +28,9 @@ export const InventoryItemCard: React.FC<InventoryItemCardProps> = ({
   <Pressable onPress={() => onEdit(item.id)}>
     <Card style={styles.listItem}>
       <View style={styles.listItemDetails}>
-        <ThemedText style={styles.listItemTexBold}>{item.name}</ThemedText>
+        <ThemedText type="subtitle" style={styles.listItemTexBold}>
+          {item.name}
+        </ThemedText>
         <ThemedText>
           Quantidade:{" "}
           <ThemedText style={styles.listItemTexBold}>
@@ -81,13 +83,17 @@ export const InventoryItemCard: React.FC<InventoryItemCardProps> = ({
           style={styles.plusButton}
           onPress={() => onIncrement(item.id)}
         >
-          <ThemedText style={styles.buttonText}>+</ThemedText>
+          <ThemedText type="subtitle" style={styles.buttonText}>
+            +
+          </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.minusButton}
           onPress={() => onDecrement(item.id)}
         >
-          <ThemedText style={styles.buttonText}>-</ThemedText>
+          <ThemedText type="subtitle" style={styles.buttonText}>
+            -
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </Card>
@@ -108,23 +114,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   actionsContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     gap: 5,
   },
   plusButton: {
     backgroundColor: "#A3D977",
-    borderRadius: 200,
-    width: 35,
-    height: 35,
+    borderRadius: 6,
+    width: 42,
+    height: "48%",
     justifyContent: "center",
     alignItems: "center",
   },
   minusButton: {
     backgroundColor: "#FF364E",
-    borderRadius: 200,
-    width: 35,
-    height: 35,
+    borderRadius: 6,
+    width: 42,
+    height: "48%",
     justifyContent: "center",
     alignItems: "center",
   },

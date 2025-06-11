@@ -24,19 +24,31 @@ export const DebtorCard: React.FC<DebtorCardProps> = ({
 }) => (
   <Card style={styles.debtorCard}>
     <View style={styles.debtorInfo}>
-      <ThemedText style={styles.debtorName}>{debtor.name}</ThemedText>
-      <ThemedText style={styles.debtorAmount}>
-        Valor: R$ {debtor.amount.toFixed(2)}
+      <ThemedText type="subtitle">{debtor.name}</ThemedText>
+      <ThemedText>
+        Valor:{" "}
+        <ThemedText style={styles.listItemTexBold}>
+          R$ {debtor.amount.toFixed(2)}
+        </ThemedText>
       </ThemedText>
-      <ThemedText style={styles.debtorStatus}>
-        Início: {debtor.startDate ? debtor.startDate.substring(0, 10) : "-"}
+      <ThemedText>
+        Início:{" "}
+        <ThemedText style={styles.listItemTexBold}>
+          {debtor.startDate ? debtor.startDate.substring(0, 10) : "-"}
+        </ThemedText>
       </ThemedText>
-      <ThemedText style={styles.debtorStatus}>
-        Prazo: {debtor.dueDate ? debtor.dueDate.substring(0, 10) : "-"}
+      <ThemedText>
+        Prazo:{" "}
+        <ThemedText style={styles.listItemTexBold}>
+          {debtor.dueDate ? debtor.dueDate.substring(0, 10) : "-"}
+        </ThemedText>
       </ThemedText>
       {debtor.status === "paid" && (
-        <ThemedText style={styles.debtorStatus}>
-          Pago em: {debtor.paidDate ? debtor.paidDate.substring(0, 10) : "-"}
+        <ThemedText>
+          Pago em:{" "}
+          <ThemedText style={styles.listItemTexBold}>
+            {debtor.paidDate ? debtor.paidDate.substring(0, 10) : "-"}
+          </ThemedText>
         </ThemedText>
       )}
     </View>
@@ -68,9 +80,9 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   debtorInfo: { flex: 1 },
-  debtorName: { fontSize: 16, fontWeight: "600" },
-  debtorAmount: { fontSize: 14, marginVertical: 4 },
-  debtorStatus: { fontSize: 14, fontWeight: "bold" },
+  listItemTexBold: {
+    fontWeight: "bold",
+  },
   statusOpen: { color: "#FF6347" },
   statusPaid: { color: "#32CD32" },
   actions: {
