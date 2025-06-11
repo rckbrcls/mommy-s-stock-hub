@@ -80,20 +80,16 @@ export const InventoryItemCard: React.FC<InventoryItemCardProps> = ({
       </View>
       <View style={styles.actionsContainer}>
         <TouchableOpacity
-          style={styles.plusButton}
-          onPress={() => onIncrement(item.id)}
-        >
-          <ThemedText type="subtitle" style={styles.buttonText}>
-            +
-          </ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
           style={styles.minusButton}
           onPress={() => onDecrement(item.id)}
         >
-          <ThemedText type="subtitle" style={styles.buttonText}>
-            -
-          </ThemedText>
+          <ThemedText style={styles.buttonText}>-</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPress={() => onIncrement(item.id)}
+        >
+          <ThemedText style={styles.buttonText}>+</ThemedText>
         </TouchableOpacity>
       </View>
     </Card>
@@ -105,6 +101,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    flexWrap: "wrap",
+    gap: 12,
   },
   listItemDetails: {
     flexDirection: "column",
@@ -114,25 +112,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   actionsContainer: {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 5,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
   },
   plusButton: {
     backgroundColor: "#A3D977",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 6,
-    width: 42,
-    height: "48%",
-    justifyContent: "center",
     alignItems: "center",
+    width: "48%",
   },
   minusButton: {
     backgroundColor: "#FF364E",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 6,
-    width: 42,
-    height: "48%",
-    justifyContent: "center",
     alignItems: "center",
+    width: "48%",
   },
   buttonText: {
     color: "#FFFFFF",
